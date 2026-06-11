@@ -54,4 +54,11 @@
 - [x] Documentar integración Cloudflare R2
 - [x] Probar flujos faltantes en navegador (código inválido, wholesale submit/approve, logs, inquiries, images)
 - [x] Push a GitHub (repo privado georgemontilva-crypto/beri-disposable)
-- [ ] Checkpoint y entrega
+- [x] Checkpoint y entrega
+
+## Mejoras Home (v2)
+- [x] Sección hero general arriba (breve, impactante)
+- [x] Sección Beri Crush: specs reales (World's 1st Auto-Adaptive Power, Crush Mode 25K / Normal Mode 50K puffs, Interactive HD Screen, 2.5x Charging Speed, Quad Coil Technology) + carrusel automático de sabores
+- [x] Sección Beri Cliq: specs reales (Cliq Mode 25K / Normal Mode 50K puffs, 360° Crystal Tank, 2.5x Charging Speed, LED Display, Refillable Pod, Dual Mesh Coil) + carrusel automático de sabores
+- [x] Carruseles de sabores con autoplay (3-4s), indicadores y transición suave
+- [ ] Checkpoint y push a GitHub
