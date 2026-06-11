@@ -53,5 +53,5 @@
 - [x] Documentación de deploy en Railway (variables de entorno, R2, email)
 - [x] Documentar integración Cloudflare R2
 - [x] Probar flujos faltantes en navegador (código inválido, wholesale submit/approve, logs, inquiries, images)
-- [ ] Push a GitHub
+- [x] Push a GitHub (repo privado georgemontilva-crypto/beri-disposable)
 - [ ] Checkpoint y entrega
