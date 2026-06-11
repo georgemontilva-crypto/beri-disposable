@@ -1,17 +1,21 @@
-import { int, mysqlEnum, mysqlTable, text, timestamp, varchar } from "drizzle-orm/mysql-core";
+import {
+  bigint,
+  index,
+  int,
+  mysqlEnum,
+  mysqlTable,
+  text,
+  timestamp,
+  varchar,
+} from "drizzle-orm/mysql-core";
 
 /**
- * Core user table backing auth flow.
- * Extend this file with additional tables as your product grows.
- * Columns use camelCase to match both database fields and generated types.
+ * Core user table backing the Manus OAuth flow (kept for template compatibility).
+ * NOT used for the public-facing auth system. The proprietary auth lives in
+ * `adminUsers` and `wholesaleUsers`.
  */
 export const users = mysqlTable("users", {
-  /**
-   * Surrogate primary key. Auto-incremented numeric value managed by the database.
-   * Use this for relations between tables.
-   */
   id: int("id").autoincrement().primaryKey(),
-  /** Manus OAuth identifier (openId) returned from the OAuth callback. Unique per user. */
   openId: varchar("openId", { length: 64 }).notNull().unique(),
   name: text("name"),
   email: varchar("email", { length: 320 }),
@@ -25,4 +29,154 @@ export const users = mysqlTable("users", {
 export type User = typeof users.$inferSelect;
 export type InsertUser = typeof users.$inferInsert;
 
-// TODO: Add your tables here
+/**
+ * Proprietary admin accounts (own auth, NOT Manus OAuth).
+ * Authenticated with email + bcrypt password hash and a custom JWT session.
+ */
+export const adminUsers = mysqlTable("admin_users", {
+  id: int("id").autoincrement().primaryKey(),
+  email: varchar("email", { length: 320 }).notNull().unique(),
+  passwordHash: varchar("passwordHash", { length: 255 }).notNull(),
+  name: varchar("name", { length: 255 }),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+  lastSignedIn: timestamp("lastSignedIn"),
+});
+
+export type AdminUser = typeof adminUsers.$inferSelect;
+export type InsertAdminUser = typeof adminUsers.$inferInsert;
+
+/**
+ * Wholesale customer accounts (own auth, NOT Manus OAuth).
+ * A user becomes active after admin approval + completing registration via email link.
+ */
+export const wholesaleUsers = mysqlTable(
+  "wholesale_users",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    email: varchar("email", { length: 320 }).notNull().unique(),
+    passwordHash: varchar("passwordHash", { length: 255 }),
+    name: varchar("name", { length: 255 }),
+    company: varchar("company", { length: 255 }),
+    phone: varchar("phone", { length: 64 }),
+    // pending -> approved (awaiting password) -> active ; or rejected
+    status: mysqlEnum("status", ["pending", "approved", "active", "rejected"])
+      .default("pending")
+      .notNull(),
+    // token sent by email so the user can set a password and finalize registration
+    registrationToken: varchar("registrationToken", { length: 128 }),
+    registrationTokenExpiresAt: timestamp("registrationTokenExpiresAt"),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+    updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+    lastSignedIn: timestamp("lastSignedIn"),
+  },
+  (t) => ({
+    statusIdx: index("wholesale_status_idx").on(t.status),
+    tokenIdx: index("wholesale_token_idx").on(t.registrationToken),
+  })
+);
+
+export type WholesaleUser = typeof wholesaleUsers.$inferSelect;
+export type InsertWholesaleUser = typeof wholesaleUsers.$inferInsert;
+
+/**
+ * Wholesale inquiries submitted from the public form.
+ * These are leads; the admin can approve one into a wholesaleUser registration.
+ */
+export const wholesaleInquiries = mysqlTable(
+  "wholesale_inquiries",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    name: varchar("name", { length: 255 }).notNull(),
+    company: varchar("company", { length: 255 }),
+    email: varchar("email", { length: 320 }).notNull(),
+    phone: varchar("phone", { length: 64 }),
+    status: mysqlEnum("status", ["pending", "approved", "rejected"])
+      .default("pending")
+      .notNull(),
+    notes: text("notes"),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+    updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+  },
+  (t) => ({
+    statusIdx: index("inquiry_status_idx").on(t.status),
+    emailIdx: index("inquiry_email_idx").on(t.email),
+  })
+);
+
+export type WholesaleInquiry = typeof wholesaleInquiries.$inferSelect;
+export type InsertWholesaleInquiry = typeof wholesaleInquiries.$inferInsert;
+
+/**
+ * Authentication codes printed on/under BERI product holograms.
+ * Customers type the code to verify the product is genuine.
+ */
+export const authCodes = mysqlTable(
+  "auth_codes",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    code: varchar("code", { length: 128 }).notNull().unique(),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+    updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+  },
+  (t) => ({
+    codeIdx: index("auth_code_idx").on(t.code),
+  })
+);
+
+export type AuthCode = typeof authCodes.$inferSelect;
+export type InsertAuthCode = typeof authCodes.$inferInsert;
+
+/**
+ * Query logs: every verification attempt against an authentication code.
+ */
+export const queryLogs = mysqlTable(
+  "query_logs",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    code: varchar("code", { length: 128 }).notNull(),
+    result: mysqlEnum("result", ["valid", "not_found"]).notNull(),
+    ip: varchar("ip", { length: 64 }),
+    userAgent: text("userAgent"),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+  },
+  (t) => ({
+    codeIdx: index("log_code_idx").on(t.code),
+    resultIdx: index("log_result_idx").on(t.result),
+  })
+);
+
+export type QueryLog = typeof queryLogs.$inferSelect;
+export type InsertQueryLog = typeof queryLogs.$inferInsert;
+
+/**
+ * Site images managed from the admin panel. Stored in object storage
+ * (Manus storage in dev, Cloudflare R2 in production via storageKey/url).
+ * Images are assigned to named "slots"/sections of the site.
+ */
+export const siteImages = mysqlTable(
+  "site_images",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    // logical slot identifier, e.g. "home_hero", "crush_flavor_tropical_gummy"
+    slot: varchar("slot", { length: 128 }).notNull(),
+    // human label / section grouping, e.g. "Home", "Beri Crush"
+    section: varchar("section", { length: 128 }),
+    title: varchar("title", { length: 255 }),
+    storageKey: varchar("storageKey", { length: 512 }).notNull(),
+    url: varchar("url", { length: 1024 }).notNull(),
+    width: int("width"),
+    height: int("height"),
+    sizeBytes: bigint("sizeBytes", { mode: "number" }),
+    mimeType: varchar("mimeType", { length: 128 }),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+    updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+  },
+  (t) => ({
+    slotIdx: index("image_slot_idx").on(t.slot),
+    sectionIdx: index("image_section_idx").on(t.section),
+  })
+);
+
+export type SiteImage = typeof siteImages.$inferSelect;
+export type InsertSiteImage = typeof siteImages.$inferInsert;

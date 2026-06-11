@@ -1,0 +1,57 @@
+# Beri Disposable - Project TODO
+
+## Fase 2: Arquitectura de datos y tema visual
+- [x] Definir esquema de base de datos (códigos, query logs, wholesale inquiries, wholesale users, site images, admins)
+- [x] Generar y aplicar migraciones SQL
+- [x] Configurar sistema de tema visual (paleta blanco/negro/gris, fuentes, glasmorfismo)
+- [x] Configurar fuentes Google Fonts modernas
+
+## Fase 3: Backend
+- [x] Sistema de autenticación propio (admin login con email/password + JWT propio)
+- [x] Sistema de autenticación wholesale (registro, login, aprobación)
+- [x] API: verificación de códigos de autenticación (público)
+- [x] API: registro de query logs (IP, user agent, resultado)
+- [x] API: importar códigos CSV/TXT (admin)
+- [x] API: CRUD de códigos (admin)
+- [x] API: solicitud wholesale (público) + notificación al owner
+- [x] API: gestión wholesale inquiries (admin: listar, aprobar, rechazar, export CSV)
+- [x] API: flujo de aprobación con token de registro por email
+- [x] API: gestión de imágenes del sitio (subir, asignar a secciones)
+- [x] Helper de envío de emails (preparado para SMTP/Resend en Railway)
+- [x] Tests vitest para procedimientos clave
+
+## Fase 4: Frontend público
+- [x] Layout público con navbar moderno (dropdown Products), warning de nicotina en header
+- [x] Footer con warning de nicotina y emails de contacto
+- [x] Home: hero banner, carrusel de productos, secciones Beri Crush y Beri Cliq
+- [x] Página Beri Crush con galería de sabores (placeholders grises con medidas)
+- [x] Página Beri Cliq con galería de sabores (placeholders grises con medidas)
+- [x] Página Authenticate: formulario de código + Scratch/Scan/Certify + respuesta visual
+- [x] Página Wholesale: formulario de solicitud
+- [x] Página de registro/login wholesale (auth propio)
+- [x] Página de completar registro (desde email token)
+- [x] Componente PlaceholderImage (gris con dimensiones visibles)
+
+## Fase 5: Panel admin
+- [x] Login de admin propio
+- [x] Layout del panel admin (sidebar estilo WordPress)
+- [x] Dashboard con estadísticas
+- [x] Gestión Verify Codes (importar, listar, buscar, añadir, eliminar)
+- [x] Query Logs (listar, buscar)
+- [x] Wholesale Inquiries (listar, aprobar, rechazar, export CSV)
+- [x] Gestión de usuarios wholesale aprobados
+- [x] Gestión de imágenes del sitio (subir, asignar secciones)
+
+## Fase 6: Pulido visual y pruebas
+- [x] Glasmorfismo, bordes redondeados, animaciones de entrada
+- [x] Efectos parallax y scroll suave
+- [x] Responsive completo
+- [x] Verificar todos los flujos en navegador
+- [x] Ejecutar tests vitest
+
+## Fase 7: Deploy y entrega
+- [x] Documentación de deploy en Railway (variables de entorno, R2, email)
+- [x] Documentar integración Cloudflare R2
+- [x] Probar flujos faltantes en navegador (código inválido, wholesale submit/approve, logs, inquiries, images)
+- [ ] Push a GitHub
+- [ ] Checkpoint y entrega
