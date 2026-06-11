@@ -61,4 +61,13 @@
 - [x] Sección Beri Crush: specs reales (World's 1st Auto-Adaptive Power, Crush Mode 25K / Normal Mode 50K puffs, Interactive HD Screen, 2.5x Charging Speed, Quad Coil Technology) + carrusel automático de sabores
 - [x] Sección Beri Cliq: specs reales (Cliq Mode 25K / Normal Mode 50K puffs, 360° Crystal Tank, 2.5x Charging Speed, LED Display, Refillable Pod, Dual Mesh Coil) + carrusel automático de sabores
 - [x] Carruseles de sabores con autoplay (3-4s), indicadores y transición suave
+- [x] Checkpoint y push a GitHub (04bfc890)
+
+## Mejoras v3
+- [ ] Hero: reemplazar por video horizontal (95% ancho, centrado, 35px margen top/bottom), gestionable desde admin
+- [ ] Backend: añadir slot de video hero al sistema de imágenes/media del admin
+- [ ] Admin: sección para subir/cambiar el video del hero
+- [ ] Páginas de producto: añadir bento grid de especificaciones con imágenes de detalle y etiquetas (estilo referencia)
+- [ ] Slots de imágenes de detalle de specs en el panel admin (crush_spec_1..4, cliq_spec_1..4)
+- [ ] Tipografía: cambiar títulos y subtítulos a Bebas Neue (Impact-style)
 - [ ] Checkpoint y push a GitHub

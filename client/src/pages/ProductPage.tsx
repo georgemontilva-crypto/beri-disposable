@@ -1,12 +1,117 @@
 import { PlaceholderImage } from "@/components/PlaceholderImage";
 import { PublicLayout } from "@/components/PublicLayout";
 import { useReveal } from "@/hooks/useReveal";
-import { useSiteImages } from "@/hooks/useSiteImages";
-import { getProductByKey } from "@/lib/products";
+import { useSiteImages, type PublicMediaEntry } from "@/hooks/useSiteImages";
+import { getProductByKey, type SpecSlot } from "@/lib/products";
 import { ArrowLeft, ArrowRight, ShieldCheck } from "lucide-react";
 import { Link, useParams } from "wouter";
 import NotFound from "./NotFound";
 
+/* ─── Bento Spec Grid ──────────────────────────────────────────────────── */
+function SpecGrid({
+  specSlots,
+  images,
+  productName,
+}: {
+  specSlots: SpecSlot[];
+  images: Record<string, PublicMediaEntry>;
+  productName: string;
+}) {
+  // Layout: 4-column CSS grid, first item is tall (row-span-2)
+  // Cells with bigValue show a stat card instead of an image
+  return (
+    <section className="container pb-20">
+      <div className="reveal mb-10 text-center">
+        <span className="text-xs font-semibold uppercase tracking-[0.25em] text-muted-foreground">
+          Engineering
+        </span>
+        <h2 className="mt-3 font-display text-4xl font-bold tracking-tight">
+          Built Different
+        </h2>
+        <p className="mx-auto mt-3 max-w-md text-muted-foreground">
+          Every detail of the {productName} is engineered for a premium experience.
+        </p>
+      </div>
+
+      {/* Bento grid */}
+      <div
+        className="grid gap-3"
+        style={{
+          gridTemplateColumns: "repeat(4, 1fr)",
+          gridAutoRows: "220px",
+        }}
+      >
+        {specSlots.map((s, i) => {
+          const entry = images[s.slot];
+          const hasMedia = !!entry;
+          const isStatCard = !hasMedia && (s.bigValue || s.bigUnit);
+
+          const cellClass = [
+            "reveal relative overflow-hidden rounded-2xl border border-neutral-200 bg-neutral-950 text-white transition-transform duration-300 hover:-translate-y-1",
+            s.tall ? "row-span-2" : "",
+            s.wide ? "col-span-2" : "",
+          ]
+            .filter(Boolean)
+            .join(" ");
+
+          return (
+            <div key={s.slot} className={cellClass} style={{ transitionDelay: `${i * 60}ms` }}>
+              {hasMedia ? (
+                <>
+                  {entry.mimeType?.startsWith("video/") ? (
+                    <video
+                      src={entry.url}
+                      className="h-full w-full object-cover"
+                      autoPlay
+                      muted
+                      loop
+                      playsInline
+                    />
+                  ) : (
+                    <img
+                      src={entry.url}
+                      alt={s.label}
+                      className="h-full w-full object-cover"
+                      loading="lazy"
+                    />
+                  )}
+                  {/* Label overlay */}
+                  <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent px-4 pb-4 pt-10">
+                    <p className="text-sm font-semibold leading-tight">{s.label}</p>
+                  </div>
+                </>
+              ) : isStatCard ? (
+                /* Stat card — no image uploaded yet */
+                <div className="flex h-full flex-col items-center justify-center gap-1 p-6 text-center">
+                  <span className="font-display text-5xl font-black tracking-tight text-white">
+                    {s.bigValue}
+                  </span>
+                  <span className="text-sm font-semibold text-neutral-300">{s.bigUnit}</span>
+                  <span className="mt-2 text-xs text-neutral-500">{s.label}</span>
+                </div>
+              ) : (
+                /* Gray placeholder */
+                <div className="flex h-full flex-col items-center justify-center gap-2 border border-dashed border-neutral-700 bg-neutral-900 text-neutral-500">
+                  <div
+                    className="absolute inset-0 opacity-30"
+                    style={{
+                      backgroundImage:
+                        "repeating-linear-gradient(45deg, rgba(255,255,255,0.03) 0 12px, transparent 12px 24px)",
+                    }}
+                  />
+                  <span className="relative font-mono text-xs">{s.slot}</span>
+                  <span className="relative text-xs font-medium text-neutral-400">{s.label}</span>
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
+/* ─── Page ─────────────────────────────────────────────────────────────── */
 export default function ProductPage() {
   const params = useParams();
   const key = params.key ?? "";
@@ -90,6 +195,9 @@ export default function ProductPage() {
             />
           </div>
         </section>
+
+        {/* Bento Spec Grid */}
+        <SpecGrid specSlots={product.specSlots} images={images} productName={product.name} />
 
         {/* Flavors grid */}
         <section className="container pb-20">

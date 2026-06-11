@@ -303,13 +303,15 @@ export async function listSiteImages() {
 }
 
 /** Returns a map of slot -> latest image url for the public site. */
-export async function getPublicImageMap(): Promise<Record<string, string>> {
+export type PublicMediaEntry = { url: string; mimeType: string | null };
+
+export async function getPublicImageMap(): Promise<Record<string, PublicMediaEntry>> {
   const db = await getDb();
   if (!db) return {};
   const rows = await db.select().from(siteImages).orderBy(desc(siteImages.id));
-  const map: Record<string, string> = {};
+  const map: Record<string, PublicMediaEntry> = {};
   for (const row of rows) {
-    if (!(row.slot in map)) map[row.slot] = row.url;
+    if (!(row.slot in map)) map[row.slot] = { url: row.url, mimeType: row.mimeType ?? null };
   }
   return map;
 }

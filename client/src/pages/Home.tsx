@@ -1,9 +1,9 @@
 import { PlaceholderImage } from "@/components/PlaceholderImage";
 import { PublicLayout } from "@/components/PublicLayout";
 import { useReveal } from "@/hooks/useReveal";
-import { useSiteImages } from "@/hooks/useSiteImages";
+import { useSiteImages, type PublicMediaEntry } from "@/hooks/useSiteImages";
 import { BERI_CLIQ, BERI_CRUSH, type Flavor, type Product } from "@/lib/products";
-import { ArrowRight, ShieldCheck, Sparkles, Zap, Cpu, Battery, Monitor } from "lucide-react";
+import { ArrowRight, Film, ShieldCheck, Sparkles, Zap, Cpu, Battery, Monitor } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "wouter";
 
@@ -26,66 +26,48 @@ export default function Home() {
 }
 
 /* ─── Hero ─────────────────────────────────────────────────────────────── */
-function Hero({ images }: { images: Record<string, string> }) {
-  return (
-    <section className="relative overflow-hidden noise-bg">
-      <div className="pointer-events-none absolute -right-32 -top-32 h-96 w-96 rounded-full bg-neutral-200/50 blur-3xl" />
-      <div className="container relative grid items-center gap-12 py-20 md:grid-cols-2 md:py-28">
-        <div className="reveal">
-          <span className="inline-flex items-center gap-2 rounded-full border border-neutral-200 bg-white/60 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-neutral-600 backdrop-blur">
-            <Sparkles className="h-3.5 w-3.5" />
-            Premium Disposable &amp; Pod Systems
-          </span>
-          <h1 className="mt-6 font-display text-5xl font-bold leading-[1.05] tracking-tight text-balance sm:text-6xl lg:text-7xl">
-            Taste the
-            <br />
-            <span className="bg-gradient-to-r from-neutral-900 via-neutral-600 to-neutral-900 bg-clip-text text-transparent">
-              real thing.
-            </span>
-          </h1>
-          <p className="mt-6 max-w-md text-lg leading-relaxed text-muted-foreground">
-            Bold, true-to-taste flavor engineered for consistency. Two iconic lines — Beri Crush and Beri Cliq — each crafted to deliver a premium experience every time.
-          </p>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <Link
-              href="/authenticate"
-              className="press inline-flex items-center gap-2 rounded-full bg-foreground px-7 py-3.5 text-sm font-semibold text-background transition-colors hover:bg-foreground/90"
-            >
-              <ShieldCheck className="h-4 w-4" />
-              Authenticate Product
-            </Link>
-            <Link
-              href="/products/crush"
-              className="press inline-flex items-center gap-2 rounded-full border border-neutral-300 bg-white/50 px-7 py-3.5 text-sm font-semibold text-foreground backdrop-blur transition-colors hover:bg-white"
-            >
-              Explore Products
-              <ArrowRight className="h-4 w-4" />
-            </Link>
-          </div>
-        </div>
+function Hero({ images }: { images: Record<string, PublicMediaEntry> }) {
+  const videoEntry = images["home_hero_video"];
+  const hasVideo = videoEntry?.mimeType?.startsWith("video/");
 
-        <div className="reveal relative" data-reveal-delay="120">
-          <div className="animate-float">
-            <PlaceholderImage
-              slot="home_hero"
-              imageMap={images}
-              width={720}
-              height={840}
-              label="Hero product render"
-              className="shadow-2xl"
-              rounded="rounded-[2rem]"
+  return (
+    <section className="relative overflow-hidden">
+      {/* Video / placeholder block */}
+      <div
+        className="mx-auto overflow-hidden rounded-2xl"
+        style={{ width: "95%", marginTop: "35px", marginBottom: "35px" }}
+      >
+        {hasVideo ? (
+          <video
+            src={videoEntry.url}
+            className="w-full block"
+            autoPlay
+            muted
+            loop
+            playsInline
+            style={{ display: "block" }}
+          />
+        ) : (
+          /* Gray placeholder with dimensions and slot name */
+          <div
+            className="relative flex flex-col items-center justify-center gap-3 bg-neutral-100 border border-dashed border-neutral-300 text-neutral-500 select-none"
+            style={{ aspectRatio: "16 / 9" }}
+            data-slot-placeholder="home_hero_video"
+          >
+            <div
+              className="absolute inset-0 opacity-60"
+              style={{
+                backgroundImage:
+                  "repeating-linear-gradient(45deg, rgba(0,0,0,0.03) 0 12px, transparent 12px 24px)",
+              }}
             />
+            <Film className="relative h-10 w-10 opacity-50 text-blue-400" />
+            <span className="relative font-mono text-base font-semibold tracking-wide">1920 × 1080</span>
+            <span className="relative text-sm font-medium text-neutral-600">Hero Video (MP4)</span>
+            <span className="relative font-mono text-xs text-neutral-400">home_hero_video</span>
+            <span className="relative text-xs text-blue-500 font-medium">Upload from Admin → Site Images &amp; Video</span>
           </div>
-          <div className="glass absolute -bottom-6 -left-6 hidden items-center gap-3 rounded-2xl px-5 py-4 shadow-xl sm:flex">
-            <div className="rounded-full bg-foreground p-2 text-background">
-              <ShieldCheck className="h-5 w-5" />
-            </div>
-            <div>
-              <div className="text-sm font-bold">100% Authentic</div>
-              <div className="text-xs text-muted-foreground">Verified by code</div>
-            </div>
-          </div>
-        </div>
+        )}
       </div>
     </section>
   );
@@ -154,7 +136,7 @@ function ProductDeepSection({
   badgeLabel,
 }: {
   product: Product;
-  images: Record<string, string>;
+  images: Record<string, PublicMediaEntry>;
   align: "left" | "right";
   accentColor: string;
   badgeLabel: string;
@@ -258,7 +240,7 @@ function FlavorCarouselAuto({
   dark,
 }: {
   product: Product;
-  images: Record<string, string>;
+  images: Record<string, PublicMediaEntry>;
   dark: boolean;
 }) {
   const flavors = product.flavors;

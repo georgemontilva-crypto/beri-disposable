@@ -4,6 +4,19 @@ export type Flavor = {
   slot: string; // image slot key for admin-managed images
 };
 
+export type SpecSlot = {
+  slot: string;   // image slot key
+  label: string;  // caption shown under the image in the bento grid
+  /** Optional: show a large number/value prominently (e.g. "50K") */
+  bigValue?: string;
+  /** Optional: unit/description after bigValue (e.g. "Puffs") */
+  bigUnit?: string;
+  /** If true, this cell spans 2 columns in the bento grid */
+  wide?: boolean;
+  /** If true, this cell spans 2 rows */
+  tall?: boolean;
+};
+
 export type Product = {
   key: "crush" | "cliq";
   name: string;
@@ -11,6 +24,7 @@ export type Product = {
   description: string;
   specs: { label: string; value: string }[];
   heroSlot: string;
+  specSlots: SpecSlot[];
   flavors: Flavor[];
 };
 
@@ -42,6 +56,14 @@ export const BERI_CRUSH: Product = {
     { label: "Power", value: "Auto-Adaptive" },
   ],
   heroSlot: "crush_hero",
+  specSlots: [
+    { slot: "crush_spec_main", label: "Multi Curved Design", tall: true },
+    { slot: "crush_spec_coil", label: "Quad Coil Technology" },
+    { slot: "crush_spec_screen", label: "Interactive HD Screen" },
+    { slot: "crush_spec_bottom", label: "2.5x Charging Speed" },
+    { slot: "crush_spec_puffs", label: "50K Puffs Normal Mode", bigValue: "50K", bigUnit: "Puffs" },
+    { slot: "crush_spec_power", label: "Auto-Adaptive Power", bigValue: "AAP", bigUnit: "Technology" },
+  ],
   flavors: buildFlavors("crush", [
     "Tropical Gummy",
     "Triple Berry",
@@ -77,6 +99,14 @@ export const BERI_CLIQ: Product = {
     { label: "Pod", value: "Refillable" },
   ],
   heroSlot: "cliq_hero",
+  specSlots: [
+    { slot: "cliq_spec_main", label: "Multi Curved Design", tall: true },
+    { slot: "cliq_spec_tank", label: "360° Crystal Tank" },
+    { slot: "cliq_spec_coil", label: "Dual Mesh Coil" },
+    { slot: "cliq_spec_bottom", label: "Light On/Off" },
+    { slot: "cliq_spec_puffs", label: "50K Puffs Normal Mode", bigValue: "50K", bigUnit: "Puffs" },
+    { slot: "cliq_spec_display", label: "LED Display", bigValue: "LED", bigUnit: "Display" },
+  ],
   flavors: buildFlavors("cliq", [
     "Tropical Gummy",
     "Triple Berry",

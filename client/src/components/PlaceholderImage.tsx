@@ -1,11 +1,12 @@
 import { cn } from "@/lib/utils";
-import { ImageIcon } from "lucide-react";
+import { Film, ImageIcon } from "lucide-react";
+import type { PublicMediaEntry } from "@/hooks/useSiteImages";
 
 type PlaceholderImageProps = {
   /** Logical slot, e.g. "home_hero" — looked up in the managed image map. */
   slot?: string;
-  /** Map of slot -> url provided by the public images query. */
-  imageMap?: Record<string, string>;
+  /** Map of slot -> { url, mimeType } provided by the public images query. */
+  imageMap?: Record<string, PublicMediaEntry>;
   /** Width in px to show in the placeholder label. */
   width: number;
   /** Height in px to show in the placeholder label. */
@@ -16,12 +17,14 @@ type PlaceholderImageProps = {
   rounded?: string;
   /** object-fit when a real image exists. */
   fit?: "cover" | "contain";
+  /** Extra video props (autoPlay, muted, loop, controls) */
+  videoProps?: React.VideoHTMLAttributes<HTMLVideoElement>;
 };
 
 /**
- * Renders a managed image if one exists for `slot`; otherwise shows a gray
- * placeholder with the intended pixel dimensions clearly visible so a designer
- * knows exactly what asset to produce.
+ * Renders a managed image or video if one exists for `slot`; otherwise shows a
+ * gray placeholder with the intended pixel dimensions clearly visible so a
+ * designer knows exactly what asset to produce.
  */
 export function PlaceholderImage({
   slot,
@@ -32,19 +35,33 @@ export function PlaceholderImage({
   className,
   rounded = "rounded-2xl",
   fit = "cover",
+  videoProps,
 }: PlaceholderImageProps) {
-  const url = slot && imageMap ? imageMap[slot] : undefined;
+  const entry = slot && imageMap ? imageMap[slot] : undefined;
   const aspect = `${width} / ${height}`;
+  const isVideo = entry?.mimeType?.startsWith("video/");
 
-  if (url) {
+  if (entry) {
     return (
       <div className={cn("overflow-hidden", rounded, className)} style={{ aspectRatio: aspect }}>
-        <img
-          src={url}
-          alt={label ?? slot ?? "image"}
-          loading="lazy"
-          className={cn("h-full w-full", fit === "cover" ? "object-cover" : "object-contain")}
-        />
+        {isVideo ? (
+          <video
+            src={entry.url}
+            className={cn("h-full w-full", fit === "cover" ? "object-cover" : "object-contain")}
+            autoPlay
+            muted
+            loop
+            playsInline
+            {...videoProps}
+          />
+        ) : (
+          <img
+            src={entry.url}
+            alt={label ?? slot ?? "image"}
+            loading="lazy"
+            className={cn("h-full w-full", fit === "cover" ? "object-cover" : "object-contain")}
+          />
+        )}
       </div>
     );
   }
@@ -66,7 +83,11 @@ export function PlaceholderImage({
             "repeating-linear-gradient(45deg, rgba(0,0,0,0.03) 0 12px, transparent 12px 24px)",
         }}
       />
-      <ImageIcon className="relative h-6 w-6 opacity-60" />
+      {slot?.includes("video") ? (
+        <Film className="relative h-6 w-6 opacity-60 text-blue-400" />
+      ) : (
+        <ImageIcon className="relative h-6 w-6 opacity-60" />
+      )}
       <span className="relative font-mono text-sm font-semibold tracking-wide">
         {width} × {height}
       </span>
