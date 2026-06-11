@@ -71,3 +71,10 @@
 - [x] Slots de imágenes de detalle de specs en el panel admin (crush_spec_1..4, cliq_spec_1..4)
 - [x] Tipografía: cambiar títulos y subtítulos a Bebas Neue (Impact-style)
 - [x] Checkpoint y push a GitHub (5b87ab76)
+
+## Solicitud v4 (pendiente)
+- [x] Título BERI CRUSH / BERI CLIQ alineado a la izquierda en ProductPage.tsx (junto al texto, no centrado)
+- [x] Hero video con altura fija de 800px en Home.tsx
+- [x] Fondos negros en secciones de las páginas de producto (ProductPage.tsx)
+- [x] Scroll al top al navegar entre productos (botón inferior en ProductPage.tsx)
+- [x] Pantalla de carga negra completa con círculo SVG animado que cambia de colores (amarillo → azul → rosa → verde) y porcentaje numérico (LoadingScreen.tsx)

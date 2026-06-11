@@ -32,26 +32,24 @@ function Hero({ images }: { images: Record<string, PublicMediaEntry> }) {
 
   return (
     <section className="relative overflow-hidden">
-      {/* Video / placeholder block */}
+      {/* Video / placeholder block — fixed 800px height */}
       <div
         className="mx-auto overflow-hidden rounded-2xl"
-        style={{ width: "95%", marginTop: "35px", marginBottom: "35px" }}
+        style={{ width: "95%", marginTop: "35px", marginBottom: "35px", height: "800px" }}
       >
         {hasVideo ? (
           <video
             src={videoEntry.url}
-            className="w-full block"
+            className="w-full h-full object-cover block"
             autoPlay
             muted
             loop
             playsInline
-            style={{ display: "block" }}
           />
         ) : (
           /* Gray placeholder with dimensions and slot name */
           <div
-            className="relative flex flex-col items-center justify-center gap-3 bg-neutral-100 border border-dashed border-neutral-300 text-neutral-500 select-none"
-            style={{ aspectRatio: "16 / 9" }}
+            className="relative flex flex-col items-center justify-center gap-3 bg-neutral-100 border border-dashed border-neutral-300 text-neutral-500 select-none w-full h-full"
             data-slot-placeholder="home_hero_video"
           >
             <div
@@ -78,11 +76,14 @@ function Marquee() {
   const items = ["BERI CRUSH", "BERI CLIQ", "AUTHENTIC", "PREMIUM FLAVOR", "VERIFIED", "MONOCHROME"];
   const doubled = [...items, ...items];
   return (
-    <div className="border-y border-neutral-200 bg-neutral-950 py-4 text-white">
-      <div className="flex w-max animate-marquee gap-12 whitespace-nowrap px-6">
-        {doubled.map((t, i) => (
-          <span key={i} className="font-display text-sm font-semibold tracking-[0.3em] text-neutral-400">
-            {t}
+    <div className="overflow-hidden border-y border-neutral-200 bg-neutral-950 py-4">
+      <div className="flex animate-marquee whitespace-nowrap">
+        {doubled.map((item, i) => (
+          <span
+            key={i}
+            className="mx-8 font-display text-sm font-bold tracking-[0.25em] text-white/60"
+          >
+            {item}
           </span>
         ))}
       </div>
@@ -90,36 +91,28 @@ function Marquee() {
   );
 }
 
-/* ─── Feature strip ─────────────────────────────────────────────────────── */
+/* ─── Feature Strip ─────────────────────────────────────────────────────── */
 function FeatureStrip() {
   const features = [
-    { icon: ShieldCheck, title: "Verified Authenticity", desc: "Every device carries a unique secret code you can verify instantly." },
-    { icon: Zap, title: "Engineered Consistency", desc: "Smooth, true-to-taste flavor from the first puff to the last." },
-    { icon: Sparkles, title: "Two Iconic Lines", desc: "Beri Crush for raw power. Beri Cliq for magnetic versatility." },
+    { icon: Zap, title: "Auto-Adaptive Power", desc: "World's 1st AAP technology" },
+    { icon: Monitor, title: "Interactive HD Screen", desc: "Real-time usage display" },
+    { icon: Battery, title: "2.5x Charging Speed", desc: "Blazing fast recharge" },
+    { icon: Cpu, title: "Quad Coil Technology", desc: "Unmatched flavor density" },
+    { icon: Sparkles, title: "360° Crystal Tank", desc: "Full-view e-liquid window" },
+    { icon: ShieldCheck, title: "Verified Authentic", desc: "Scratch & scan security" },
   ];
   return (
-    <section className="container py-16 md:py-20">
-      <div className="reveal text-center mb-10">
-        <span className="text-xs font-semibold uppercase tracking-[0.25em] text-muted-foreground">The Beri Lineup</span>
-        <h2 className="mt-3 font-display text-3xl font-bold tracking-tight sm:text-4xl">
-          Two products. One standard.
-        </h2>
-        <p className="mx-auto mt-4 max-w-xl text-muted-foreground">
-          Whether you choose the raw power of Beri Crush or the magnetic versatility of Beri Cliq, every device is built to the same uncompromising standard.
-        </p>
-      </div>
-      <div className="grid gap-5 md:grid-cols-3">
-        {features.map((f, i) => (
-          <div
-            key={f.title}
-            className="reveal glass rounded-2xl p-7 transition-transform duration-300 hover:-translate-y-1"
-            data-reveal-delay={i * 80}
-          >
-            <div className="inline-flex rounded-xl bg-foreground p-2.5 text-background">
+    <section className="container py-16">
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
+        {features.map((f) => (
+          <div key={f.title} className="reveal flex flex-col items-center gap-3 text-center">
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-neutral-950 text-white">
               <f.icon className="h-5 w-5" />
             </div>
-            <h3 className="mt-4 font-display text-lg font-semibold">{f.title}</h3>
-            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{f.desc}</p>
+            <div>
+              <div className="text-sm font-semibold">{f.title}</div>
+              <div className="mt-0.5 text-xs text-muted-foreground">{f.desc}</div>
+            </div>
           </div>
         ))}
       </div>
@@ -141,237 +134,120 @@ function ProductDeepSection({
   accentColor: string;
   badgeLabel: string;
 }) {
-  const imageFirst = align === "right";
-  const isCliq = product.key === "cliq";
-
-  return (
-    <section className={`relative overflow-hidden py-20 md:py-28 ${isCliq ? "bg-neutral-950 text-white" : "bg-white"}`}>
-      {/* Decorative blobs */}
-      <div className={`pointer-events-none absolute -top-32 ${imageFirst ? "left-0" : "right-0"} h-96 w-96 rounded-full blur-3xl ${isCliq ? "bg-white/5" : "bg-neutral-100/80"}`} />
-
-      <div className="container relative">
-        {/* Header */}
-        <div className="reveal mb-12 text-center">
-          <span className={`inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-xs font-semibold uppercase tracking-wider backdrop-blur ${isCliq ? "border-white/20 bg-white/10 text-white/70" : "border-neutral-200 bg-white/60 text-neutral-600"}`}>
-            {badgeLabel}
-          </span>
-          <h2 className={`mt-4 font-display text-5xl font-bold tracking-tight sm:text-6xl ${isCliq ? "text-white" : "text-foreground"}`}>
-            {product.name}
-          </h2>
-          <p className={`mt-2 text-xl font-medium ${isCliq ? "text-white/60" : "text-neutral-500"}`}>
-            {product.tagline}
-          </p>
-        </div>
-
-        {/* Main grid: image + info */}
-        <div className={`grid items-center gap-12 md:grid-cols-2 mb-16`}>
-          {/* Image */}
-          <div className={`reveal ${imageFirst ? "md:order-1" : "md:order-2"}`} data-reveal-delay="60">
-            <div className="animate-float">
-              <PlaceholderImage
-                slot={product.heroSlot}
-                imageMap={images}
-                width={640}
-                height={640}
-                label={`${product.name} render`}
-                rounded="rounded-[2rem]"
-                className="shadow-2xl"
-              />
-            </div>
-          </div>
-
-          {/* Info */}
-          <div className={`reveal ${imageFirst ? "md:order-2" : "md:order-1"}`}>
-            <p className={`max-w-md text-lg leading-relaxed ${isCliq ? "text-white/70" : "text-muted-foreground"}`}>
-              {product.description}
-            </p>
-
-            {/* Puff count highlight */}
-            <div className={`mt-8 grid grid-cols-2 gap-4`}>
-              {product.specs.slice(0, 2).map((s) => (
-                <div
-                  key={s.label}
-                  className={`rounded-2xl p-5 text-center ${isCliq ? "bg-white/10 border border-white/20" : "bg-neutral-950 text-white"}`}
-                >
-                  <div className={`font-display text-4xl font-black tracking-tight ${isCliq ? "text-white" : "text-white"}`}>
-                    {s.value}
-                  </div>
-                  <div className={`mt-1 text-xs font-semibold uppercase tracking-wider ${isCliq ? "text-white/50" : "text-neutral-400"}`}>
-                    {s.label}
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Feature badges */}
-            <div className="mt-6 flex flex-wrap gap-2">
-              {product.specs.slice(2).map((s) => (
-                <span
-                  key={s.label}
-                  className={`inline-flex items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-xs font-semibold ${isCliq ? "border-white/20 bg-white/10 text-white/80" : "border-neutral-200 bg-neutral-50 text-neutral-700"}`}
-                >
-                  <span className={`h-1.5 w-1.5 rounded-full ${isCliq ? "bg-white/60" : "bg-neutral-400"}`} />
-                  {s.label}: {s.value}
-                </span>
-              ))}
-            </div>
-
-            <Link
-              href={`/products/${product.key}`}
-              className={`press mt-8 inline-flex items-center gap-2 rounded-full px-7 py-3.5 text-sm font-semibold transition-colors ${isCliq ? "bg-white text-neutral-950 hover:bg-white/90" : "bg-foreground text-background hover:bg-foreground/90"}`}
-            >
-              Discover {product.name}
-              <ArrowRight className="h-4 w-4" />
-            </Link>
-          </div>
-        </div>
-
-        {/* Flavor carousel */}
-        <FlavorCarouselAuto product={product} images={images} dark={isCliq} />
-      </div>
-    </section>
-  );
-}
-
-/* ─── Auto-play Flavor Carousel ─────────────────────────────────────────── */
-function FlavorCarouselAuto({
-  product,
-  images,
-  dark,
-}: {
-  product: Product;
-  images: Record<string, PublicMediaEntry>;
-  dark: boolean;
-}) {
-  const flavors = product.flavors;
-  const VISIBLE = 4; // cards visible at once (desktop)
   const [current, setCurrent] = useState(0);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  const total = flavors.length;
-  const maxIndex = total - VISIBLE;
-
-  const next = () => setCurrent((c) => (c >= maxIndex ? 0 : c + 1));
-  const prev = () => setCurrent((c) => (c <= 0 ? maxIndex : c - 1));
-
-  // Autoplay every 3.5 s
-  useEffect(() => {
-    timerRef.current = setInterval(next, 3500);
-    return () => { if (timerRef.current) clearInterval(timerRef.current); };
-  }, [maxIndex]);
-
-  const resetTimer = () => {
-    if (timerRef.current) clearInterval(timerRef.current);
-    timerRef.current = setInterval(next, 3500);
+  const startTimer = () => {
+    timerRef.current = setInterval(() => {
+      setCurrent((c) => (c + 1) % product.flavors.length);
+    }, 3500);
   };
 
-  const handlePrev = () => { prev(); resetTimer(); };
-  const handleNext = () => { next(); resetTimer(); };
+  useEffect(() => {
+    startTimer();
+    return () => { if (timerRef.current) clearInterval(timerRef.current); };
+  }, [product.flavors.length]);
+
+  const handleDot = (i: number) => {
+    setCurrent(i);
+    if (timerRef.current) clearInterval(timerRef.current);
+    startTimer();
+  };
+
+  const flavor: Flavor = product.flavors[current];
 
   return (
-    <div className="reveal mt-4">
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <span className={`text-xs font-semibold uppercase tracking-[0.25em] ${dark ? "text-white/40" : "text-muted-foreground"}`}>
-            Flavors
+    <section className="overflow-hidden bg-neutral-950 py-20 text-white">
+      <div className="container">
+        {/* Header */}
+        <div className={`reveal mb-12 flex flex-col ${align === "right" ? "items-end text-right" : "items-start text-left"}`}>
+          <span className="mb-3 inline-block rounded-full border border-white/20 px-4 py-1 text-xs font-semibold uppercase tracking-[0.25em] text-white/60">
+            {badgeLabel}
           </span>
-          <h3 className={`mt-1 font-display text-2xl font-bold ${dark ? "text-white" : "text-foreground"}`}>
-            {product.name} — All Flavors
-          </h3>
+          <h2 className="font-display text-5xl font-bold tracking-tight sm:text-6xl">
+            {product.name}
+          </h2>
+          <p className="mt-3 max-w-md text-neutral-400">{product.tagline}</p>
         </div>
-        <div className="flex items-center gap-2">
-          <button
-            onClick={handlePrev}
-            aria-label="Previous flavors"
-            className={`press rounded-full border p-2.5 transition-colors ${dark ? "border-white/20 bg-white/10 text-white hover:bg-white/20" : "border-neutral-200 bg-white text-foreground hover:bg-neutral-50"}`}
-          >
-            <ArrowRight className="h-4 w-4 rotate-180" />
-          </button>
-          <button
-            onClick={handleNext}
-            aria-label="Next flavors"
-            className={`press rounded-full border p-2.5 transition-colors ${dark ? "border-white/20 bg-white/10 text-white hover:bg-white/20" : "border-neutral-200 bg-white text-foreground hover:bg-neutral-50"}`}
-          >
-            <ArrowRight className="h-4 w-4" />
-          </button>
-        </div>
-      </div>
 
-      {/* Sliding window */}
-      <div className="overflow-hidden">
-        <div
-          className="flex gap-4 transition-transform duration-500"
-          style={{ transform: `translateX(calc(-${current} * (100% / ${VISIBLE} + 1rem)))` }}
-        >
-          {flavors.map((f: Flavor) => (
-            <div
-              key={f.slug}
-              className="shrink-0"
-              style={{ width: `calc(${100 / VISIBLE}% - ${(VISIBLE - 1) * 16 / VISIBLE}px)` }}
+        {/* Grid */}
+        <div className={`grid items-center gap-12 md:grid-cols-2 ${align === "right" ? "md:[direction:rtl]" : ""}`}>
+          {/* Specs */}
+          <div className="reveal space-y-6 md:[direction:ltr]">
+            <div className="grid grid-cols-2 gap-3">
+              {product.specs.map((s) => (
+                <div key={s.label} className="rounded-2xl border border-white/10 bg-white/5 px-4 py-4 backdrop-blur-sm">
+                  <div className="text-xs uppercase tracking-wider text-neutral-500">{s.label}</div>
+                  <div className="mt-1 text-sm font-semibold text-white">{s.value}</div>
+                </div>
+              ))}
+            </div>
+            <Link
+              href={`/products/${product.key}`}
+              className="press inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-semibold text-neutral-950 transition-colors hover:bg-neutral-100"
             >
+              Explore {product.name} <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+
+          {/* Flavor carousel */}
+          <div className="reveal md:[direction:ltr]">
+            <div className="overflow-hidden rounded-[2rem]">
               <PlaceholderImage
-                slot={f.slot}
+                slot={flavor.slot}
                 imageMap={images}
-                width={320}
-                height={400}
-                label={f.name}
-                rounded="rounded-2xl"
-                className="shadow-md"
+                width={480}
+                height={600}
+                label={flavor.name}
+                rounded="rounded-[2rem]"
+                className="transition-opacity duration-500"
               />
-              <div className="mt-3 px-1">
-                <div className={`font-semibold text-sm ${dark ? "text-white" : "text-foreground"}`}>{f.name}</div>
-                <div className={`text-xs mt-0.5 ${dark ? "text-white/40" : "text-muted-foreground"}`}>{product.name}</div>
+            </div>
+            <div className="mt-4 flex items-center justify-between px-1">
+              <span className="text-sm font-semibold">{flavor.name}</span>
+              <div className="flex gap-1.5">
+                {product.flavors.map((_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => handleDot(i)}
+                    className={`h-1.5 rounded-full transition-all duration-300 ${i === current ? "w-5 bg-white" : "w-1.5 bg-white/30"}`}
+                  />
+                ))}
               </div>
             </div>
-          ))}
+          </div>
         </div>
       </div>
-
-      {/* Dot indicators */}
-      <div className="mt-5 flex justify-center gap-1.5">
-        {Array.from({ length: maxIndex + 1 }).map((_, i) => (
-          <button
-            key={i}
-            onClick={() => { setCurrent(i); resetTimer(); }}
-            aria-label={`Go to slide ${i + 1}`}
-            className={`h-1.5 rounded-full transition-all duration-300 ${i === current ? (dark ? "w-6 bg-white" : "w-6 bg-foreground") : (dark ? "w-1.5 bg-white/30" : "w-1.5 bg-neutral-300")}`}
-          />
-        ))}
-      </div>
-
-      {/* Link to full product page */}
-      <div className="mt-6 text-center">
-        <Link
-          href={`/products/${product.key}`}
-          className={`text-sm font-semibold underline-offset-4 hover:underline ${dark ? "text-white/60 hover:text-white" : "text-muted-foreground hover:text-foreground"}`}
-        >
-          View all {product.flavors.length} flavors →
-        </Link>
-      </div>
-    </div>
+    </section>
   );
 }
 
 /* ─── Auth CTA ──────────────────────────────────────────────────────────── */
 function AuthCta() {
   return (
-    <section className="container py-20">
-      <div className="reveal relative overflow-hidden rounded-[2.5rem] bg-foreground px-8 py-16 text-center text-background md:px-16">
-        <div className="pointer-events-none absolute -left-20 -top-20 h-64 w-64 rounded-full bg-white/5 blur-2xl" />
-        <div className="pointer-events-none absolute -bottom-20 -right-20 h-64 w-64 rounded-full bg-white/5 blur-2xl" />
-        <ShieldCheck className="mx-auto h-12 w-12" />
-        <h2 className="mx-auto mt-5 max-w-2xl font-display text-3xl font-bold tracking-tight sm:text-4xl">
-          Make sure your BERI is the real deal
+    <section className="container py-24">
+      <div className="reveal relative overflow-hidden rounded-[2rem] bg-neutral-950 px-8 py-16 text-center text-white md:px-16">
+        <div
+          className="absolute inset-0 opacity-20"
+          style={{
+            backgroundImage:
+              "radial-gradient(ellipse at 50% 0%, rgba(255,255,255,0.15) 0%, transparent 70%)",
+          }}
+        />
+        <ShieldCheck className="relative mx-auto mb-6 h-12 w-12 text-white/60" />
+        <h2 className="relative font-display text-4xl font-bold tracking-tight sm:text-5xl">
+          Is Your Device Authentic?
         </h2>
-        <p className="mx-auto mt-4 max-w-md text-background/70">
-          Scratch the label, scan the code and certify your product is 100% authentic.
+        <p className="relative mx-auto mt-4 max-w-md text-neutral-400">
+          Every Beri device ships with a unique security code. Scratch the label, scan the QR, or
+          enter the code below to verify your product.
         </p>
         <Link
           href="/authenticate"
-          className="press mt-8 inline-flex items-center gap-2 rounded-full bg-background px-8 py-3.5 text-sm font-semibold text-foreground transition-transform hover:scale-[1.02]"
+          className="press relative mt-8 inline-flex items-center gap-2 rounded-full bg-white px-8 py-3.5 text-sm font-semibold text-neutral-950 transition-colors hover:bg-neutral-100"
         >
-          Authenticate Now
-          <ArrowRight className="h-4 w-4" />
+          <ShieldCheck className="h-4 w-4" />
+          Verify Now
         </Link>
       </div>
     </section>
