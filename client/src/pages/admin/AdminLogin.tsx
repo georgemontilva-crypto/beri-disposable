@@ -10,6 +10,7 @@ export default function AdminLogin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
+  const [setupToken, setSetupToken] = useState("");
 
   const goToDashboard = async () => {
     await utils.adminAuth.me.invalidate();
@@ -24,7 +25,12 @@ export default function AdminLogin() {
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (needsSetup) {
-      setup.mutate({ email: email.trim(), password, name: name.trim() || undefined });
+      setup.mutate({
+        email: email.trim(),
+        password,
+        name: name.trim() || undefined,
+        setupToken: setupToken.trim(),
+      });
     } else {
       login.mutate({ email: email.trim(), password });
     }
@@ -45,7 +51,7 @@ export default function AdminLogin() {
           </h1>
           <p className="mt-1 text-sm text-neutral-400">
             {needsSetup
-              ? "No admin exists yet. Create the first administrator."
+              ? "No admin exists yet. Enter the setup token to create the first administrator."
               : "Sign in to manage Beri Disposable."}
           </p>
 
@@ -55,6 +61,19 @@ export default function AdminLogin() {
             </div>
           ) : (
             <form onSubmit={onSubmit} className="mt-6 space-y-4">
+              {needsSetup && (
+                <div>
+                  <label className="text-sm font-medium text-neutral-300">Setup token</label>
+                  <input
+                    required
+                    type="password"
+                    value={setupToken}
+                    onChange={(e) => setSetupToken(e.target.value)}
+                    className="mt-1.5 w-full rounded-xl border border-white/10 bg-neutral-800 px-4 py-3 text-white outline-none transition focus:border-white/30"
+                    placeholder="ADMIN_SETUP_TOKEN"
+                  />
+                </div>
+              )}
               {needsSetup && (
                 <div>
                   <label className="text-sm font-medium text-neutral-300">Name</label>
@@ -89,7 +108,9 @@ export default function AdminLogin() {
               </div>
               {error && (
                 <p className="text-sm text-red-400">
-                  {needsSetup ? "Could not create admin." : "Invalid credentials."}
+                  {needsSetup
+                    ? "Could not create admin. Check the setup token."
+                    : "Invalid credentials."}
                 </p>
               )}
               <button

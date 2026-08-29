@@ -51,6 +51,19 @@ Configura estas variables en **Railway → Variables**:
 | Variable | Descripción |
 | --- | --- |
 | `JWT_SECRET` | Cadena aleatoria larga para firmar las cookies de sesión (admin y wholesale). Genera con `openssl rand -hex 32`. |
+| `ADMIN_SETUP_TOKEN` | Secreto **temporal** requerido para crear la primera cuenta de admin. Genera con `openssl rand -hex 24`. |
+
+> **Importante — creación del primer admin.** El endpoint de bootstrap
+> (`adminAuth.setup`) es público por necesidad: se usa cuando todavía no existe
+> ninguna cuenta. Para que nadie pueda reclamar el panel, ahora exige el valor de
+> `ADMIN_SETUP_TOKEN`. El flujo correcto es:
+>
+> 1. Define `ADMIN_SETUP_TOKEN` en Railway y redespliega.
+> 2. Entra a `/admin/login`, pega el token y crea tu cuenta.
+> 3. **Borra la variable `ADMIN_SETUP_TOKEN`** de Railway y redespliega.
+>
+> Sin la variable definida, el formulario de setup ni siquiera se ofrece y el
+> endpoint responde `FORBIDDEN`.
 
 ### Cloudflare R2 (almacenamiento de imágenes)
 | Variable | Descripción |
@@ -212,7 +225,9 @@ pnpm drizzle-kit migrate      # aplica las migraciones a la base de datos
 - [ ] Migraciones aplicadas (`auth_codes`, `wholesale_*`, `site_images`, etc.)
 - [ ] R2 conectado (`server/storage.ts` reemplazado + variables R2)
 - [ ] Email configurado (`RESEND_API_KEY`, `EMAIL_FROM`, `APP_BASE_URL`)
+- [ ] `ADMIN_SETUP_TOKEN` definido temporalmente
 - [ ] Primer admin creado en `/admin`
+- [ ] `ADMIN_SETUP_TOKEN` **eliminado** de Railway tras crear el admin
 - [ ] Códigos importados desde el panel admin
 - [ ] Imágenes subidas a sus slots desde **Site Images**
 - [ ] Dominio personalizado apuntando a Railway

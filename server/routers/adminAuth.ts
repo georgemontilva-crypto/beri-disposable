@@ -1,5 +1,6 @@
 import { ADMIN_COOKIE_NAME } from "@shared/const";
 import { TRPCError } from "@trpc/server";
+import { timingSafeEqual } from "node:crypto";
 import { z } from "zod";
 import {
   beriCookieOptions,
@@ -10,26 +11,59 @@ import {
 import { adminAuthedProcedure, beriPublicProcedure, beriRouter } from "../beriTrpc";
 import * as db from "../db";
 
+/**
+ * Secret required to create the first admin account.
+ *
+ * Without this, the bootstrap endpoint would let ANY anonymous visitor claim
+ * the admin panel as long as the `admin_users` table is still empty. Set
+ * `ADMIN_SETUP_TOKEN` in Railway, create the admin, then delete the variable.
+ */
+const ADMIN_SETUP_TOKEN = process.env.ADMIN_SETUP_TOKEN ?? "";
+
+/** Timing-safe string comparison (avoids leaking the token via response time). */
+function safeEqual(a: string, b: string): boolean {
+  const bufA = Buffer.from(a);
+  const bufB = Buffer.from(b);
+  if (bufA.length !== bufB.length) return false;
+  return timingSafeEqual(bufA, bufB);
+}
+
 export const adminAuthRouter = beriRouter({
-  /** Returns whether the system already has at least one admin (for first-run setup). */
+  /**
+   * Returns whether first-run setup is available.
+   *
+   * `needsSetup` is true ONLY when there is no admin yet AND the server has an
+   * `ADMIN_SETUP_TOKEN` configured, so the setup form is never offered to the
+   * public on a deployment that isn't expecting it.
+   */
   setupStatus: beriPublicProcedure.query(async () => {
     const count = await db.countAdmins();
-    return { needsSetup: count === 0 };
+    return { needsSetup: count === 0 && ADMIN_SETUP_TOKEN.length > 0 };
   }),
 
-  /** Create the very first admin. Only allowed when no admin exists yet. */
+  /** Create the very first admin. Requires the ADMIN_SETUP_TOKEN secret. */
   setup: beriPublicProcedure
     .input(
       z.object({
         email: z.string().email(),
         password: z.string().min(8),
         name: z.string().min(1).optional(),
+        setupToken: z.string().min(1),
       })
     )
     .mutation(async ({ input, ctx }) => {
+      if (!ADMIN_SETUP_TOKEN) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Admin setup is disabled on this server",
+        });
+      }
       const count = await db.countAdmins();
       if (count > 0) {
         throw new TRPCError({ code: "FORBIDDEN", message: "Admin already configured" });
+      }
+      if (!safeEqual(input.setupToken, ADMIN_SETUP_TOKEN)) {
+        throw new TRPCError({ code: "UNAUTHORIZED", message: "Invalid setup token" });
       }
       const passwordHash = await hashPassword(input.password);
       await db.createAdmin({ email: input.email.toLowerCase(), passwordHash, name: input.name ?? null });
