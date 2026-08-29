@@ -1,8 +1,8 @@
 import { AdminLayout } from "@/components/AdminLayout";
 import { TableCard } from "@/components/admin/AdminTable";
-import { BERI_CLIQ, BERI_CRUSH } from "@/lib/products";
+import { PRODUCTS } from "@/lib/products";
 import { trpc } from "@/lib/trpc";
-import { Film, Image as ImageIcon, Loader2, Trash2, Upload } from "lucide-react";
+import { Box, Film, Image as ImageIcon, Loader2, Trash2, Upload } from "lucide-react";
 import { useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 
@@ -11,7 +11,7 @@ type SlotDef = {
   label: string;
   section: string;
   size: string;
-  type?: "image" | "video";
+  type?: "image" | "video" | "model";
 };
 
 function buildSlots(): SlotDef[] {
@@ -24,32 +24,32 @@ function buildSlots(): SlotDef[] {
       size: "1920×1080 MP4",
       type: "video",
     },
-    // Spec grid images — Beri Crush
-    { slot: "crush_spec_main",   label: "Crush — Main Device (tall)",       section: "Beri Crush", size: "600×1200" },
-    { slot: "crush_spec_coil",   label: "Crush — Quad Coil Technology",    section: "Beri Crush", size: "600×600" },
-    { slot: "crush_spec_screen", label: "Crush — Interactive HD Screen",   section: "Beri Crush", size: "600×600" },
-    { slot: "crush_spec_bottom", label: "Crush — 2.5x Charging Speed",    section: "Beri Crush", size: "600×600" },
-    { slot: "crush_spec_puffs",  label: "Crush — 50K Puffs (stat card)",  section: "Beri Crush", size: "600×600" },
-    { slot: "crush_spec_power",  label: "Crush — Auto-Adaptive Power",    section: "Beri Crush", size: "600×600" },
-    // Spec grid images — Beri Cliq
-    { slot: "cliq_spec_main",    label: "Cliq — Main Device (tall)",        section: "Beri Cliq",  size: "600×1200" },
-    { slot: "cliq_spec_tank",    label: "Cliq — 360° Crystal Tank",        section: "Beri Cliq",  size: "600×600" },
-    { slot: "cliq_spec_coil",    label: "Cliq — Dual Mesh Coil",           section: "Beri Cliq",  size: "600×600" },
-    { slot: "cliq_spec_bottom",  label: "Cliq — Light On/Off",            section: "Beri Cliq",  size: "600×600" },
-    { slot: "cliq_spec_puffs",   label: "Cliq — 50K Puffs (stat card)",   section: "Beri Cliq",  size: "600×600" },
-    { slot: "cliq_spec_display", label: "Cliq — LED Display (stat card)", section: "Beri Cliq",  size: "600×600" },
-    // Existing slots
     { slot: "authenticate_banner", label: "Authenticate — Banner", section: "Authenticate", size: "1600×600" },
     { slot: "wholesale_banner", label: "Wholesale — Banner", section: "Wholesale", size: "1600×600" },
-    { slot: BERI_CRUSH.heroSlot, label: "Beri Crush — Hero", section: "Beri Crush", size: "1200×900" },
-    { slot: BERI_CLIQ.heroSlot, label: "Beri Cliq — Hero", section: "Beri Cliq", size: "1200×900" },
   ];
-  for (const f of BERI_CRUSH.flavors) {
-    slots.push({ slot: f.slot, label: `Crush — ${f.name}`, section: "Beri Crush", size: "600×600" });
+
+  // Per-product slots are generated from the product catalogue, so adding a
+  // product to lib/products.ts automatically surfaces all of its media slots
+  // here — no need to edit this file again.
+  for (const p of PRODUCTS) {
+    const section = p.name;
+    slots.push({ slot: p.heroSlot, label: `${p.name} — Hero`, section, size: "1200×900" });
+    slots.push({
+      slot: p.modelSlot,
+      label: `${p.name} — 3D Model`,
+      section,
+      size: ".glb / .gltf · max 25 MB",
+      type: "model",
+    });
+    slots.push({ slot: `${p.key}_banner`, label: `${p.name} — Banner`, section, size: "1600×600" });
+    for (const sp of p.specSlots) {
+      slots.push({ slot: sp.slot, label: `${p.name} — ${sp.label}`, section, size: sp.tall ? "600×1200" : "600×600" });
+    }
+    for (const f of p.flavors) {
+      slots.push({ slot: f.slot, label: `${p.name} — ${f.name}`, section, size: "600×600" });
+    }
   }
-  for (const f of BERI_CLIQ.flavors) {
-    slots.push({ slot: f.slot, label: `Cliq — ${f.name}`, section: "Beri Cliq", size: "600×600" });
-  }
+
   return slots;
 }
 
@@ -93,7 +93,7 @@ export default function AdminImages() {
   return (
     <AdminLayout title="Site Images & Video">
       <p className="mb-4 text-sm text-neutral-500">
-        Upload images and videos for each section. The <strong>Home Hero Video</strong> slot accepts MP4 files (max 50 MB) and is displayed as a full-width video on the homepage. All other slots accept images. Empty slots render gray placeholders on the public site.
+        Upload media for each section. The <strong>Home Hero Video</strong> slot accepts MP4 files (max 50 MB). The <strong>3D Model</strong> slots accept web-ready <strong>.glb</strong> files (max 25 MB) and power the interactive viewer on each product page — CAD files (STEP/IGES) must be converted to GLB first. All other slots accept images. Empty slots render placeholders on the public site.
       </p>
 
       <div className="mb-5 flex flex-wrap gap-2">
@@ -152,8 +152,17 @@ function SlotCard({
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
   const isVideo = def.type === "video";
-  const maxBytes = isVideo ? 50 * 1024 * 1024 : 8 * 1024 * 1024;
-  const accept = isVideo ? "video/mp4,video/*" : "image/*";
+  const maxBytes = isVideo
+    ? 50 * 1024 * 1024
+    : def.type === "model"
+      ? 25 * 1024 * 1024
+      : 8 * 1024 * 1024;
+  const isModel = def.type === "model";
+  const accept = isVideo
+    ? "video/mp4,video/*"
+    : isModel
+      ? ".glb,.gltf,model/gltf-binary,model/gltf+json"
+      : "image/*";
 
   const onFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -172,16 +181,27 @@ function SlotCard({
       section: def.section,
       title: def.label,
       fileName: file.name,
-      mimeType: file.type || (isVideo ? "video/mp4" : "image/jpeg"),
+      mimeType:
+        file.type ||
+        (isVideo ? "video/mp4" : isModel ? "model/gltf-binary" : "image/jpeg"),
       base64,
     });
     if (inputRef.current) inputRef.current.value = "";
   };
 
   const isCurrentVideo = current?.mimeType?.startsWith("video/") || (current && def.type === "video");
+  const isCurrentModel = current?.mimeType?.startsWith("model/") || (current && def.type === "model");
 
   return (
-    <div className={`overflow-hidden rounded-xl border ${isVideo ? "border-blue-200 bg-blue-50/30" : "border-neutral-200"}`}>
+    <div
+      className={`overflow-hidden rounded-xl border ${
+        isVideo
+          ? "border-blue-200 bg-blue-50/30"
+          : isModel
+            ? "border-violet-200 bg-violet-50/30"
+            : "border-neutral-200"
+      }`}
+    >
       <div className="relative aspect-square bg-neutral-100">
         {current ? (
           isCurrentVideo ? (
@@ -193,14 +213,34 @@ function SlotCard({
               autoPlay
               playsInline
             />
+          ) : isCurrentModel ? (
+            <div className="flex h-full w-full flex-col items-center justify-center gap-2 text-violet-500">
+              <Box className="h-8 w-8" strokeWidth={1.5} />
+              <span className="text-xs font-semibold">Model uploaded</span>
+              <a
+                href={current.url}
+                target="_blank"
+                rel="noreferrer"
+                className="text-[10px] underline hover:text-violet-700"
+              >
+                Download
+              </a>
+            </div>
           ) : (
             <img src={current.url} alt={def.label} className="h-full w-full object-cover" />
           )
         ) : (
           <div className="flex h-full w-full flex-col items-center justify-center gap-1 text-neutral-400">
-            {isVideo ? <Film className="h-6 w-6 text-blue-400" /> : <ImageIcon className="h-6 w-6" />}
+            {isVideo ? (
+              <Film className="h-6 w-6 text-blue-400" />
+            ) : isModel ? (
+              <Box className="h-6 w-6 text-violet-400" />
+            ) : (
+              <ImageIcon className="h-6 w-6" />
+            )}
             <span className="text-xs font-medium">{def.size}</span>
             {isVideo && <span className="text-[10px] text-blue-400">MP4 video</span>}
+            {isModel && <span className="text-[10px] text-violet-400">glTF binary</span>}
           </div>
         )}
         {uploading && (
@@ -213,6 +253,11 @@ function SlotCard({
             VIDEO
           </div>
         )}
+        {isModel && (
+          <div className="absolute left-2 top-2 rounded-full bg-violet-600 px-2 py-0.5 text-[10px] font-bold text-white">
+            3D
+          </div>
+        )}
       </div>
       <div className="p-3">
         <div className="truncate text-sm font-semibold" title={def.label}>
@@ -223,7 +268,13 @@ function SlotCard({
           <input ref={inputRef} type="file" accept={accept} onChange={onFile} className="hidden" />
           <button
             onClick={() => inputRef.current?.click()}
-            className={`press inline-flex flex-1 items-center justify-center gap-1.5 rounded-lg px-3 py-2 text-xs font-semibold text-white ${isVideo ? "bg-blue-600 hover:bg-blue-700" : "bg-neutral-950"}`}
+            className={`press inline-flex flex-1 items-center justify-center gap-1.5 rounded-lg px-3 py-2 text-xs font-semibold text-white ${
+              isVideo
+                ? "bg-blue-600 hover:bg-blue-700"
+                : isModel
+                  ? "bg-violet-600 hover:bg-violet-700"
+                  : "bg-neutral-950"
+            }`}
           >
             <Upload className="h-3.5 w-3.5" />
             {current ? "Replace" : isVideo ? "Upload Video" : "Upload"}

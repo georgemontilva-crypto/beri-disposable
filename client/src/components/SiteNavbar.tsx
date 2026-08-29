@@ -12,6 +12,8 @@ const NAV_LINKS = [
 const PRODUCT_LINKS = [
   { label: "Beri Crush", href: "/products/crush" },
   { label: "Beri Cliq", href: "/products/cliq" },
+  { label: "Beri Cirql", href: "/products/cirql" },
+  { label: "Beri E-Liquid", href: "/products/eliquid" },
 ];
 
 export function SiteNavbar() {

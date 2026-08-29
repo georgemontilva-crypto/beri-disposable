@@ -1,8 +1,9 @@
 import { PlaceholderImage } from "@/components/PlaceholderImage";
 import { PublicLayout } from "@/components/PublicLayout";
 import { useReveal } from "@/hooks/useReveal";
+import ProductViewer3D from "@/components/ProductViewer3D";
 import { useSiteImages, type PublicMediaEntry } from "@/hooks/useSiteImages";
-import { getProductByKey, type SpecSlot } from "@/lib/products";
+import { getNextProduct, getProductByKey, type SpecSlot } from "@/lib/products";
 import { ArrowLeft, ArrowRight, ShieldCheck } from "lucide-react";
 import { Link, useLocation, useParams } from "wouter";
 import NotFound from "./NotFound";
@@ -119,12 +120,11 @@ export default function ProductPage() {
 
   if (!product) return <NotFound />;
 
-  const other = key === "crush" ? "cliq" : "crush";
-  const otherName = key === "crush" ? "Beri Cliq" : "Beri Crush";
+  const next = getNextProduct(key);
 
-  const goToOther = () => {
+  const goToNext = () => {
     window.scrollTo({ top: 0, behavior: "instant" });
-    navigate(`/products/${other}`);
+    navigate(`/products/${next.key}`);
   };
 
   return (
@@ -265,15 +265,35 @@ export default function ProductPage() {
           </div>
         </section>
 
+        {/* ── Interactive 3D viewer ────────────────────────────────────── */}
+        <section className="bg-black py-20 text-white">
+          <div className="container">
+            <div className="reveal mx-auto max-w-2xl text-center">
+              <div className="text-xs font-semibold uppercase tracking-[0.25em] text-neutral-500">
+                Explore in 3D
+              </div>
+              <h2 className="mt-3 font-display text-4xl font-bold md:text-5xl">
+                Every Angle
+              </h2>
+              <p className="mt-3 text-neutral-400">
+                Spin the {product.name} and inspect it from any side.
+              </p>
+            </div>
+            <div className="reveal mx-auto mt-10 max-w-2xl">
+              <ProductViewer3D slot={product.modelSlot} productName={product.name} />
+            </div>
+          </div>
+        </section>
+
         {/* ── Cross-sell (scroll to top + navigate) ────────────────────── */}
         <section className="container py-24">
-          <button onClick={goToOther} className="w-full text-left">
+          <button onClick={goToNext} className="w-full text-left">
             <div className="reveal group relative flex items-center justify-between overflow-hidden rounded-[2rem] bg-neutral-950 px-8 py-10 text-white transition-transform duration-300 hover:scale-[1.01] md:px-12">
               <div>
                 <div className="text-xs font-semibold uppercase tracking-[0.25em] text-neutral-500">
                   Discover more
                 </div>
-                <div className="mt-2 font-display text-3xl font-bold">{otherName}</div>
+                <div className="mt-2 font-display text-3xl font-bold">{next.name}</div>
               </div>
               <ArrowRight className="h-8 w-8 transition-transform duration-300 group-hover:translate-x-2" />
             </div>

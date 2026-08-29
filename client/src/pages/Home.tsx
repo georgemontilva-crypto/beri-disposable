@@ -2,7 +2,7 @@ import { PlaceholderImage } from "@/components/PlaceholderImage";
 import { PublicLayout } from "@/components/PublicLayout";
 import { useReveal } from "@/hooks/useReveal";
 import { useSiteImages, type PublicMediaEntry } from "@/hooks/useSiteImages";
-import { BERI_CLIQ, BERI_CRUSH, type Flavor, type Product } from "@/lib/products";
+import { BERI_CIRQL, BERI_CLIQ, BERI_CRUSH, BERI_ELIQUID, type Flavor, type Product } from "@/lib/products";
 import { ArrowRight, Film, ShieldCheck, Sparkles, Zap, Cpu, Battery, Monitor } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "wouter";
@@ -19,6 +19,8 @@ export default function Home() {
         <FeatureStrip />
         <ProductDeepSection product={BERI_CRUSH} images={images} align="left" accentColor="from-neutral-900 to-neutral-600" badgeLabel="WORLD'S 1ST AUTO-ADAPTIVE POWER" />
         <ProductDeepSection product={BERI_CLIQ} images={images} align="right" accentColor="from-neutral-700 to-neutral-400" badgeLabel="FIND YOUR CLIQ" />
+        <ProductDeepSection product={BERI_CIRQL} images={images} align="left" accentColor="from-neutral-900 to-neutral-600" badgeLabel="FULL CIRCLE PERFORMANCE" />
+        <ProductDeepSection product={BERI_ELIQUID} images={images} align="right" accentColor="from-neutral-700 to-neutral-400" badgeLabel="THE FLAVOR, BOTTLED" />
         <AuthCta />
       </div>
     </PublicLayout>
