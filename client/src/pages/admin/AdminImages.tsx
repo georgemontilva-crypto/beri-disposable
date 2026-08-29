@@ -16,13 +16,11 @@ type SlotDef = {
 
 function buildSlots(): SlotDef[] {
   const slots: SlotDef[] = [
-    // Video hero
     {
-      slot: "home_hero_video",
-      label: "Home — Hero Video",
+      slot: "home_hero_poster",
+      label: "Home — Hero Poster",
       section: "Home",
-      size: "1920×1080 MP4",
-      type: "video",
+      size: "1200×1200 PNG (transparent)",
     },
     { slot: "authenticate_banner", label: "Authenticate — Banner", section: "Authenticate", size: "1600×600" },
     { slot: "wholesale_banner", label: "Wholesale — Banner", section: "Wholesale", size: "1600×600" },
@@ -93,7 +91,7 @@ export default function AdminImages() {
   return (
     <AdminLayout title="Site Images & Video">
       <p className="mb-4 text-sm text-neutral-500">
-        Upload media for each section. The <strong>Home Hero Video</strong> slot accepts MP4 files (max 50 MB). The <strong>3D Model</strong> slots accept web-ready <strong>.glb</strong> files (max 25 MB) and power the interactive viewer on each product page — CAD files (STEP/IGES) must be converted to GLB first. All other slots accept images. Empty slots render placeholders on the public site.
+        Upload media for each section. The <strong>Home Hero Poster</strong> is the still image shown instantly in the hero while the 3D model loads — use a transparent PNG of the featured device. The <strong>3D Model</strong> slots accept web-ready <strong>.glb</strong> files (max 25 MB) and power the interactive viewer on each product page — CAD files (STEP/IGES) must be converted to GLB first. All other slots accept images. Empty slots render placeholders on the public site.
       </p>
 
       <div className="mb-5 flex flex-wrap gap-2">

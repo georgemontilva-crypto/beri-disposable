@@ -1,9 +1,10 @@
+import HeroInteractive from "@/components/HeroInteractive";
 import { PlaceholderImage } from "@/components/PlaceholderImage";
 import { PublicLayout } from "@/components/PublicLayout";
 import { useReveal } from "@/hooks/useReveal";
 import { useSiteImages, type PublicMediaEntry } from "@/hooks/useSiteImages";
 import { BERI_CIRQL, BERI_CLIQ, BERI_CRUSH, BERI_ELIQUID, type Flavor, type Product } from "@/lib/products";
-import { ArrowRight, Film, ShieldCheck, Sparkles, Zap, Cpu, Battery, Monitor } from "lucide-react";
+import { ArrowRight, ShieldCheck, Sparkles, Zap, Cpu, Battery, Monitor } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "wouter";
 
@@ -14,7 +15,7 @@ export default function Home() {
   return (
     <PublicLayout>
       <div ref={revealRef}>
-        <Hero images={images} />
+        <HeroInteractive />
         <Marquee />
         <FeatureStrip />
         <ProductDeepSection product={BERI_CRUSH} images={images} align="left" accentColor="from-neutral-900 to-neutral-600" badgeLabel="WORLD'S 1ST AUTO-ADAPTIVE POWER" />
@@ -24,52 +25,6 @@ export default function Home() {
         <AuthCta />
       </div>
     </PublicLayout>
-  );
-}
-
-/* ─── Hero ─────────────────────────────────────────────────────────────── */
-function Hero({ images }: { images: Record<string, PublicMediaEntry> }) {
-  const videoEntry = images["home_hero_video"];
-  const hasVideo = videoEntry?.mimeType?.startsWith("video/");
-
-  return (
-    <section className="relative overflow-hidden">
-      {/* Video / placeholder block — fixed 800px height */}
-      <div
-        className="mx-auto overflow-hidden rounded-2xl"
-        style={{ width: "95%", marginTop: "35px", marginBottom: "35px", height: "800px" }}
-      >
-        {hasVideo ? (
-          <video
-            src={videoEntry.url}
-            className="w-full h-full object-cover block"
-            autoPlay
-            muted
-            loop
-            playsInline
-          />
-        ) : (
-          /* Gray placeholder with dimensions and slot name */
-          <div
-            className="relative flex flex-col items-center justify-center gap-3 bg-neutral-100 border border-dashed border-neutral-300 text-neutral-500 select-none w-full h-full"
-            data-slot-placeholder="home_hero_video"
-          >
-            <div
-              className="absolute inset-0 opacity-60"
-              style={{
-                backgroundImage:
-                  "repeating-linear-gradient(45deg, rgba(0,0,0,0.03) 0 12px, transparent 12px 24px)",
-              }}
-            />
-            <Film className="relative h-10 w-10 opacity-50 text-blue-400" />
-            <span className="relative font-mono text-base font-semibold tracking-wide">1920 × 1080</span>
-            <span className="relative text-sm font-medium text-neutral-600">Hero Video (MP4)</span>
-            <span className="relative font-mono text-xs text-neutral-400">home_hero_video</span>
-            <span className="relative text-xs text-blue-500 font-medium">Upload from Admin → Site Images &amp; Video</span>
-          </div>
-        )}
-      </div>
-    </section>
   );
 }
 

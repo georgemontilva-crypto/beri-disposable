@@ -8,13 +8,18 @@ import { Bounds, Environment, Html, OrbitControls, useGLTF } from "@react-three/
 import { Canvas } from "@react-three/fiber";
 import { Loader2 } from "lucide-react";
 import { Suspense, useEffect, useRef } from "react";
-import type { Group } from "three";
+import { TOUCH, type Group } from "three";
 
 /* ─── Model ───────────────────────────────────────────────────────────────── */
 
-function Model({ url, autoRotate }: { url: string; autoRotate: boolean }) {
+function Model({ url, onReady }: { url: string; onReady?: () => void }) {
   const { scene } = useGLTF(url);
   const ref = useRef<Group>(null);
+
+  // Fires once the GLTF has actually resolved, so the poster can fade out.
+  useEffect(() => {
+    onReady?.();
+  }, [onReady]);
 
   // Every product page mounts its own model; dispose the cache entry on unmount
   // so navigating between four products doesn't pile up GPU memory.
@@ -49,9 +54,17 @@ function CanvasLoader() {
 export default function ProductViewer3DCanvas({
   url,
   autoRotate = true,
+  enableZoom = true,
+  onReady,
 }: {
   url: string;
   autoRotate?: boolean;
+  /**
+   * Hero usage passes false. Scroll-wheel zoom on a full-width canvas hijacks
+   * page scrolling, which traps the visitor on mobile.
+   */
+  enableZoom?: boolean;
+  onReady?: () => void;
 }) {
   return (
     <Canvas
@@ -71,7 +84,7 @@ export default function ProductViewer3DCanvas({
         <Environment preset="studio" />
         {/* Auto-frames the model regardless of the scale it was exported at. */}
         <Bounds fit clip observe margin={1.15}>
-          <Model url={url} autoRotate={autoRotate} />
+          <Model url={url} onReady={onReady} />
         </Bounds>
       </Suspense>
 
@@ -79,6 +92,10 @@ export default function ProductViewer3DCanvas({
         makeDefault
         // Product viewer, not a scene explorer: no panning off-center.
         enablePan={false}
+        enableZoom={enableZoom}
+        // Two fingers rotate; one finger is left to the page so mobile
+        // visitors can scroll past the canvas instead of being trapped in it.
+        touches={{ ONE: TOUCH.PAN, TWO: TOUCH.DOLLY_ROTATE }}
         autoRotate={autoRotate}
         autoRotateSpeed={0.9}
         minPolarAngle={Math.PI * 0.15}

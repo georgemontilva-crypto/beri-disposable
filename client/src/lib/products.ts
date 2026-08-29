@@ -227,6 +227,12 @@ export function getProductByKey(key: string): Product | undefined {
   return PRODUCTS.find((p) => p.key === key);
 }
 
+/**
+ * Product featured in the interactive hero. Change this one constant to swap
+ * which device leads the homepage — no other file needs editing.
+ */
+export const HERO_PRODUCT: Product = BERI_CRUSH;
+
 /** Next product in the line-up, wrapping around. Powers the bottom nav CTA. */
 export function getNextProduct(key: string): Product {
   const i = PRODUCTS.findIndex((p) => p.key === key);
