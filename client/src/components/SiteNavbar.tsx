@@ -41,8 +41,8 @@ export function SiteNavbar() {
   return (
     <header
       className={cn(
-        "sticky top-0 z-50 transition-all duration-300",
-        scrolled ? "glass shadow-[0_8px_30px_rgba(0,0,0,0.06)]" : "bg-background/0"
+        "sticky top-0 z-50 glass-nav transition-all duration-300",
+        scrolled && "glass-nav-scrolled"
       )}
       style={{ transitionTimingFunction: "var(--ease-out-expo)" }}
     >
@@ -87,7 +87,7 @@ export function SiteNavbar() {
               )}
               style={{ transitionTimingFunction: "var(--ease-out-expo)" }}
             >
-              <div className="glass overflow-hidden rounded-2xl p-1.5 shadow-xl">
+              <div className="glass-panel overflow-hidden rounded-2xl p-1.5">
                 {PRODUCT_LINKS.map((p) => (
                   <Link
                     key={p.href}
@@ -134,7 +134,7 @@ export function SiteNavbar() {
         )}
         style={{ transitionTimingFunction: "var(--ease-out-expo)" }}
       >
-        <div className="glass container space-y-1 py-4">
+        <div className="glass-panel container space-y-1 py-4">
           {NAV_LINKS.slice(0, 1).map((l) => (
             <MobileLink key={l.href} href={l.href} active={isActive(l.href)}>
               {l.label}
