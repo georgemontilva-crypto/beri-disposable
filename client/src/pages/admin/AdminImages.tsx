@@ -17,10 +17,10 @@ type SlotDef = {
 function buildSlots(): SlotDef[] {
   const slots: SlotDef[] = [
     {
-      slot: "home_hero_poster",
-      label: "Home — Hero Poster",
+      slot: "home_hero_bg",
+      label: "Home — Hero Background",
       section: "Home",
-      size: "1200×1200 PNG (transparent)",
+      size: "2400×1400 (optional)",
     },
     { slot: "authenticate_banner", label: "Authenticate — Banner", section: "Authenticate", size: "1600×600" },
     { slot: "wholesale_banner", label: "Wholesale — Banner", section: "Wholesale", size: "1600×600" },
@@ -31,6 +31,12 @@ function buildSlots(): SlotDef[] {
   // here — no need to edit this file again.
   for (const p of PRODUCTS) {
     const section = p.name;
+    slots.push({
+      slot: `${p.key}_hero_card`,
+      label: `${p.name} — Home Fan Card`,
+      section,
+      size: "480×640 (portrait)",
+    });
     slots.push({ slot: p.heroSlot, label: `${p.name} — Hero`, section, size: "1200×900" });
     slots.push({
       slot: p.modelSlot,
@@ -144,7 +150,7 @@ export default function AdminImages() {
         </div>
       )}
       <p className="mb-4 text-sm text-neutral-500">
-        Upload media for each section. The <strong>Home Hero Poster</strong> is the still image shown instantly in the hero while the 3D model loads — use a transparent PNG of the featured device. The <strong>3D Model</strong> slots accept web-ready <strong>.glb</strong> files (max 25 MB) and power the interactive viewer on each product page — CAD files (STEP/IGES) must be converted to GLB first. All other slots accept images. Empty slots render placeholders on the public site.
+        Upload media for each section. The <strong>Home Fan Card</strong> slots are the four portrait cards in the homepage hero (480×640, the product on a clean background). <strong>Home Hero Background</strong> is optional — the hero falls back to solid black. The <strong>3D Model</strong> slots accept web-ready <strong>.glb</strong> files (max 25 MB) and power the interactive viewer on each product page — CAD files (STEP/IGES) must be converted to GLB first. All other slots accept images. Empty slots render placeholders on the public site.
       </p>
 
       <div className="mb-5 flex flex-wrap gap-2">

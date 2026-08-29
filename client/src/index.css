@@ -253,3 +253,34 @@
     background-size: 22px 22px;
   }
 }
+
+/* ─── Fan-card hero ────────────────────────────────────────────────────────
+   Cards rest in an arc and straighten on hover. The overshoot easing is what
+   sells it: the card travels past its target and settles back.
+   Only applied at md+, where the fan layout is active. */
+@media (min-width: 768px) {
+  .fan-card {
+    transform-origin: 50% 50%;
+    transform: translate(var(--tx), var(--ty)) rotate(var(--rot));
+    transition:
+      transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+      box-shadow 0.4s ease;
+  }
+
+  .fan-card:hover,
+  .fan-card:focus-visible {
+    z-index: 50;
+    transform: translate(var(--tx), calc(var(--ty) - 30px)) rotate(0deg) scale(1.1);
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.55);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fan-card {
+    transition: none;
+  }
+  .fan-card:hover,
+  .fan-card:focus-visible {
+    transform: translate(var(--tx), var(--ty)) rotate(var(--rot));
+  }
+}

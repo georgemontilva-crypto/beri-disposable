@@ -1,4 +1,4 @@
-import HeroInteractive from "@/components/HeroInteractive";
+import HeroFan from "@/components/HeroFan";
 import { PlaceholderImage } from "@/components/PlaceholderImage";
 import { PublicLayout } from "@/components/PublicLayout";
 import { useReveal } from "@/hooks/useReveal";
@@ -15,7 +15,7 @@ export default function Home() {
   return (
     <PublicLayout>
       <div ref={revealRef}>
-        <HeroInteractive />
+        <HeroFan />
         <Marquee />
         <FeatureStrip />
         <ProductDeepSection product={BERI_CRUSH} images={images} align="left" accentColor="from-neutral-900 to-neutral-600" badgeLabel="WORLD'S 1ST AUTO-ADAPTIVE POWER" />
