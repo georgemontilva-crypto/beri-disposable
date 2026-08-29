@@ -110,7 +110,7 @@ export default function ProductViewer3D({
           {/* Affordance hint + autorotate toggle */}
           <div className="pointer-events-none absolute inset-x-0 bottom-0 flex items-center justify-between p-4">
             <span className="rounded-full bg-black/50 px-3 py-1.5 text-[11px] font-medium tracking-wide text-neutral-300 backdrop-blur">
-              Drag to rotate · Scroll to zoom
+              Drag to spin
             </span>
             <button
               type="button"
