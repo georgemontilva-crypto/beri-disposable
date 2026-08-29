@@ -75,7 +75,15 @@ function Hero({ images }: { images: Record<string, PublicMediaEntry> }) {
 
 /* ─── Marquee ───────────────────────────────────────────────────────────── */
 function Marquee() {
-  const items = ["BERI CRUSH", "BERI CLIQ", "AUTHENTIC", "PREMIUM FLAVOR", "VERIFIED", "MONOCHROME"];
+  const items = [
+    "BERI CRUSH",
+    "BERI CLIQ",
+    "BERI CIRQL",
+    "BERI E-LIQUID",
+    "AUTHENTIC",
+    "PREMIUM FLAVOR",
+    "VERIFIED",
+  ];
   const doubled = [...items, ...items];
   return (
     <div className="overflow-hidden border-y border-neutral-200 bg-neutral-950 py-4">
