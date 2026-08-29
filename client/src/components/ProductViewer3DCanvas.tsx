@@ -14,8 +14,8 @@
 import { Bounds, Environment, Html, useGLTF } from "@react-three/drei";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Loader2 } from "lucide-react";
-import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import type { Group } from "three";
+import { Suspense, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { Box3, Vector3, type Group } from "three";
 
 /* ─── Tuning ──────────────────────────────────────────────────────────────── */
 
@@ -65,7 +65,45 @@ function Model({
 }) {
   const { scene } = useGLTF(url);
   const ref = useRef<Group>(null);
+  const inner = useRef<Group>(null);
   const { invalidate } = useThree();
+
+  /**
+   * Normalizes whatever the modeller exported into something that spins
+   * sensibly, without needing every supplier to follow the same conventions.
+   *
+   *  - CAD tools (FreeCAD, SolidWorks) treat Z as vertical; glTF and three.js
+   *    treat Y as vertical. A model converted without correcting that arrives
+   *    lying down, pointing at the camera — you end up staring at the bottom
+   *    cap. If the depth clearly exceeds the height, stand it upright.
+   *  - The scene is then offset so its bounding-box centre sits on the origin.
+   *    Otherwise the model orbits around whatever point the exporter happened
+   *    to use, drifting off-frame as it turns.
+   */
+  useLayoutEffect(() => {
+    const g = inner.current;
+    if (!g) return;
+
+    g.rotation.set(0, 0, 0);
+    g.position.set(0, 0, 0);
+    g.updateMatrixWorld(true);
+
+    const box = new Box3().setFromObject(g);
+    const size = box.getSize(new Vector3());
+
+    // Elongated along Z rather than Y: a Z-up export. 1.3 keeps roughly cubic
+    // products (a bottle cap, a squat pod) from being rotated by accident.
+    if (size.z > size.y * 1.3) {
+      g.rotation.x = -Math.PI / 2;
+      g.updateMatrixWorld(true);
+    }
+
+    const centered = new Box3().setFromObject(g);
+    const center = centered.getCenter(new Vector3());
+    g.position.sub(center);
+
+    invalidate();
+  }, [scene, invalidate]);
 
   useEffect(() => {
     onReady?.();
@@ -122,7 +160,11 @@ function Model({
 
   return (
     <group ref={ref}>
-      <primitive object={scene} />
+      {/* Inner group carries the orientation/centering fix; the outer group
+          carries the interactive rotation, so the two never fight. */}
+      <group ref={inner}>
+        <primitive object={scene} />
+      </group>
     </group>
   );
 }

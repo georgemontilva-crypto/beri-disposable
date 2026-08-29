@@ -189,19 +189,14 @@ export default function ProductPage() {
                 </Link>
               </div>
 
-              {/* Right: hero image */}
+              {/* Right: interactive 3D model, falling back to the hero shot */}
               <div className="reveal" data-reveal-delay="120">
-                <div className="animate-float">
-                  <PlaceholderImage
-                    slot={product.heroSlot}
-                    imageMap={images}
-                    width={680}
-                    height={760}
-                    label={`${product.name} hero render`}
-                    rounded="rounded-[2rem]"
-                    className="shadow-2xl"
-                  />
-                </div>
+                <ProductViewer3D
+                  slot={product.modelSlot}
+                  fallbackSlot={product.heroSlot}
+                  productName={product.name}
+                  transparent
+                />
               </div>
             </div>
           </div>
@@ -309,26 +304,6 @@ export default function ProductPage() {
                 </div>
               </div>
             ))}
-          </div>
-        </section>
-
-        {/* ── Interactive 3D viewer ────────────────────────────────────── */}
-        <section className="bg-black py-20 text-white">
-          <div className="container">
-            <div className="reveal mx-auto max-w-2xl text-center">
-              <div className="text-xs font-semibold uppercase tracking-[0.25em] text-neutral-500">
-                Explore in 3D
-              </div>
-              <h2 className="mt-3 font-display text-4xl font-bold md:text-5xl">
-                Every Angle
-              </h2>
-              <p className="mt-3 text-neutral-400">
-                Spin the {product.name} and inspect it from any side.
-              </p>
-            </div>
-            <div className="reveal mx-auto mt-10 max-w-2xl">
-              <ProductViewer3D slot={product.modelSlot} productName={product.name} />
-            </div>
           </div>
         </section>
 

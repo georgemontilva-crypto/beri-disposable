@@ -59,10 +59,20 @@ function ViewerPlaceholder({ slot, label }: { slot: string; label: string }) {
 export default function ProductViewer3D({
   slot,
   productName,
+  fallbackSlot,
+  transparent = false,
   className = "",
 }: {
   slot: string;
   productName: string;
+  /**
+   * Image shown when no model has been uploaded. Lets the viewer sit in the
+   * hero from day one: it degrades to the ordinary product shot instead of a
+   * dashed "upload a model" box in the most visible spot on the page.
+   */
+  fallbackSlot?: string;
+  /** Hero usage: no dark plate, so the viewer sits on the page background. */
+  transparent?: boolean;
   className?: string;
 }) {
   const media = useSiteImages();
@@ -90,12 +100,24 @@ export default function ProductViewer3D({
     return () => observer.disconnect();
   }, [visible]);
 
-  const placeholder = <ViewerPlaceholder slot={slot} label={`${productName} in 3D`} />;
+  const fallbackImage = fallbackSlot ? media[fallbackSlot]?.url : undefined;
+
+  const placeholder = fallbackImage ? (
+    <img
+      src={fallbackImage}
+      alt={productName}
+      className="h-full w-full object-contain"
+    />
+  ) : (
+    <ViewerPlaceholder slot={slot} label={`${productName} in 3D`} />
+  );
 
   return (
     <div
       ref={containerRef}
-      className={`relative aspect-square w-full overflow-hidden rounded-[1.75rem] bg-neutral-950 ${className}`}
+      className={`relative aspect-square w-full overflow-hidden ${
+        transparent ? "" : "rounded-[1.75rem] bg-neutral-950"
+      } ${className}`}
     >
       {!url ? (
         placeholder
@@ -109,14 +131,24 @@ export default function ProductViewer3D({
 
           {/* Affordance hint + autorotate toggle */}
           <div className="pointer-events-none absolute inset-x-0 bottom-0 flex items-center justify-between p-4">
-            <span className="rounded-full bg-black/50 px-3 py-1.5 text-[11px] font-medium tracking-wide text-neutral-300 backdrop-blur">
+            <span
+              className={`rounded-full px-3 py-1.5 text-[11px] font-medium tracking-wide backdrop-blur ${
+                transparent
+                  ? "bg-black/10 text-neutral-600"
+                  : "bg-black/50 text-neutral-300"
+              }`}
+            >
               Drag to spin
             </span>
             <button
               type="button"
               onClick={() => setAutoRotate((v) => !v)}
               aria-label={autoRotate ? "Pause auto-rotation" : "Resume auto-rotation"}
-              className="pointer-events-auto rounded-full bg-black/50 p-2 text-neutral-300 backdrop-blur transition hover:bg-black/70 hover:text-white"
+              className={`pointer-events-auto rounded-full p-2 backdrop-blur transition ${
+                transparent
+                  ? "bg-black/10 text-neutral-600 hover:bg-black/20 hover:text-neutral-900"
+                  : "bg-black/50 text-neutral-300 hover:bg-black/70 hover:text-white"
+              }`}
             >
               {autoRotate ? (
                 <RotateCcw className="h-4 w-4" />
