@@ -70,14 +70,60 @@ export default function AdminImages() {
     return map;
   }, [list.data]);
 
-  const upload = trpc.images.adminUpload.useMutation({
-    onSuccess: (_, vars) => {
+  const storage = trpc.images.storageStatus.useQuery(undefined, { retry: false });
+  const presign = trpc.images.adminPresignUpload.useMutation();
+  const confirm = trpc.images.adminConfirmUpload.useMutation();
+  const [uploadingSlot, setUploadingSlot] = useState<string | null>(null);
+
+  /**
+   * Two-step upload: ask the server for a presigned URL, PUT the file straight
+   * to R2 from the browser, then record it in the database. The file never
+   * passes through the Node process.
+   */
+  const handleUpload = async (p: {
+    slot: string;
+    section: string;
+    title: string;
+    file: File;
+    mimeType: string;
+  }) => {
+    setUploadingSlot(p.slot);
+    try {
+      const { storageKey, uploadUrl, publicUrl } = await presign.mutateAsync({
+        slot: p.slot,
+        fileName: p.file.name,
+        mimeType: p.mimeType,
+      });
+
+      const put = await fetch(uploadUrl, {
+        method: "PUT",
+        headers: { "Content-Type": p.mimeType },
+        body: p.file,
+      });
+      if (!put.ok) {
+        throw new Error(
+          `R2 rejected the upload (${put.status}). Check the bucket CORS policy.`
+        );
+      }
+
+      await confirm.mutateAsync({
+        slot: p.slot,
+        section: p.section,
+        title: p.title,
+        storageKey,
+        url: publicUrl,
+        mimeType: p.mimeType,
+        sizeBytes: p.file.size,
+      });
+
       utils.images.adminList.invalidate();
-      const isVideo = vars.mimeType.startsWith("video/");
-      toast.success(isVideo ? "Video uploaded" : "Image uploaded");
-    },
-    onError: (e) => toast.error(e.message || "Upload failed"),
-  });
+      toast.success("Uploaded");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Upload failed");
+    } finally {
+      setUploadingSlot(null);
+    }
+  };
 
   const del = trpc.images.adminDelete.useMutation({
     onSuccess: () => {
@@ -90,6 +136,13 @@ export default function AdminImages() {
 
   return (
     <AdminLayout title="Site Images & Video">
+      {storage.data && !storage.data.configured && (
+        <div className="mb-4 rounded-xl border border-amber-300 bg-amber-50 p-4 text-sm text-amber-900">
+          <strong>Object storage is not configured.</strong> Uploads will fail until
+          these environment variables are set on the server:{" "}
+          <code className="font-mono text-xs">{storage.data.missing.join(", ")}</code>
+        </div>
+      )}
       <p className="mb-4 text-sm text-neutral-500">
         Upload media for each section. The <strong>Home Hero Poster</strong> is the still image shown instantly in the hero while the 3D model loads — use a transparent PNG of the featured device. The <strong>3D Model</strong> slots accept web-ready <strong>.glb</strong> files (max 25 MB) and power the interactive viewer on each product page — CAD files (STEP/IGES) must be converted to GLB first. All other slots accept images. Empty slots render placeholders on the public site.
       </p>
@@ -117,8 +170,8 @@ export default function AdminImages() {
               key={s.slot}
               def={s}
               current={bySlot[s.slot]}
-              uploading={upload.isPending && upload.variables?.slot === s.slot}
-              onUpload={(payload) => upload.mutate(payload)}
+              uploading={uploadingSlot === s.slot}
+              onUpload={handleUpload}
               onDelete={(id) => del.mutate({ id })}
             />
           ))}
@@ -142,9 +195,8 @@ function SlotCard({
     slot: string;
     section: string;
     title: string;
-    fileName: string;
+    file: File;
     mimeType: string;
-    base64: string;
   }) => void;
   onDelete: (id: number) => void;
 }) {
@@ -166,23 +218,20 @@ function SlotCard({
     const file = e.target.files?.[0];
     if (!file) return;
     if (file.size > maxBytes) {
-      toast.error(isVideo ? "Video must be under 50 MB" : "Image must be under 8 MB");
+      const limitMb = Math.round(maxBytes / 1024 / 1024);
+      toast.error(`File must be under ${limitMb} MB`);
       return;
     }
-    const buf = await file.arrayBuffer();
-    let binary = "";
-    const bytes = new Uint8Array(buf);
-    for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
-    const base64 = btoa(binary);
+    // Browsers report an empty type for .glb, so fall back by slot kind.
+    const mimeType =
+      file.type ||
+      (isVideo ? "video/mp4" : isModel ? "model/gltf-binary" : "image/jpeg");
     onUpload({
       slot: def.slot,
       section: def.section,
       title: def.label,
-      fileName: file.name,
-      mimeType:
-        file.type ||
-        (isVideo ? "video/mp4" : isModel ? "model/gltf-binary" : "image/jpeg"),
-      base64,
+      file,
+      mimeType,
     });
     if (inputRef.current) inputRef.current.value = "";
   };

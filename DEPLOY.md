@@ -65,14 +65,47 @@ Configura estas variables en **Railway → Variables**:
 > Sin la variable definida, el formulario de setup ni siquiera se ofrece y el
 > endpoint responde `FORBIDDEN`.
 
-### Cloudflare R2 (almacenamiento de imágenes)
+### Cloudflare R2 (almacenamiento de medios)
 | Variable | Descripción |
 | --- | --- |
-| `R2_ACCOUNT_ID` | ID de cuenta de Cloudflare |
-| `R2_ACCESS_KEY_ID` | Access Key del token R2 |
-| `R2_SECRET_ACCESS_KEY` | Secret Key del token R2 |
-| `R2_BUCKET` | Nombre del bucket (ej. `beri-images`) |
-| `R2_PUBLIC_URL` | URL pública del bucket o dominio personalizado (ej. `https://images.beridisposable.com`) |
+| `R2_ACCOUNT_ID` | Account ID de Cloudflare (R2 → esquina superior derecha) |
+| `R2_ACCESS_KEY_ID` | Access Key del token de API de R2 |
+| `R2_SECRET_ACCESS_KEY` | Secret Key del token (se muestra **una sola vez**) |
+| `R2_BUCKET` | Nombre del bucket, ej. `beri-media` |
+| `R2_PUBLIC_URL` | URL pública del bucket, sin barra final. Ej. `https://pub-xxxx.r2.dev` o tu dominio propio |
+
+> **CORS del bucket es obligatorio.** El navegador sube los archivos
+> directamente a R2 con una URL prefirmada, así que R2 tiene que aceptar
+> peticiones desde tu dominio. En Cloudflare → R2 → tu bucket → **Settings →
+> CORS policy**, pegá:
+>
+> ```json
+> [
+>   {
+>     "AllowedOrigins": ["https://TU-DOMINIO.com"],
+>     "AllowedMethods": ["PUT", "GET"],
+>     "AllowedHeaders": ["Content-Type"],
+>     "ExposeHeaders": ["ETag"],
+>     "MaxAgeSeconds": 3600
+>   }
+> ]
+> ```
+>
+> Agregá también la URL que te dio Railway (`https://xxx.up.railway.app`) si
+> vas a administrar el sitio desde ahí. Sin esto, cada subida falla con un
+> error de CORS en la consola del navegador.
+
+> **Acceso público al bucket.** En **Settings → Public access**, habilitá el
+> dominio `r2.dev` o conectá un dominio propio. `R2_PUBLIC_URL` debe ser esa
+> URL: es la que se guarda en la base de datos y con la que el sitio sirve
+> las imágenes y los modelos 3D por el CDN de Cloudflare.
+
+> **Cómo funcionan las subidas.** El panel de admin pide al servidor una URL
+> prefirmada y el navegador manda el archivo directo a R2. El archivo nunca
+> pasa por el contenedor de Railway, así que no hay límite práctico de tamaño
+> ni consumo de memoria del servidor — importante para los modelos 3D y el
+> video. Si falta alguna variable, el panel muestra un aviso indicando
+> exactamente cuáles.
 
 ### Email (aprobación wholesale)
 | Variable | Descripción |
@@ -223,7 +256,9 @@ pnpm drizzle-kit migrate      # aplica las migraciones a la base de datos
 
 - [ ] `DATABASE_URL` y `JWT_SECRET` configurados
 - [ ] Migraciones aplicadas (`auth_codes`, `wholesale_*`, `site_images`, etc.)
-- [ ] R2 conectado (`server/storage.ts` reemplazado + variables R2)
+- [ ] R2 conectado (5 variables `R2_*`)
+- [ ] CORS del bucket R2 configurado con el dominio del sitio
+- [ ] Acceso público del bucket habilitado
 - [ ] Email configurado (`RESEND_API_KEY`, `EMAIL_FROM`, `APP_BASE_URL`)
 - [ ] `ADMIN_SETUP_TOKEN` definido temporalmente
 - [ ] Primer admin creado en `/admin`

@@ -297,6 +297,12 @@ export async function getSiteImageBySlot(slot: string) {
   return rows[0];
 }
 
+export async function getSiteImageById(id: number) {
+  const db = await requireDb();
+  const rows = await db.select().from(siteImages).where(eq(siteImages.id, id)).limit(1);
+  return rows[0];
+}
+
 export async function listSiteImages() {
   const db = await requireDb();
   return db.select().from(siteImages).orderBy(desc(siteImages.id));
