@@ -187,21 +187,22 @@ export const BERI_ELIQUID: Product = {
   name: "Beri E-Liquid",
   tagline: "The Flavor, Bottled.",
   description:
-    "The full Beri flavor library, now available as bottled e-liquid for your own device. Same flavor engineering as the Beri disposables, formulated for consistent performance across a wide range of coils and tanks.",
+    "The full Beri flavor library, now available as 30 ml bottled e-liquid for your own device. 50 mg nicotine salt, made in the USA, in a child-resistant chubby gorilla bottle — same flavor engineering as the Beri disposables, formulated for consistent performance across a wide range of coils and tanks.",
   specs: [
-    { label: "Bottle Size", value: "TBD" },
-    { label: "Nicotine", value: "TBD" },
-    { label: "Base", value: "TBD" },
+    { label: "Bottle Size", value: "30 ml" },
+    { label: "Nicotine", value: "50 mg Salt" },
+    { label: "Origin", value: "Made in USA" },
+    { label: "Cap", value: "Child-Resistant" },
     { label: "Flavors", value: "12 Profiles" },
   ],
   heroSlot: "eliquid_hero",
   modelSlot: "eliquid_model_3d",
   specSlots: [
     { slot: "eliquid_spec_main", label: "Bottle Design", tall: true },
-    { slot: "eliquid_spec_nic", label: "Nicotine Strength" },
+    { slot: "eliquid_spec_nic", label: "50 mg Nicotine Salt" },
     { slot: "eliquid_spec_base", label: "VG / PG Base" },
     { slot: "eliquid_spec_bottom", label: "Child-Resistant Cap" },
-    { slot: "eliquid_spec_size", label: "Bottle Size", bigValue: "TBD", bigUnit: "ml" },
+    { slot: "eliquid_spec_size", label: "Bottle Size", bigValue: "30", bigUnit: "ml" },
     { slot: "eliquid_spec_flavors", label: "Flavor Profiles", bigValue: "12", bigUnit: "Flavors" },
   ],
   flavors: buildFlavors("eliquid", [
