@@ -10,6 +10,7 @@ import {
 } from "../auth";
 import { adminAuthedProcedure, beriPublicProcedure, beriRouter } from "../beriTrpc";
 import * as db from "../db";
+import { isStorageConfigured, missingStorageVars } from "../storage";
 
 /**
  * Secret required to create the first admin account.
@@ -114,6 +115,50 @@ export const adminAuthRouter = beriRouter({
       pendingInquiries: stats.pendingInquiries,
       users: stats.wholesaleUsers,
       images,
+    };
+  }),
+
+  /**
+   * Everything the dashboard needs in one round trip: counts, health checks,
+   * which media slots are filled, and the latest activity.
+   */
+  dashboardOverview: adminAuthedProcedure.query(async () => {
+    const stats = await db.getDashboardStats();
+    const siteImages = await db.listSiteImages();
+    const recentLogs = await db.listQueryLogs({ limit: 6, offset: 0 });
+    const recentInquiries = await db.listInquiries({ limit: 5, offset: 0 });
+
+    // One entry per slot: the newest upload wins, matching the public site.
+    const filledSlots = Array.from(new Set(siteImages.map((i) => i.slot)));
+
+    return {
+      counts: {
+        codes: stats.totalCodes,
+        logs: stats.totalLogs,
+        validLogs: stats.validLogs,
+        inquiries: stats.totalInquiries,
+        pendingInquiries: stats.pendingInquiries,
+        users: stats.wholesaleUsers,
+        images: siteImages.length,
+      },
+      storage: {
+        configured: isStorageConfigured(),
+        missing: missingStorageVars(),
+      },
+      filledSlots,
+      recentLogs: recentLogs.rows.map((l) => ({
+        id: l.id,
+        code: l.code,
+        result: l.result,
+        createdAt: l.createdAt,
+      })),
+      recentInquiries: recentInquiries.rows.map((i) => ({
+        id: i.id,
+        name: i.name,
+        company: i.company,
+        status: i.status,
+        createdAt: i.createdAt,
+      })),
     };
   }),
 });

@@ -45,7 +45,22 @@ Configura estas variables en **Railway → Variables**:
 | --- | --- |
 | `DATABASE_URL` | Cadena de conexión MySQL. Ej: `mysql://user:pass@host:3306/beri` |
 
-> Si usas el plugin MySQL de Railway, copia su `MYSQL_URL` a `DATABASE_URL`.
+> Si usas el plugin MySQL de Railway, **no copies la contraseña a mano**: usa una
+> referencia entre servicios. En tu servicio de la app → Variables → nueva
+> variable `DATABASE_URL` con el valor `${{MySQL.MYSQL_URL}}` (escrito tal cual).
+> Railway la resuelve en cada deploy, así que si rota las credenciales la app
+> sigue funcionando. Usa `MYSQL_URL` (red interna) y no `MYSQL_PUBLIC_URL`.
+
+> **Las tablas se crean solas.** El servidor ejecuta las migraciones pendientes
+> al arrancar (`server/migrate.ts`), así que una base recién creada se
+> provisiona en el primer deploy sin ningún comando manual. Es el migrador de
+> Drizzle, que lleva registro en la tabla `__drizzle_migrations` y es
+> idempotente: sobre una base al día no hace nada.
+>
+> Deliberadamente **no** se usa `drizzle-kit push`, que compara el esquema vivo
+> contra `schema.ts` y puede ofrecer truncar tablas cuando ve una diferencia que
+> no sabe reconciliar. Para cambios de esquema futuros: generar la migración con
+> `pnpm drizzle-kit generate` y commitearla; el deploy la aplica.
 
 ### Sesiones / Seguridad
 | Variable | Descripción |
@@ -255,7 +270,7 @@ pnpm drizzle-kit migrate      # aplica las migraciones a la base de datos
 ## 7. Checklist post‑deploy
 
 - [ ] `DATABASE_URL` y `JWT_SECRET` configurados
-- [ ] Migraciones aplicadas (`auth_codes`, `wholesale_*`, `site_images`, etc.)
+- [ ] Migraciones aplicadas — **automático**: el servidor las corre al arrancar
 - [ ] R2 conectado (5 variables `R2_*`)
 - [ ] CORS del bucket R2 configurado con el dominio del sitio
 - [ ] Acceso público del bucket habilitado
