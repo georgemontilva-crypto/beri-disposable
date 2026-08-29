@@ -2,6 +2,8 @@ export type Flavor = {
   name: string;
   slug: string;
   slot: string; // image slot key for admin-managed images
+  /** Optional grouping shown on the product page, e.g. "Summer Edition". */
+  edition?: string;
 };
 
 export type SpecSlot = {
@@ -24,8 +26,21 @@ export type Product = {
   key: ProductKey;
   name: string;
   tagline: string;
+  /**
+   * One or two sentences for the homepage summary card. The homepage is a
+   * router, not a spec sheet — the full story lives on the product page, so
+   * this stays short on purpose.
+   */
+  summary: string;
+  /** Full copy, used on the product page only. */
   description: string;
+  /** The single number that sells the product, shown large on the home card. */
+  highlight: { value: string; unit: string };
+  /** Three specs at most for the home card. `specs` holds the full list. */
+  keySpecs: string[];
   specs: { label: string; value: string }[];
+  /** Packaging info from the trade sheets, shown on the product page. */
+  packaging?: { label: string; value: string }[];
   heroSlot: string;
   /**
    * Media slot holding the interactive 3D model (.glb / .gltf).
@@ -42,184 +57,282 @@ const toSlug = (s: string) =>
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/(^-|-$)/g, "");
 
-function buildFlavors(productKey: string, names: string[]): Flavor[] {
-  return names.map((name) => {
-    const slug = toSlug(name);
-    return { name, slug, slot: `${productKey}_flavor_${slug}` };
-  });
+function buildFlavors(
+  productKey: string,
+  names: string[],
+  edition?: string
+): Flavor[] {
+  return names.map((name) => ({
+    name,
+    slug: toSlug(name),
+    slot: `${productKey}_flavor_${toSlug(name)}`,
+    ...(edition ? { edition } : {}),
+  }));
 }
+
+/* ─── Beri Crush ──────────────────────────────────────────────────────────── */
 
 export const BERI_CRUSH: Product = {
   key: "crush",
   name: "Beri Crush",
-  tagline: "World's 1st Auto-Adaptive Power.",
+  tagline: "Auto-Adaptive Draw.",
+  summary:
+    "The flagship. Quad-mesh coil and up to 40W of auto-adaptive power, in the widest flavor range Beri makes.",
   description:
-    "The Beri Crush redefines high-capacity disposables with World's 1st Auto-Adaptive Power technology. Engineered for consistency from the first puff to the last, with an Interactive HD Screen, blazing 2.5x Charging Speed and Quad Coil Technology for unmatched flavor intensity.",
+    "Beri Crush reads your draw and adapts power in real time, delivering up to 40W through a quad-mesh coil. Up to 50,000 puffs of consistent flavor density, with a full-color display and the broadest flavor library in the line-up — including Summer and Winter limited editions and a zero-nicotine range.",
+  highlight: { value: "50K", unit: "Puffs" },
+  keySpecs: ["Quad-Mesh Coil", "Up to 40W Power", "Auto-Adaptive Draw"],
   specs: [
-    { label: "Crush Mode", value: "25K Puffs" },
-    { label: "Normal Mode", value: "50K Puffs" },
-    { label: "Screen", value: "Interactive HD" },
-    { label: "Charging", value: "2.5x Speed" },
-    { label: "Coil", value: "Quad Coil Tech" },
-    { label: "Power", value: "Auto-Adaptive" },
+    { label: "Puffs", value: "Up to 50,000" },
+    { label: "Nicotine", value: "5% (0% available)" },
+    { label: "Coil", value: "Quad-Mesh" },
+    { label: "Power", value: "Up to 40W" },
+    { label: "Draw", value: "Auto-Adaptive" },
+    { label: "Origin", value: "Designed in USA" },
+  ],
+  packaging: [
+    { label: "Display Box", value: "5 single pieces" },
+    { label: "Master Box", value: "20 displays" },
   ],
   heroSlot: "crush_hero",
   modelSlot: "crush_model_3d",
   specSlots: [
     { slot: "crush_spec_main", label: "Multi Curved Design", tall: true },
-    { slot: "crush_spec_coil", label: "Quad Coil Technology" },
-    { slot: "crush_spec_screen", label: "Interactive HD Screen" },
-    { slot: "crush_spec_bottom", label: "2.5x Charging Speed" },
-    { slot: "crush_spec_puffs", label: "50K Puffs Normal Mode", bigValue: "50K", bigUnit: "Puffs" },
-    { slot: "crush_spec_power", label: "Auto-Adaptive Power", bigValue: "AAP", bigUnit: "Technology" },
+    { slot: "crush_spec_coil", label: "Quad-Mesh Coil" },
+    { slot: "crush_spec_screen", label: "Full-Color Display" },
+    { slot: "crush_spec_power", label: "Up to 40W Power" },
+    { slot: "crush_spec_puffs", label: "Up to 50,000 Puffs", bigValue: "50K", bigUnit: "Puffs" },
+    { slot: "crush_spec_draw", label: "Auto-Adaptive Draw", bigValue: "40W", bigUnit: "Max Power" },
   ],
-  flavors: buildFlavors("crush", [
-    "Tropical Gummy",
-    "Triple Berry",
-    "Watermelon Ice",
-    "Watermelon Refresh",
-    "Banana Taffy",
-    "White Strawberry",
-    "Blue Razz Ice",
-    "Blue Sour",
-    "Cherry B-Pop",
-    "Green Apple",
-    "Mango Bomb",
-    "Miami Mint",
-    "Polar Ice",
-    "Strawberry Cream",
-    "Strawberry Watermelon",
-  ]),
+  flavors: [
+    ...buildFlavors(
+      "crush",
+      [
+        "Banana Taffy",
+        "Blue Razz Ice",
+        "Blue Sour",
+        "Cherry B-Pop",
+        "Grape Ice",
+        "Green Apple",
+        "Juicy Peach",
+        "Mango Bomb",
+        "Melon Dragon Slush",
+        "Miami Mint",
+        "OG Lemonade",
+        "Polar Ice",
+        "Sour Neon Fab",
+        "Strawberry Cream",
+        "Strawberry Watermelon",
+        "Super Mint",
+        "Triple Berry",
+        "Watermelon Ice",
+        "Watermelon Refresh",
+        "White Strawberry",
+      ]
+    ),
+    ...buildFlavors(
+      "crush",
+      [
+        "Berry Peach Gush",
+        "Blue Coconut",
+        "Blueberry Watermelon",
+        "Pineapple Passion Punch",
+        "Sour Watermelon Gami",
+      ],
+      "Summer Edition"
+    ),
+    ...buildFlavors(
+      "crush",
+      ["Alaskan Mint", "Cherry Cola Gami", "Cran Apple Smash", "Punch Ice", "White Gami"],
+      "Winter Edition"
+    ),
+  ],
 };
+
+/** Crush flavors also offered without nicotine. */
+export const CRUSH_ZERO_NICOTINE = [
+  "Blue Razz Ice",
+  "Grape Ice",
+  "Miami Mint",
+  "Strawberry Watermelon",
+  "Triple Berry",
+];
+
+/* ─── Beri Cliq ───────────────────────────────────────────────────────────── */
 
 export const BERI_CLIQ: Product = {
   key: "cliq",
   name: "Beri Cliq",
   tagline: "Find Your Cliq.",
+  summary:
+    "A refillable pod system. Swap flavors in seconds on a 900mAh battery, with an 18mL pre-filled 360° crystal tank.",
   description:
-    "The Beri Cliq pod system lets you cliq between flavors in seconds. Compact, refined, and built around a satisfying magnetic connection with a 360° Crystal Tank, LED Display and Dual Mesh Coil for a premium experience every time.",
+    "Beri Cliq separates the battery from the pod, so one device carries your whole flavor rotation. An 18mL pre-filled 360° crystal tank clicks into a 900mAh USB-C battery, running a dual mesh coil with dual power modes for up to 50,000 puffs. Batteries come in six colors.",
+  highlight: { value: "18", unit: "mL Pod" },
+  keySpecs: ["Refillable Pod System", "360° Crystal Tank", "900mAh USB-C"],
   specs: [
-    { label: "Cliq Mode", value: "25K Puffs" },
-    { label: "Normal Mode", value: "50K Puffs" },
-    { label: "Tank", value: "360° Crystal" },
-    { label: "Charging", value: "2.5x Speed" },
-    { label: "Display", value: "LED Display" },
+    { label: "Puffs", value: "Up to 50,000" },
+    { label: "Nicotine", value: "5%" },
     { label: "Coil", value: "Dual Mesh" },
+    { label: "E-Liquid", value: "18 mL Pre-Filled" },
+    { label: "Battery", value: "900mAh USB-C" },
+    { label: "Tank", value: "360° Crystal" },
+    { label: "Modes", value: "Dual-Power" },
     { label: "Pod", value: "Refillable" },
+  ],
+  packaging: [
+    { label: "Display Box", value: "5 single boxes" },
+    { label: "Master Case — Kits", value: "16 displays" },
+    { label: "Master Case — Pods", value: "20 displays" },
   ],
   heroSlot: "cliq_hero",
   modelSlot: "cliq_model_3d",
   specSlots: [
-    { slot: "cliq_spec_main", label: "Multi Curved Design", tall: true },
+    { slot: "cliq_spec_main", label: "Pod & Battery System", tall: true },
     { slot: "cliq_spec_tank", label: "360° Crystal Tank" },
     { slot: "cliq_spec_coil", label: "Dual Mesh Coil" },
-    { slot: "cliq_spec_bottom", label: "Light On/Off" },
-    { slot: "cliq_spec_puffs", label: "50K Puffs Normal Mode", bigValue: "50K", bigUnit: "Puffs" },
-    { slot: "cliq_spec_display", label: "LED Display", bigValue: "LED", bigUnit: "Display" },
+    { slot: "cliq_spec_battery", label: "900mAh USB-C Battery" },
+    { slot: "cliq_spec_puffs", label: "18 mL Pre-Filled Pod", bigValue: "18", bigUnit: "mL" },
+    { slot: "cliq_spec_modes", label: "Dual-Power Modes", bigValue: "50K", bigUnit: "Puffs" },
   ],
   flavors: buildFlavors("cliq", [
-    "Tropical Gummy",
-    "Triple Berry",
-    "Watermelon Ice",
-    "Banana Taffy",
-    "White Strawberry",
+    "Alaskan Mint",
+    "Banana Ice",
+    "Black Razz Ice",
+    "Blue Rancher",
     "Blue Razz Ice",
-    "Cherry B-Pop",
+    "Clear",
+    "Grape Ice",
     "Green Apple",
     "Mango Bomb",
     "Miami Mint",
-    "Polar Ice",
-    "Strawberry Cream",
-    "Cool Mint",
     "Peach Ice",
-    "Grape Burst",
-    "Lush Ice",
-    "Pineapple Coconut",
-    "Sour Apple",
-    "Berry Blast",
-    "Banana",
+    "Punch Ice",
+    "Sour Neon Fab",
+    "Super Mint",
+    "Tobacco",
+    "Triple Berry",
+    "Watermelon BG",
+    "Watermelon Gami",
+    "White Gami",
+    "White Strawberry",
   ]),
 };
 
+/** Battery colors available for the Cliq. */
+export const CLIQ_BATTERY_COLORS = [
+  { name: "Black", hex: "#1a1a1a" },
+  { name: "Blue", hex: "#1a9fb5" },
+  { name: "Green", hex: "#2fa84f" },
+  { name: "Orange", hex: "#f07d1a" },
+  { name: "Purple", hex: "#6b3fc4" },
+  { name: "Red", hex: "#c8202e" },
+];
+
+/** Ready-to-vape kits (battery + pod). */
+export const CLIQ_KITS = [
+  "Blue Razz Ice",
+  "Grape Ice",
+  "Miami Mint",
+  "Peach Ice",
+  "Super Mint",
+  "Watermelon Ice",
+  "White Gami",
+  "White Strawberry",
+];
+
+/* ─── Beri Cirql ──────────────────────────────────────────────────────────── */
 
 export const BERI_CIRQL: Product = {
   key: "cirql",
   name: "Beri Cirql",
-  tagline: "Full Circle Performance.",
+  tagline: "Authentic Shisha Flavor.",
+  summary:
+    "Hookah, without the setup. 150,000 puffs of authentic shisha flavor through a quad mesh coil.",
   description:
-    "Beri Cirql brings a rounded, ergonomic form factor to the Beri line-up. Built around a continuous airflow path and a long-life mesh coil, it delivers steady flavor across the full tank without the drop-off you get from lesser devices.",
+    "Beri Cirql brings the shisha lounge into a disposable. Built around authentic hookah flavor profiles — double apple, grape drank, love 66 — and a quad mesh coil rated for 150,000 puffs, the longest-running device Beri makes by a wide margin.",
+  highlight: { value: "150K", unit: "Puffs" },
+  keySpecs: ["Authentic Shisha Flavor", "Quad Mesh Coil", "Made in USA"],
   specs: [
-    { label: "Cirql Mode", value: "25K Puffs" },
-    { label: "Normal Mode", value: "50K Puffs" },
-    { label: "Airflow", value: "Continuous Path" },
-    { label: "Charging", value: "2.5x Speed" },
-    { label: "Display", value: "LED Display" },
-    { label: "Coil", value: "Long-Life Mesh" },
+    { label: "Puffs", value: "150,000" },
+    { label: "Coil", value: "Quad Mesh" },
+    { label: "Flavor", value: "Authentic Shisha" },
+    { label: "Origin", value: "USA" },
   ],
   heroSlot: "cirql_hero",
   modelSlot: "cirql_model_3d",
   specSlots: [
-    { slot: "cirql_spec_main", label: "Rounded Ergonomic Design", tall: true },
-    { slot: "cirql_spec_airflow", label: "Continuous Airflow Path" },
-    { slot: "cirql_spec_coil", label: "Long-Life Mesh Coil" },
-    { slot: "cirql_spec_bottom", label: "2.5x Charging Speed" },
-    { slot: "cirql_spec_puffs", label: "50K Puffs Normal Mode", bigValue: "50K", bigUnit: "Puffs" },
-    { slot: "cirql_spec_display", label: "LED Display", bigValue: "LED", bigUnit: "Display" },
+    { slot: "cirql_spec_main", label: "Hookah-Inspired Form", tall: true },
+    { slot: "cirql_spec_coil", label: "Quad Mesh Coil" },
+    { slot: "cirql_spec_flavor", label: "Authentic Shisha Flavor" },
+    { slot: "cirql_spec_display", label: "E-Liquid Level Display" },
+    { slot: "cirql_spec_puffs", label: "150,000 Puffs", bigValue: "150K", bigUnit: "Puffs" },
+    { slot: "cirql_spec_usa", label: "Made in USA", bigValue: "USA", bigUnit: "Made In" },
   ],
   flavors: buildFlavors("cirql", [
-    "Tropical Gummy",
-    "Triple Berry",
+    "Apple Caramel Pop",
+    "Blue Razz",
+    "Cool Mint",
+    "Double Apple",
+    "Grape Drank",
+    "Lemon Mint",
+    "Lime Frost",
+    "Love 66",
+    "Lucid Dreams",
+    "Mixed Berries",
+    "Peach Ice",
+    "Peach Mango Watermelon",
+    "Strawberry Punch",
     "Watermelon Ice",
-    "Banana Taffy",
-    "White Strawberry",
-    "Blue Razz Ice",
-    "Cherry B-Pop",
-    "Green Apple",
-    "Mango Bomb",
-    "Miami Mint",
-    "Polar Ice",
-    "Strawberry Cream",
   ]),
 };
+
+/* ─── Beri E-Liquid ───────────────────────────────────────────────────────── */
 
 export const BERI_ELIQUID: Product = {
   key: "eliquid",
   name: "Beri E-Liquid",
   tagline: "The Flavor, Bottled.",
+  summary:
+    "The Beri flavor library for your own device. 30 mL bottles in 25 mg or 50 mg, bottled in California.",
   description:
-    "The full Beri flavor library, now available as 30 ml bottled e-liquid for your own device. 50 mg nicotine salt, made in the USA, in a child-resistant chubby gorilla bottle — same flavor engineering as the Beri disposables, formulated for consistent performance across a wide range of coils and tanks.",
+    "The same flavor engineering behind the Beri disposables, bottled for your own setup. 30 mL child-resistant bottles in 25 mg and 50 mg nicotine salt, blended and bottled in California, across twelve profiles.",
+  highlight: { value: "30", unit: "mL Bottle" },
+  keySpecs: ["25 mg & 50 mg", "Nicotine Salt", "Bottled in California"],
   specs: [
-    { label: "Bottle Size", value: "30 ml" },
-    { label: "Nicotine", value: "50 mg Salt" },
-    { label: "Origin", value: "Made in USA" },
+    { label: "Bottle Size", value: "30 mL" },
+    { label: "Nicotine", value: "25 mg / 50 mg" },
+    { label: "Type", value: "Nicotine Salt" },
+    { label: "Origin", value: "Bottled in California" },
     { label: "Cap", value: "Child-Resistant" },
-    { label: "Flavors", value: "12 Profiles" },
   ],
   heroSlot: "eliquid_hero",
   modelSlot: "eliquid_model_3d",
   specSlots: [
-    { slot: "eliquid_spec_main", label: "Bottle Design", tall: true },
-    { slot: "eliquid_spec_nic", label: "50 mg Nicotine Salt" },
-    { slot: "eliquid_spec_base", label: "VG / PG Base" },
-    { slot: "eliquid_spec_bottom", label: "Child-Resistant Cap" },
-    { slot: "eliquid_spec_size", label: "Bottle Size", bigValue: "30", bigUnit: "ml" },
+    { slot: "eliquid_spec_main", label: "30 mL Bottle", tall: true },
+    { slot: "eliquid_spec_nic", label: "25 mg & 50 mg Options" },
+    { slot: "eliquid_spec_cap", label: "Child-Resistant Cap" },
+    { slot: "eliquid_spec_ca", label: "Bottled in California" },
+    { slot: "eliquid_spec_size", label: "30 mL Bottle", bigValue: "30", bigUnit: "mL" },
     { slot: "eliquid_spec_flavors", label: "Flavor Profiles", bigValue: "12", bigUnit: "Flavors" },
   ],
   flavors: buildFlavors("eliquid", [
-    "Tropical Gummy",
-    "Triple Berry",
-    "Watermelon Ice",
-    "Banana Taffy",
-    "White Strawberry",
-    "Blue Razz Ice",
-    "Cherry B-Pop",
-    "Green Apple",
-    "Mango Bomb",
-    "Miami Mint",
-    "Polar Ice",
-    "Strawberry Cream",
+    "Apple Caramel Pop",
+    "Apple Juice",
+    "Blue Frost",
+    "Citrus Squeeze",
+    "Grape Drank",
+    "Lime Frost",
+    "Minty O's",
+    "Mother's Milk",
+    "Pistachio Gelato",
+    "Red Ropes",
+    "Sunni Drank",
+    "Winter Green Saverz",
   ]),
 };
+
+/* ─── Catalogue ───────────────────────────────────────────────────────────── */
 
 export const PRODUCTS: Product[] = [BERI_CRUSH, BERI_CLIQ, BERI_CIRQL, BERI_ELIQUID];
 

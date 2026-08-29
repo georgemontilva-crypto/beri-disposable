@@ -3,9 +3,8 @@ import { PlaceholderImage } from "@/components/PlaceholderImage";
 import { PublicLayout } from "@/components/PublicLayout";
 import { useReveal } from "@/hooks/useReveal";
 import { useSiteImages, type PublicMediaEntry } from "@/hooks/useSiteImages";
-import { BERI_CIRQL, BERI_CLIQ, BERI_CRUSH, BERI_ELIQUID, type Flavor, type Product } from "@/lib/products";
-import { ArrowRight, ShieldCheck, Sparkles, Zap, Cpu, Battery, Monitor } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { PRODUCTS, type Product } from "@/lib/products";
+import { ArrowRight, Check, ShieldCheck, Store } from "lucide-react";
 import { Link } from "wouter";
 
 export default function Home() {
@@ -17,12 +16,9 @@ export default function Home() {
       <div ref={revealRef}>
         <HeroFan />
         <Marquee />
-        <FeatureStrip />
-        <ProductDeepSection product={BERI_CRUSH} images={images} align="left" accentColor="from-neutral-900 to-neutral-600" badgeLabel="WORLD'S 1ST AUTO-ADAPTIVE POWER" />
-        <ProductDeepSection product={BERI_CLIQ} images={images} align="right" accentColor="from-neutral-700 to-neutral-400" badgeLabel="FIND YOUR CLIQ" />
-        <ProductDeepSection product={BERI_CIRQL} images={images} align="left" accentColor="from-neutral-900 to-neutral-600" badgeLabel="FULL CIRCLE PERFORMANCE" />
-        <ProductDeepSection product={BERI_ELIQUID} images={images} align="right" accentColor="from-neutral-700 to-neutral-400" badgeLabel="THE FLAVOR, BOTTLED" />
+        <ProductSummary images={images} />
         <AuthCta />
+        <WholesaleCta />
       </div>
     </PublicLayout>
   );
@@ -56,141 +52,107 @@ function Marquee() {
   );
 }
 
-/* ─── Feature Strip ─────────────────────────────────────────────────────── */
-function FeatureStrip() {
-  const features = [
-    { icon: Zap, title: "Auto-Adaptive Power", desc: "World's 1st AAP technology" },
-    { icon: Monitor, title: "Interactive HD Screen", desc: "Real-time usage display" },
-    { icon: Battery, title: "2.5x Charging Speed", desc: "Blazing fast recharge" },
-    { icon: Cpu, title: "Quad Coil Technology", desc: "Unmatched flavor density" },
-    { icon: Sparkles, title: "360° Crystal Tank", desc: "Full-view e-liquid window" },
-    { icon: ShieldCheck, title: "Verified Authentic", desc: "Scratch & scan security" },
-  ];
+/* ─── Product summary ───────────────────────────────────────────────────────
+   The homepage is a router: one comparable card per product, then straight to
+   the product page. Full specs, flavor galleries and the 3D viewer live there,
+   so nothing here repeats what the visitor will see next. */
+function ProductSummary({ images }: { images: Record<string, PublicMediaEntry> }) {
   return (
-    <section className="container py-16">
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
-        {features.map((f) => (
-          <div key={f.title} className="reveal flex flex-col items-center gap-3 text-center">
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-neutral-950 text-white">
-              <f.icon className="h-5 w-5" />
-            </div>
-            <div>
-              <div className="text-sm font-semibold">{f.title}</div>
-              <div className="mt-0.5 text-xs text-muted-foreground">{f.desc}</div>
-            </div>
-          </div>
+    <section className="container py-20 md:py-28">
+      <div className="reveal mx-auto max-w-2xl text-center">
+        <span className="text-xs font-semibold uppercase tracking-[0.25em] text-neutral-400">
+          The line-up
+        </span>
+        <h2 className="mt-3 font-display text-4xl font-bold tracking-tight md:text-5xl">
+          Four Devices, One Standard
+        </h2>
+        <p className="mt-4 text-neutral-500">
+          From the auto-adaptive flagship to authentic shisha and bottled
+          e-liquid — every Beri product runs the same flavor engineering and
+          ships with a verifiable authenticity code.
+        </p>
+      </div>
+
+      <div className="mt-14 grid gap-6 md:grid-cols-2">
+        {PRODUCTS.map((product) => (
+          <ProductCard key={product.key} product={product} images={images} />
         ))}
       </div>
     </section>
   );
 }
 
-/* ─── Product Deep Section ──────────────────────────────────────────────── */
-function ProductDeepSection({
+function ProductCard({
   product,
   images,
-  align,
-  accentColor,
-  badgeLabel,
 }: {
   product: Product;
   images: Record<string, PublicMediaEntry>;
-  align: "left" | "right";
-  accentColor: string;
-  badgeLabel: string;
 }) {
-  const [current, setCurrent] = useState(0);
-  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
-
-  const startTimer = () => {
-    timerRef.current = setInterval(() => {
-      setCurrent((c) => (c + 1) % product.flavors.length);
-    }, 3500);
-  };
-
-  useEffect(() => {
-    startTimer();
-    return () => { if (timerRef.current) clearInterval(timerRef.current); };
-  }, [product.flavors.length]);
-
-  const handleDot = (i: number) => {
-    setCurrent(i);
-    if (timerRef.current) clearInterval(timerRef.current);
-    startTimer();
-  };
-
-  const flavor: Flavor = product.flavors[current];
-
   return (
-    <section className="overflow-hidden bg-neutral-950 py-20 text-white">
-      <div className="container">
-        {/* Header */}
-        <div className={`reveal mb-12 flex flex-col ${align === "right" ? "items-end text-right" : "items-start text-left"}`}>
-          <span className="mb-3 inline-block rounded-full border border-white/20 px-4 py-1 text-xs font-semibold uppercase tracking-[0.25em] text-white/60">
-            {badgeLabel}
-          </span>
-          <h2 className="font-display text-5xl font-bold tracking-tight sm:text-6xl">
+    <Link href={`/products/${product.key}`}>
+      <article className="reveal group flex h-full flex-col overflow-hidden rounded-[2rem] border border-neutral-200 bg-white transition-all duration-300 hover:-translate-y-1 hover:border-neutral-300 hover:shadow-[0_24px_60px_-24px_rgba(0,0,0,0.3)]">
+        {/* Visual */}
+        <div className="relative aspect-[16/10] overflow-hidden bg-neutral-950">
+          <PlaceholderImage
+            slot={`${product.key}_banner`}
+            imageMap={images}
+            width={800}
+            height={500}
+            label={product.name}
+            rounded="rounded-none"
+            className="h-full w-full transition-transform duration-500 group-hover:scale-[1.04]"
+          />
+          {/* Headline number */}
+          <div className="pointer-events-none absolute bottom-0 left-0 flex items-end gap-2 bg-gradient-to-t from-black/80 to-transparent p-6 pr-16 pt-16 text-white">
+            <span className="font-display text-5xl font-bold leading-none">
+              {product.highlight.value}
+            </span>
+            <span className="pb-1 text-sm font-medium text-neutral-300">
+              {product.highlight.unit}
+            </span>
+          </div>
+        </div>
+
+        {/* Copy */}
+        <div className="flex flex-1 flex-col p-7">
+          <h3 className="font-display text-3xl font-bold tracking-tight">
             {product.name}
-          </h2>
-          <p className="mt-3 max-w-md text-neutral-400">{product.tagline}</p>
-        </div>
+          </h3>
+          <p className="mt-1 text-sm font-medium text-neutral-400">
+            {product.tagline}
+          </p>
+          <p className="mt-4 text-sm leading-relaxed text-neutral-600">
+            {product.summary}
+          </p>
 
-        {/* Grid */}
-        <div className={`grid items-center gap-12 md:grid-cols-2 ${align === "right" ? "md:[direction:rtl]" : ""}`}>
-          {/* Specs */}
-          <div className="reveal space-y-6 md:[direction:ltr]">
-            <div className="grid grid-cols-2 gap-3">
-              {product.specs.map((s) => (
-                <div key={s.label} className="rounded-2xl border border-white/10 bg-white/5 px-4 py-4 backdrop-blur-sm">
-                  <div className="text-xs uppercase tracking-wider text-neutral-500">{s.label}</div>
-                  <div className="mt-1 text-sm font-semibold text-white">{s.value}</div>
-                </div>
-              ))}
-            </div>
-            <Link
-              href={`/products/${product.key}`}
-              className="press inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-semibold text-neutral-950 transition-colors hover:bg-neutral-100"
-            >
-              Explore {product.name} <ArrowRight className="h-4 w-4" />
-            </Link>
-          </div>
+          <ul className="mt-5 space-y-2">
+            {product.keySpecs.map((spec) => (
+              <li key={spec} className="flex items-center gap-2 text-sm text-neutral-700">
+                <Check className="h-4 w-4 shrink-0 text-neutral-400" strokeWidth={2.5} />
+                {spec}
+              </li>
+            ))}
+          </ul>
 
-          {/* Flavor carousel */}
-          <div className="reveal md:[direction:ltr]">
-            <div className="overflow-hidden rounded-[2rem]">
-              <PlaceholderImage
-                slot={flavor.slot}
-                imageMap={images}
-                width={480}
-                height={600}
-                label={flavor.name}
-                rounded="rounded-[2rem]"
-                className="transition-opacity duration-500"
-              />
-            </div>
-            <div className="mt-4 flex items-center justify-between px-1">
-              <span className="text-sm font-semibold">{flavor.name}</span>
-              <div className="flex gap-1.5">
-                {product.flavors.map((_, i) => (
-                  <button
-                    key={i}
-                    onClick={() => handleDot(i)}
-                    className={`h-1.5 rounded-full transition-all duration-300 ${i === current ? "w-5 bg-white" : "w-1.5 bg-white/30"}`}
-                  />
-                ))}
-              </div>
-            </div>
+          <div className="mt-auto flex items-center justify-between pt-6">
+            <span className="text-xs font-medium uppercase tracking-wider text-neutral-400">
+              {product.flavors.length} flavors
+            </span>
+            <span className="inline-flex items-center gap-1.5 text-sm font-semibold transition-transform duration-300 group-hover:translate-x-1">
+              Explore <ArrowRight className="h-4 w-4" />
+            </span>
           </div>
         </div>
-      </div>
-    </section>
+      </article>
+    </Link>
   );
 }
 
 /* ─── Auth CTA ──────────────────────────────────────────────────────────── */
 function AuthCta() {
   return (
-    <section className="container py-24">
+    <section className="container pb-10">
       <div className="reveal relative overflow-hidden rounded-[2rem] bg-neutral-950 px-8 py-16 text-center text-white md:px-16">
         <div
           className="absolute inset-0 opacity-20"
@@ -213,6 +175,35 @@ function AuthCta() {
         >
           <ShieldCheck className="h-4 w-4" />
           Verify Now
+        </Link>
+      </div>
+    </section>
+  );
+}
+
+/* ─── Wholesale CTA ─────────────────────────────────────────────────────── */
+function WholesaleCta() {
+  return (
+    <section className="container pb-24">
+      <div className="reveal flex flex-col items-start gap-6 rounded-[2rem] border border-neutral-200 px-8 py-12 md:flex-row md:items-center md:justify-between md:px-12">
+        <div>
+          <div className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.25em] text-neutral-400">
+            <Store className="h-4 w-4" /> For retailers
+          </div>
+          <h2 className="mt-3 font-display text-3xl font-bold tracking-tight sm:text-4xl">
+            Carry Beri In Your Store
+          </h2>
+          <p className="mt-3 max-w-lg text-sm text-neutral-600">
+            Displays, master cases and full flavor coverage across all four
+            lines. Apply for a wholesale account and our team will get back to
+            you with pricing.
+          </p>
+        </div>
+        <Link
+          href="/wholesale"
+          className="press inline-flex shrink-0 items-center gap-2 rounded-full bg-neutral-950 px-8 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-neutral-800"
+        >
+          Apply For Wholesale <ArrowRight className="h-4 w-4" />
         </Link>
       </div>
     </section>

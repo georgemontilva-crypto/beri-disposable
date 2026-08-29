@@ -122,6 +122,23 @@ export default function ProductPage() {
 
   const next = getNextProduct(key);
 
+  // Flavors keep their sheet order but split by edition, so limited runs read
+  // as their own range instead of disappearing into one long grid.
+  const flavorGroups = (() => {
+    const core = product.flavors.filter((f) => !f.edition);
+    const editions = new Map<string, typeof product.flavors>();
+    for (const f of product.flavors) {
+      if (!f.edition) continue;
+      const list = editions.get(f.edition) ?? [];
+      list.push(f);
+      editions.set(f.edition, list);
+    }
+    return [
+      ...(core.length ? [{ title: editions.size ? "Core Range" : null, flavors: core }] : []),
+      ...Array.from(editions, ([title, flavors]) => ({ title, flavors })),
+    ];
+  })();
+
   const goToNext = () => {
     window.scrollTo({ top: 0, behavior: "instant" });
     navigate(`/products/${next.key}`);
@@ -223,6 +240,27 @@ export default function ProductPage() {
         {/* ── Bento Spec Grid (black bg) ───────────────────────────────── */}
         <SpecGrid specSlots={product.specSlots} images={images} productName={product.name} />
 
+        {/* ── Packaging (trade info) ───────────────────────────────────── */}
+        {product.packaging && (
+          <section className="container pb-14">
+            <div className="reveal rounded-[2rem] border border-neutral-200 px-8 py-8">
+              <div className="text-xs font-semibold uppercase tracking-[0.25em] text-neutral-400">
+                Packaging
+              </div>
+              <div className="mt-5 grid gap-6 sm:grid-cols-3">
+                {product.packaging.map((p) => (
+                  <div key={p.label}>
+                    <div className="text-xs uppercase tracking-wider text-neutral-400">
+                      {p.label}
+                    </div>
+                    <div className="mt-1 font-display text-xl font-bold">{p.value}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
+
         {/* ── Flavors grid ─────────────────────────────────────────────── */}
         <section className="bg-black py-20 text-white">
           <div className="container">
@@ -238,30 +276,39 @@ export default function ProductPage() {
               </p>
             </div>
 
-            <div className="grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-4">
-              {product.flavors.map((f, i) => (
-                <div
-                  key={f.slug}
-                  className="reveal group"
-                  data-reveal-delay={Math.min(i * 40, 320)}
-                >
-                  <div className="overflow-hidden rounded-2xl transition-transform duration-300 group-hover:-translate-y-1.5">
-                    <PlaceholderImage
-                      slot={f.slot}
-                      imageMap={images}
-                      width={400}
-                      height={500}
-                      label={f.name}
-                      rounded="rounded-2xl"
-                    />
-                  </div>
-                  <div className="mt-3 px-1">
-                    <div className="font-semibold text-white">{f.name}</div>
-                    <div className="text-xs text-neutral-500">{product.name}</div>
-                  </div>
+            {flavorGroups.map((group) => (
+              <div key={group.title ?? "core"} className="mb-14 last:mb-0">
+                {group.title && (
+                  <h3 className="reveal mb-6 inline-block rounded-full border border-white/20 px-4 py-1.5 font-display text-sm font-bold uppercase tracking-[0.2em] text-white/70">
+                    {group.title}
+                  </h3>
+                )}
+                <div className="grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-4">
+                  {group.flavors.map((f, i) => (
+                    <div
+                      key={f.slug}
+                      className="reveal group"
+                      data-reveal-delay={Math.min(i * 40, 320)}
+                    >
+                      <div className="overflow-hidden rounded-2xl transition-transform duration-300 group-hover:-translate-y-1.5">
+                        <PlaceholderImage
+                          slot={f.slot}
+                          imageMap={images}
+                          width={400}
+                          height={500}
+                          label={f.name}
+                          rounded="rounded-2xl"
+                        />
+                      </div>
+                      <div className="mt-3 px-1">
+                        <div className="font-semibold text-white">{f.name}</div>
+                        <div className="text-xs text-neutral-500">{product.name}</div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
+              </div>
+            ))}
           </div>
         </section>
 
