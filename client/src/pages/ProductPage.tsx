@@ -1,10 +1,12 @@
 import { PlaceholderImage } from "@/components/PlaceholderImage";
 import { PublicLayout } from "@/components/PublicLayout";
 import { useReveal } from "@/hooks/useReveal";
+import EditionBackdrop, { type EditionTheme } from "@/components/EditionBackdrop";
 import ProductViewer3D from "@/components/ProductViewer3D";
 import { useSiteImages, type PublicMediaEntry } from "@/hooks/useSiteImages";
 import { getNextProduct, getProductByKey, type SpecSlot } from "@/lib/products";
 import { ArrowLeft, ArrowRight, ShieldCheck } from "lucide-react";
+import { useMemo, useState } from "react";
 import { Link, useLocation, useParams } from "wouter";
 import NotFound from "./NotFound";
 
@@ -124,7 +126,9 @@ export default function ProductPage() {
 
   // Flavors keep their sheet order but split by edition, so limited runs read
   // as their own range instead of disappearing into one long grid.
-  const flavorGroups = (() => {
+  const flavorGroups = useMemo<
+    { title: string | null; flavors: typeof product.flavors }[]
+  >(() => {
     const core = product.flavors.filter((f) => !f.edition);
     const editions = new Map<string, typeof product.flavors>();
     for (const f of product.flavors) {
@@ -137,6 +141,17 @@ export default function ProductPage() {
       ...(core.length ? [{ title: editions.size ? "Core Range" : null, flavors: core }] : []),
       ...Array.from(editions, ([title, flavors]) => ({ title, flavors })),
     ];
+  }, [product]);
+
+  const [activeEdition, setActiveEdition] = useState(0);
+  const activeGroup = flavorGroups[activeEdition] ?? flavorGroups[0];
+
+  /** Maps an edition name to its ambient backdrop. */
+  const editionTheme: EditionTheme = (() => {
+    const title = activeGroup?.title?.toLowerCase() ?? "";
+    if (title.includes("winter")) return "winter";
+    if (title.includes("summer")) return "summer";
+    return "none";
   })();
 
   const goToNext = () => {
@@ -261,9 +276,12 @@ export default function ProductPage() {
         )}
 
         {/* ── Flavors grid ─────────────────────────────────────────────── */}
-        <section className="bg-black py-20 text-white">
-          <div className="container">
-            <div className="reveal mb-10">
+        <section className="relative overflow-hidden bg-black py-20 text-white">
+          {/* Ambient particles themed to the selected edition. */}
+          <EditionBackdrop theme={editionTheme} />
+
+          <div className="container relative">
+            <div className="reveal mb-8">
               <span className="text-xs font-semibold uppercase tracking-[0.25em] text-neutral-500">
                 The Lineup
               </span>
@@ -275,39 +293,68 @@ export default function ProductPage() {
               </p>
             </div>
 
-            {flavorGroups.map((group) => (
-              <div key={group.title ?? "core"} className="mb-14 last:mb-0">
-                {group.title && (
-                  <h3 className="reveal mb-6 inline-block rounded-full border border-white/20 px-4 py-1.5 font-display text-sm font-bold uppercase tracking-[0.2em] text-white/70">
-                    {group.title}
-                  </h3>
-                )}
-                <div className="grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-4">
-                  {group.flavors.map((f, i) => (
-                    <div
-                      key={f.slug}
-                      className="reveal group"
-                      data-reveal-delay={Math.min(i * 40, 320)}
+            {/* Edition tabs — only rendered when the product actually has more
+                than one range, so single-range products stay uncluttered. */}
+            {flavorGroups.length > 1 && (
+              <div
+                role="tablist"
+                aria-label="Flavor editions"
+                className="reveal mb-10 flex flex-wrap gap-2"
+              >
+                {flavorGroups.map((group, i) => {
+                  const active = i === activeEdition;
+                  return (
+                    <button
+                      key={group.title ?? "core"}
+                      role="tab"
+                      type="button"
+                      aria-selected={active}
+                      onClick={() => setActiveEdition(i)}
+                      className={`press rounded-full px-5 py-2.5 font-display text-sm font-bold uppercase tracking-[0.15em] transition-all duration-300 ${
+                        active
+                          ? "bg-white text-neutral-950"
+                          : "border border-white/20 text-white/60 hover:border-white/40 hover:text-white"
+                      }`}
                     >
-                      <div className="overflow-hidden rounded-2xl transition-transform duration-300 group-hover:-translate-y-1.5">
-                        <PlaceholderImage
-                          slot={f.slot}
-                          imageMap={images}
-                          width={400}
-                          height={500}
-                          label={f.name}
-                          rounded="rounded-2xl"
-                        />
-                      </div>
-                      <div className="mt-3 px-1">
-                        <div className="font-semibold text-white">{f.name}</div>
-                        <div className="text-xs text-neutral-500">{product.name}</div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+                      {group.title ?? "All"}
+                      <span className="ml-2 text-[11px] font-medium opacity-60">
+                        {group.flavors.length}
+                      </span>
+                    </button>
+                  );
+                })}
               </div>
-            ))}
+            )}
+
+            {/* Keyed on the tab so the grid re-runs its reveal animation on
+                every switch instead of swapping content in place. */}
+            <div
+              key={activeEdition}
+              className="grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-4"
+            >
+              {activeGroup?.flavors.map((f, i) => (
+                <div
+                  key={f.slug}
+                  className="reveal group"
+                  data-reveal-delay={Math.min(i * 40, 320)}
+                >
+                  <div className="overflow-hidden rounded-2xl transition-transform duration-300 group-hover:-translate-y-1.5">
+                    <PlaceholderImage
+                      slot={f.slot}
+                      imageMap={images}
+                      width={400}
+                      height={500}
+                      label={f.name}
+                      rounded="rounded-2xl"
+                    />
+                  </div>
+                  <div className="mt-3 px-1">
+                    <div className="font-semibold text-white">{f.name}</div>
+                    <div className="text-xs text-neutral-500">{product.name}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </section>
 
