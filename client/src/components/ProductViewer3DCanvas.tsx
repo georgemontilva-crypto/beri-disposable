@@ -15,39 +15,66 @@ import { Bounds, Environment, Html, useGLTF } from "@react-three/drei";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Loader2 } from "lucide-react";
 import { Suspense, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { Box3, Vector3, type Group } from "three";
+import { Box3, Quaternion, Vector3, type Group } from "three";
 
 /* ─── Tuning ──────────────────────────────────────────────────────────────── */
 
 const CONFIG = {
-  /** Radians of yaw per pixel dragged. */
+  /** Radians rotated per pixel dragged. */
   sensitivity: 0.008,
-  /** Vertical drag is deliberately less sensitive — it's clamped anyway. */
-  pitchSensitivity: 0.005,
   /** Fraction of spin velocity surviving each second. Lower = more friction. */
   spinDecayPerSecond: 0.06,
   /** Below this (rad/s) the spin is considered stopped. */
   spinEpsilon: 0.06,
   /** Cap so a violent flick doesn't turn into a blur. */
   maxSpin: 9,
-  /** Pitch limits, radians from level. */
-  pitchLimit: 0.5,
   /** Idle seconds before auto-rotation resumes after an interaction. */
   idleBeforeAutoRotate: 2.5,
   autoRotateSpeed: 0.32,
 };
 
-/** Shared, mutable motion state written by the DOM layer, read in useFrame. */
+const WORLD_Y = new Vector3(0, 1, 0);
+
+/**
+ * Shared, mutable motion state written by the DOM layer, read in useFrame.
+ *
+ * Orientation is a quaternion rather than yaw/pitch angles. Euler angles are
+ * fine while rotation is clamped near level, but for free rotation in every
+ * direction they gimbal-lock: tip the model far enough and the two axes
+ * collapse onto each other, so horizontal drags stop doing anything. A
+ * quaternion composed in screen space has no such pole — the model always turns
+ * in the direction the pointer moved, whichever way up it currently is.
+ */
 export type MotionState = {
-  yaw: number;
-  pitch: number;
-  spin: number;
+  orientation: Quaternion;
+  /** Axis the free spin turns around, in world space. */
+  spinAxis: Vector3;
+  /** Angular speed in rad/s. */
+  spinSpeed: number;
   dragging: boolean;
   idleSeconds: number;
 };
 
 export function createMotionState(): MotionState {
-  return { yaw: 0, pitch: 0, spin: 0, dragging: false, idleSeconds: 0 };
+  return {
+    orientation: new Quaternion(),
+    spinAxis: new Vector3(0, 1, 0),
+    spinSpeed: 0,
+    dragging: false,
+    idleSeconds: 0,
+  };
+}
+
+/**
+ * Screen-space drag to world rotation, the classic trackball mapping: dragging
+ * right turns around the vertical axis, dragging down turns around the
+ * horizontal one, and a diagonal drag turns around the axis in between.
+ */
+function dragToQuaternion(dx: number, dy: number, out: Quaternion): Quaternion {
+  const angle = Math.hypot(dx, dy) * CONFIG.sensitivity;
+  if (angle === 0) return out.identity();
+  const axis = new Vector3(dy, dx, 0).normalize();
+  return out.setFromAxisAngle(axis, angle);
 }
 
 /* ─── Model ───────────────────────────────────────────────────────────────── */
@@ -67,6 +94,8 @@ function Model({
   const ref = useRef<Group>(null);
   const inner = useRef<Group>(null);
   const { invalidate } = useThree();
+  // Reused each frame; allocating a Quaternion per frame would churn the GC.
+  const step = useMemo(() => new Quaternion(), []);
 
   /**
    * Normalizes whatever the modeller exported into something that spins
@@ -126,33 +155,27 @@ function Model({
     if (m.dragging) {
       m.idleSeconds = 0;
       moving = true;
+    } else if (m.spinSpeed > CONFIG.spinEpsilon) {
+      step.setFromAxisAngle(m.spinAxis, m.spinSpeed * dt);
+      // Pre-multiply: the spin is expressed in world space, so it has to be
+      // applied on top of the current orientation rather than after it.
+      m.orientation.premultiply(step).normalize();
+      // Exponential friction: velocity keeps a fixed fraction of itself each
+      // second, so it decays identically at 60 and at 120 fps.
+      m.spinSpeed *= Math.pow(CONFIG.spinDecayPerSecond, dt);
+      m.idleSeconds = 0;
+      moving = true;
     } else {
-      if (Math.abs(m.spin) > CONFIG.spinEpsilon) {
-        m.yaw += m.spin * dt;
-        // Exponential friction: velocity keeps a fixed fraction each second,
-        // which decays smoothly at any frame rate instead of per-frame.
-        m.spin *= Math.pow(CONFIG.spinDecayPerSecond, dt);
-        m.idleSeconds = 0;
+      m.spinSpeed = 0;
+      m.idleSeconds += dt;
+      if (autoRotate && m.idleSeconds > CONFIG.idleBeforeAutoRotate) {
+        step.setFromAxisAngle(WORLD_Y, CONFIG.autoRotateSpeed * dt);
+        m.orientation.premultiply(step).normalize();
         moving = true;
-      } else {
-        m.spin = 0;
-        m.idleSeconds += dt;
-        if (autoRotate && m.idleSeconds > CONFIG.idleBeforeAutoRotate) {
-          m.yaw += CONFIG.autoRotateSpeed * dt;
-          moving = true;
-        }
-      }
-      // Ease the pitch back toward level once the user lets go.
-      if (Math.abs(m.pitch) > 0.001) {
-        m.pitch *= Math.pow(0.25, dt);
-        moving = true;
-      } else {
-        m.pitch = 0;
       }
     }
 
-    g.rotation.y = m.yaw;
-    g.rotation.x = m.pitch;
+    g.quaternion.copy(m.orientation);
 
     // frameloop is "demand", so keep requesting frames while anything moves.
     if (moving) invalidate();
@@ -199,7 +222,8 @@ export default function ProductViewer3DCanvas({
   // Sample history for velocity. A single last-frame delta is noisy — a pointer
   // that stalls for one frame before release would read as zero velocity and
   // kill the flick, so average over a short window instead.
-  const samples = useRef<{ x: number; t: number }[]>([]);
+  const samples = useRef<{ x: number; y: number; t: number }[]>([]);
+  const dragQuat = useMemo(() => new Quaternion(), []);
   const lastX = useRef(0);
   const lastY = useRef(0);
   const activePointer = useRef<number | null>(null);
@@ -209,10 +233,10 @@ export default function ProductViewer3DCanvas({
     activePointer.current = e.pointerId;
     e.currentTarget.setPointerCapture(e.pointerId);
     motion.current.dragging = true;
-    motion.current.spin = 0;
+    motion.current.spinSpeed = 0;
     lastX.current = e.clientX;
     lastY.current = e.clientY;
-    samples.current = [{ x: e.clientX, t: performance.now() }];
+    samples.current = [{ x: e.clientX, y: e.clientY, t: performance.now() }];
     setGrabbing(true);
   }, []);
 
@@ -224,14 +248,14 @@ export default function ProductViewer3DCanvas({
     lastX.current = e.clientX;
     lastY.current = e.clientY;
 
-    m.yaw += dx * CONFIG.sensitivity;
-    m.pitch = Math.max(
-      -CONFIG.pitchLimit,
-      Math.min(CONFIG.pitchLimit, m.pitch + dy * CONFIG.pitchSensitivity)
-    );
+    // Free rotation in every direction: compose the drag in screen space and
+    // pre-multiply, so the model keeps turning the way the pointer moves no
+    // matter which way up it currently is.
+    dragToQuaternion(dx, dy, dragQuat);
+    m.orientation.premultiply(dragQuat).normalize();
 
     const now = performance.now();
-    samples.current.push({ x: e.clientX, t: now });
+    samples.current.push({ x: e.clientX, y: e.clientY, t: now });
     // Keep roughly the last 100ms of movement.
     while (samples.current.length > 2 && now - samples.current[0].t > 100) {
       samples.current.shift();
@@ -251,9 +275,13 @@ export default function ProductViewer3DCanvas({
       const last = s[s.length - 1];
       const dt = (last.t - first.t) / 1000;
       if (dt > 0.005) {
-        const pxPerSecond = (last.x - first.x) / dt;
-        const spin = pxPerSecond * CONFIG.sensitivity;
-        m.spin = Math.max(-CONFIG.maxSpin, Math.min(CONFIG.maxSpin, spin));
+        const vx = (last.x - first.x) / dt;
+        const vy = (last.y - first.y) / dt;
+        const speed = Math.hypot(vx, vy) * CONFIG.sensitivity;
+        if (speed > CONFIG.spinEpsilon) {
+          m.spinAxis.set(vy, vx, 0).normalize();
+          m.spinSpeed = Math.min(speed, CONFIG.maxSpin);
+        }
       }
     }
     samples.current = [];
@@ -295,6 +323,8 @@ export default function ProductViewer3DCanvas({
       <div
         className="absolute inset-0"
         style={{ cursor: grabbing ? "grabbing" : "grab", touchAction: "pan-y" }}
+        role="img"
+        aria-label={`Interactive 3D model. Drag to rotate.`}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
         onPointerUp={endDrag}

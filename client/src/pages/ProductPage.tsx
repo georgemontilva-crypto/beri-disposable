@@ -146,13 +146,13 @@ export default function ProductPage() {
 
   return (
     <PublicLayout>
-      <div ref={revealRef}>
+      <div ref={revealRef} className="bg-neutral-950 text-white">
         {/* ── Hero ─────────────────────────────────────────────────────── */}
-        <section className="relative overflow-hidden border-b border-neutral-200 noise-bg">
+        <section className="relative overflow-hidden border-b border-white/10">
           <div className="container py-12 md:py-16">
             <Link
               href="/"
-              className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+              className="inline-flex items-center gap-1.5 text-sm font-medium text-neutral-400 transition-colors hover:text-white"
             >
               <ArrowLeft className="h-4 w-4" />
               Back to home
@@ -161,7 +161,7 @@ export default function ProductPage() {
             <div className="mt-8 grid items-center gap-12 md:grid-cols-2">
               {/* Left: title + text — title aligned LEFT */}
               <div className="reveal">
-                <span className="text-xs font-semibold uppercase tracking-[0.25em] text-muted-foreground">
+                <span className="text-xs font-semibold uppercase tracking-[0.25em] text-neutral-500">
                   Beri Disposable
                 </span>
                 {/* Title LEFT-aligned */}
@@ -169,20 +169,25 @@ export default function ProductPage() {
                   {product.name}
                 </h1>
                 <p className="mt-3 text-xl font-medium text-neutral-500 text-left">{product.tagline}</p>
-                <p className="mt-5 max-w-md leading-relaxed text-muted-foreground">
+                <p className="mt-5 max-w-md leading-relaxed text-neutral-400">
                   {product.description}
                 </p>
                 <div className="mt-7 grid max-w-md grid-cols-2 gap-3">
                   {product.specs.map((s) => (
-                    <div key={s.label} className="glass rounded-xl px-4 py-3">
-                      <div className="text-xs uppercase tracking-wider text-muted-foreground">{s.label}</div>
+                    <div
+                      key={s.label}
+                      className="rounded-xl border border-white/10 bg-white/5 px-4 py-3"
+                    >
+                      <div className="text-xs uppercase tracking-wider text-neutral-500">
+                        {s.label}
+                      </div>
                       <div className="mt-0.5 text-sm font-semibold">{s.value}</div>
                     </div>
                   ))}
                 </div>
                 <Link
                   href="/authenticate"
-                  className="press mt-7 inline-flex items-center gap-2 rounded-full bg-foreground px-6 py-3 text-sm font-semibold text-background transition-colors hover:bg-foreground/90"
+                  className="press mt-7 inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-semibold text-neutral-950 transition-colors hover:bg-neutral-200"
                 >
                   <ShieldCheck className="h-4 w-4" />
                   Verify Authenticity
@@ -195,7 +200,6 @@ export default function ProductPage() {
                   slot={product.modelSlot}
                   fallbackSlot={product.heroSlot}
                   productName={product.name}
-                  transparent
                 />
               </div>
             </div>
@@ -238,14 +242,14 @@ export default function ProductPage() {
         {/* ── Packaging (trade info) ───────────────────────────────────── */}
         {product.packaging && (
           <section className="container pb-14">
-            <div className="reveal rounded-[2rem] border border-neutral-200 px-8 py-8">
+            <div className="reveal rounded-[2rem] border border-white/10 px-8 py-8">
               <div className="text-xs font-semibold uppercase tracking-[0.25em] text-neutral-400">
                 Packaging
               </div>
               <div className="mt-5 grid gap-6 sm:grid-cols-3">
                 {product.packaging.map((p) => (
                   <div key={p.label}>
-                    <div className="text-xs uppercase tracking-wider text-neutral-400">
+                    <div className="text-xs uppercase tracking-wider text-neutral-500">
                       {p.label}
                     </div>
                     <div className="mt-1 font-display text-xl font-bold">{p.value}</div>
@@ -310,7 +314,7 @@ export default function ProductPage() {
         {/* ── Cross-sell (scroll to top + navigate) ────────────────────── */}
         <section className="container py-24">
           <button onClick={goToNext} className="w-full text-left">
-            <div className="reveal group relative flex items-center justify-between overflow-hidden rounded-[2rem] bg-neutral-950 px-8 py-10 text-white transition-transform duration-300 hover:scale-[1.01] md:px-12">
+            <div className="reveal group relative flex items-center justify-between overflow-hidden rounded-[2rem] border border-white/10 bg-white/5 px-8 py-10 text-white transition-transform duration-300 hover:scale-[1.01] hover:bg-white/10 md:px-12">
               <div>
                 <div className="text-xs font-semibold uppercase tracking-[0.25em] text-neutral-500">
                   Discover more
