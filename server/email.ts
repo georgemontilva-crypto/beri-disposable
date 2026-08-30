@@ -77,7 +77,7 @@ export function buildApprovalEmail(params: {
     <div style="padding:28px; border:1px solid #eee; border-top:none; border-radius:0 0 16px 16px;">
       <p style="font-size:16px;">${greeting}</p>
       <p style="font-size:15px; line-height:1.6; color:#333;">
-        Great news — your wholesale application has been <strong>approved</strong>.
+        Great news, your wholesale application has been <strong>approved</strong>.
         To finish setting up your account, please create your password using the secure link below.
       </p>
       <p style="text-align:center; margin:28px 0;">

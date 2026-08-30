@@ -42,7 +42,7 @@ export const wholesaleRouter = beriRouter({
       try {
         await notifyOwner({
           title: "New Beri Wholesale Inquiry",
-          content: `${input.name} (${input.company ?? "—"}) — ${input.email} ${input.phone ?? ""}`,
+          content: `${input.name} (${input.company ?? "n/a"}) / ${input.email} ${input.phone ?? ""}`,
         });
       } catch {
         /* best-effort */

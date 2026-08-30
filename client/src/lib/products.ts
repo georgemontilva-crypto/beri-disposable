@@ -79,7 +79,7 @@ export const BERI_CRUSH: Product = {
   summary:
     "The flagship. Quad-mesh coil and up to 40W of auto-adaptive power, in the widest flavor range Beri makes.",
   description:
-    "Beri Crush reads your draw and adapts power in real time, delivering up to 40W through a quad-mesh coil. Up to 50,000 puffs of consistent flavor density, with a full-color display and the broadest flavor library in the line-up — including Summer and Winter limited editions and a zero-nicotine range.",
+    "Beri Crush reads your draw and adapts power in real time, delivering up to 40W through a quad-mesh coil. Up to 50,000 puffs of consistent flavor density, with a full-color display and the broadest flavor library in the line-up, including Summer and Winter limited editions and a zero-nicotine range.",
   highlight: { value: "50K", unit: "Puffs" },
   keySpecs: ["Quad-Mesh Coil", "Up to 40W Power", "Auto-Adaptive Draw"],
   specs: [
@@ -182,8 +182,8 @@ export const BERI_CLIQ: Product = {
   ],
   packaging: [
     { label: "Display Box", value: "5 single boxes" },
-    { label: "Master Case — Kits", value: "16 displays" },
-    { label: "Master Case — Pods", value: "20 displays" },
+    { label: "Master Case: Kits", value: "16 displays" },
+    { label: "Master Case: Pods", value: "20 displays" },
   ],
   heroSlot: "cliq_hero",
   modelSlot: "cliq_model_3d",
@@ -250,7 +250,7 @@ export const BERI_CIRQL: Product = {
   summary:
     "Hookah, without the setup. 150,000 puffs of authentic shisha flavor through a quad mesh coil.",
   description:
-    "Beri Cirql brings the shisha lounge into a disposable. Built around authentic hookah flavor profiles — double apple, grape drank, love 66 — and a quad mesh coil rated for 150,000 puffs, the longest-running device Beri makes by a wide margin.",
+    "Beri Cirql brings the shisha lounge into a disposable. Built around authentic hookah flavor profiles like double apple, grape drank and love 66, with a quad mesh coil rated for 150,000 puffs. The longest-running device Beri makes by a wide margin.",
   highlight: { value: "150K", unit: "Puffs" },
   keySpecs: ["Authentic Shisha Flavor", "Quad Mesh Coil", "Made in USA"],
   specs: [

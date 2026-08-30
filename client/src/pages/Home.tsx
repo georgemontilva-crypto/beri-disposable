@@ -68,7 +68,7 @@ function ProductSummary({ images }: { images: Record<string, PublicMediaEntry> }
         </h2>
         <p className="mt-4 text-neutral-500">
           From the auto-adaptive flagship to authentic shisha and bottled
-          e-liquid — every Beri product runs the same flavor engineering and
+          e-liquid. Every Beri product runs the same flavor engineering and
           ships with a verifiable authenticity code.
         </p>
       </div>
