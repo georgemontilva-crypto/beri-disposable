@@ -363,9 +363,9 @@
 .aurora-drift {
   background: radial-gradient(
     closest-side,
-    rgba(124, 92, 255, 0.3) 0%,
-    rgba(124, 92, 255, 0.14) 42%,
-    rgba(124, 92, 255, 0.05) 62%,
+    rgba(124, 92, 255, 0.42) 0%,
+    rgba(124, 92, 255, 0.2) 42%,
+    rgba(124, 92, 255, 0.07) 62%,
     transparent 78%
   );
   animation: aurora-drift 18s ease-in-out infinite alternate;
@@ -382,7 +382,7 @@
     transform: translate(-50%, 0) scale(1);
   }
   to {
-    transform: translate(-50%, -8vh) scale(1.08);
+    transform: translate(-50%, -10vh) scale(1.1);
   }
 }
 
@@ -401,9 +401,9 @@
 .aurora-drift-2 {
   background: radial-gradient(
     closest-side,
-    rgba(0, 190, 210, 0.26) 0%,
-    rgba(0, 190, 210, 0.12) 42%,
-    rgba(0, 190, 210, 0.04) 62%,
+    rgba(0, 190, 210, 0.38) 0%,
+    rgba(0, 190, 210, 0.18) 42%,
+    rgba(0, 190, 210, 0.06) 62%,
     transparent 78%
   );
   animation: aurora-drift-2 23s ease-in-out infinite alternate;

@@ -17,16 +17,17 @@ export default function AuroraGlow() {
       aria-hidden="true"
       className="pointer-events-none fixed inset-0 z-0 overflow-hidden"
     >
-      {/* Left source: wide, centred, the main wash. */}
+      {/* Left source. Centred on the very edge of the viewport, so only its
+          inner half is visible and it reads as light coming from off-screen. */}
       <div className="aurora-hue absolute inset-0">
-        <div className="aurora-drift absolute -bottom-[35vh] left-[30%] h-[110vh] w-[130vw] -translate-x-1/2 rounded-[50%]" />
+        <div className="aurora-drift absolute -bottom-[30vh] left-0 h-[110vh] w-[95vw] -translate-x-1/2 rounded-[50%]" />
       </div>
 
       {/* Right source. Every timing is deliberately coprime with the left one
           and offset by a negative delay, so the two never line up and the pair
           never reads as a repeating loop. */}
       <div className="aurora-hue-2 absolute inset-0">
-        <div className="aurora-drift-2 absolute -bottom-[30vh] left-[78%] h-[95vh] w-[110vw] -translate-x-1/2 rounded-[50%]" />
+        <div className="aurora-drift-2 absolute -bottom-[26vh] left-full h-[100vh] w-[95vw] -translate-x-1/2 rounded-[50%]" />
       </div>
     </div>
   );
