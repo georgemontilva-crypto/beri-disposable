@@ -434,3 +434,32 @@
     animation: none;
   }
 }
+
+/* ─── Floating media ───────────────────────────────────────────────────────
+   Gentle bob for product imagery. The base scale is above 1 so the vertical
+   travel never exposes the edges of the frame it sits in, and the shadow
+   deepens as the element rises, which is what actually sells the height —
+   movement alone reads as sliding, not floating. */
+.float-media {
+  animation: float-media 7s ease-in-out infinite;
+  will-change: transform, filter;
+}
+
+@keyframes float-media {
+  0%,
+  100% {
+    transform: translateY(0) scale(1.05);
+    filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.45));
+  }
+  50% {
+    transform: translateY(-10px) scale(1.07);
+    filter: drop-shadow(0 22px 28px rgba(0, 0, 0, 0.55));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .float-media {
+    animation: none;
+    transform: scale(1.05);
+  }
+}

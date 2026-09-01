@@ -80,8 +80,13 @@ function ProductSummary({ images }: { images: Record<string, PublicMediaEntry> }
       </div>
 
       <div className="mt-14 grid gap-6 md:grid-cols-2">
-        {PRODUCTS.map((product) => (
-          <ProductCard key={product.key} product={product} images={images} />
+        {PRODUCTS.map((product, i) => (
+          <ProductCard
+            key={product.key}
+            product={product}
+            images={images}
+            index={i}
+          />
         ))}
       </div>
     </section>
@@ -91,24 +96,43 @@ function ProductSummary({ images }: { images: Record<string, PublicMediaEntry> }
 function ProductCard({
   product,
   images,
+  index,
 }: {
   product: Product;
   images: Record<string, PublicMediaEntry>;
+  index: number;
 }) {
+  // Offset each card so the four don't bob in unison, which would read as the
+  // whole grid pulsing rather than four objects floating independently.
+  const floatDelay = -(index * 1.6);
+
   return (
     <Link href={`/products/${product.key}`}>
       <article className="reveal group flex h-full flex-col overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.04] transition-all duration-300 hover:-translate-y-1 hover:border-white/20 hover:bg-white/[0.07]">
         {/* Visual */}
         <div className="relative aspect-[16/10] overflow-hidden bg-neutral-950">
-          <PlaceholderImage
-            slot={`${product.key}_banner`}
-            imageMap={images}
-            width={800}
-            height={500}
-            label={product.name}
-            rounded="rounded-none"
-            className="h-full w-full transition-transform duration-500 group-hover:scale-[1.04]"
-          />
+          {/*
+            Two nested wrappers on purpose. The float is a CSS animation and the
+            hover zoom is a transition — both drive `transform`, so on one
+            element the animation would simply win and the hover would do
+            nothing. Outer bobs, inner zooms.
+          */}
+          <div
+            className="float-media h-full w-full"
+            style={{ animationDelay: `${floatDelay}s` }}
+          >
+            <div className="h-full w-full transition-transform duration-700 ease-out group-hover:scale-[1.14]">
+              <PlaceholderImage
+                slot={`${product.key}_banner`}
+                imageMap={images}
+                width={800}
+                height={500}
+                label={product.name}
+                rounded="rounded-none"
+                className="h-full w-full"
+              />
+            </div>
+          </div>
           {/* Headline number */}
           <div className="pointer-events-none absolute bottom-0 left-0 flex items-end gap-2 bg-gradient-to-t from-black/80 to-transparent p-6 pr-16 pt-16 text-white">
             <span className="font-display text-5xl font-bold leading-none">
