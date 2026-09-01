@@ -127,6 +127,7 @@ export const adminAuthRouter = beriRouter({
     const siteImages = await db.listSiteImages();
     const recentLogs = await db.listQueryLogs({ limit: 6, offset: 0 });
     const recentInquiries = await db.listInquiries({ limit: 5, offset: 0 });
+    const subscribers = await db.countSubscribers();
 
     // One entry per slot: the newest upload wins, matching the public site.
     const filledSlots = Array.from(new Set(siteImages.map((i) => i.slot)));
@@ -140,6 +141,7 @@ export const adminAuthRouter = beriRouter({
         pendingInquiries: stats.pendingInquiries,
         users: stats.wholesaleUsers,
         images: siteImages.length,
+        subscribers,
       },
       storage: {
         configured: isStorageConfigured(),

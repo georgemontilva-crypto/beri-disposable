@@ -6,6 +6,7 @@ import {
   CheckCircle2,
   KeyRound,
   ScrollText,
+  Mail,
   Store,
   Users,
 } from "lucide-react";
@@ -80,6 +81,13 @@ export default function AdminDashboard() {
       alert: !!data?.counts.pendingInquiries,
     },
     { label: "Wholesale Users", value: data?.counts.users, icon: Users, href: "/admin/users" },
+    {
+      label: "Newsletter",
+      value: data?.counts.subscribers,
+      icon: Mail,
+      href: "/admin/subscribers",
+      sub: "Homepage sign-ups",
+    },
   ];
 
   return (
@@ -95,7 +103,7 @@ export default function AdminDashboard() {
         </div>
       )}
 
-      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-5">
         {cards.map((c) => (
           <Link key={c.href} href={c.href}>
             <div className="group h-full rounded-2xl border border-neutral-200 bg-white p-6 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg">

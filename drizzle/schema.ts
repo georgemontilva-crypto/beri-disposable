@@ -195,3 +195,20 @@ export const siteSettings = mysqlTable("site_settings", {
 
 export type SiteSetting = typeof siteSettings.$inferSelect;
 export type InsertSiteSetting = typeof siteSettings.$inferInsert;
+
+/** Newsletter sign-ups from the homepage. */
+export const newsletterSubscribers = mysqlTable(
+  "newsletter_subscribers",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    email: varchar("email", { length: 255 }).notNull(),
+    // Where on the site the sign-up came from, so future forms can be told apart.
+    source: varchar("source", { length: 64 }).default("home"),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+  },
+  (t) => ({
+    emailIdx: index("newsletter_email_idx").on(t.email),
+  })
+);
+
+export type NewsletterSubscriber = typeof newsletterSubscribers.$inferSelect;

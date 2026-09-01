@@ -18,6 +18,7 @@ import AdminDashboard from "@/pages/admin/AdminDashboard";
 import AdminCodes from "@/pages/admin/AdminCodes";
 import AdminLogs from "@/pages/admin/AdminLogs";
 import AdminInquiries from "@/pages/admin/AdminInquiries";
+import AdminSubscribers from "@/pages/admin/AdminSubscribers";
 import AdminUsers from "@/pages/admin/AdminUsers";
 import AdminImages from "@/pages/admin/AdminImages";
 
@@ -81,6 +82,7 @@ export default function App() {
         <Route path="/admin/logs" component={AdminLogs} />
         <Route path="/admin/inquiries" component={AdminInquiries} />
         <Route path="/admin/users" component={AdminUsers} />
+        <Route path="/admin/subscribers" component={AdminSubscribers} />
         <Route path="/admin/images" component={AdminImages} />
 
         <Route component={NotFound} />

@@ -10,6 +10,7 @@ import {
   InsertWholesaleUser,
   queryLogs,
   siteImages,
+  newsletterSubscribers,
   siteSettings,
   users,
   wholesaleInquiries,
@@ -369,4 +370,44 @@ export async function setSetting(key: string, value: string) {
     .values({ key, value })
     .onDuplicateKeyUpdate({ set: { value } });
   return { key, value };
+}
+
+
+/* ─── Newsletter ──────────────────────────────────────────────────────────── */
+
+/**
+ * Records a sign-up. Re-subscribing is a no-op rather than an error: the
+ * visitor's intent is the same either way, and telling them the address is
+ * already on the list would leak who is subscribed.
+ */
+export async function addSubscriber(email: string, source = "home") {
+  const db = await requireDb();
+  const normalized = email.trim().toLowerCase();
+  const existing = await db
+    .select()
+    .from(newsletterSubscribers)
+    .where(eq(newsletterSubscribers.email, normalized))
+    .limit(1);
+  if (existing.length) return { created: false };
+  await db.insert(newsletterSubscribers).values({ email: normalized, source });
+  return { created: true };
+}
+
+export async function listSubscribers(limit = 200, offset = 0) {
+  const db = await requireDb();
+  const rows = await db
+    .select()
+    .from(newsletterSubscribers)
+    .orderBy(desc(newsletterSubscribers.id))
+    .limit(limit)
+    .offset(offset);
+  return rows;
+}
+
+export async function countSubscribers() {
+  const db = await requireDb();
+  const rows = await db
+    .select({ value: sql<number>`count(*)` })
+    .from(newsletterSubscribers);
+  return Number(rows[0]?.value ?? 0);
 }

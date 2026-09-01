@@ -7,7 +7,10 @@ import { PublicLayout } from "@/components/PublicLayout";
 import { useReveal } from "@/hooks/useReveal";
 import { useSiteImages, type PublicMediaEntry } from "@/hooks/useSiteImages";
 import { PRODUCTS, type Product } from "@/lib/products";
-import { ArrowRight, Check, ShieldCheck, Store } from "lucide-react";
+import { trpc } from "@/lib/trpc";
+import { ArrowRight, Check } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
 import { Link } from "wouter";
 
 export default function Home() {
@@ -24,8 +27,8 @@ export default function Home() {
         <HeroFan />
         <Marquee />
         <ProductSummary images={images} />
-        <AuthCta />
-        <WholesaleCta />
+        <CtaPair />
+        <Newsletter images={images} />
       </div>
     </PublicLayout>
   );
@@ -190,62 +193,162 @@ function ProductCard({
   );
 }
 
-/* ─── Auth CTA ──────────────────────────────────────────────────────────── */
-function AuthCta() {
+/* ─── Split CTA pair ────────────────────────────────────────────────────────
+   Two full-height cards in contrasting fills. The pairing does the work: the
+   same card twice would read as a list, while light against dark reads as a
+   choice between two directions. */
+function CtaPair() {
   return (
-    <section className="container pb-10">
-      <div className="reveal drop-in relative overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.04] px-8 py-16 text-center text-white md:px-16">
-        <div
-          className="absolute inset-0 opacity-20"
-          style={{
-            backgroundImage:
-              "radial-gradient(ellipse at 50% 0%, rgba(255,255,255,0.15) 0%, transparent 70%)",
-          }}
+    <section className="container pb-8">
+      <div className="grid gap-6 md:grid-cols-2">
+        <CtaCard
+          title={<>Explore<br />The<br />Line-Up</>}
+          body="Four devices, one standard. Compare Crush, Cliq, Cirql and E-Liquid, browse every flavor and see each one in 3D."
+          cta="Explore Now"
+          href="/products/crush"
+          variant="light"
         />
-        <ShieldCheck className="relative mx-auto mb-6 h-12 w-12 text-white/60" />
-        <h2 className="relative font-display text-4xl font-bold tracking-tight sm:text-5xl">
-          Is Your Device Authentic?
-        </h2>
-        <p className="relative mx-auto mt-4 max-w-md text-neutral-400">
-          Every Beri device ships with a unique security code. Scratch the label, scan the QR, or
-          enter the code below to verify your product.
-        </p>
-        <Link
-          href="/authenticate"
-          className="press relative mt-8 inline-flex items-center gap-2 rounded-full bg-white px-8 py-3.5 text-sm font-semibold text-neutral-950 transition-colors hover:bg-neutral-100"
-        >
-          <ShieldCheck className="h-4 w-4" />
-          Verify Now
-        </Link>
+        <CtaCard
+          title={<>Work<br />With<br />Us</>}
+          body="Stock Beri in your store. Displays, master cases and full flavor coverage across all four lines, with pricing from our team."
+          cta="Apply For Wholesale"
+          href="/wholesale"
+          variant="dark"
+        />
       </div>
     </section>
   );
 }
 
-/* ─── Wholesale CTA ─────────────────────────────────────────────────────── */
-function WholesaleCta() {
+function CtaCard({
+  title,
+  body,
+  cta,
+  href,
+  variant,
+}: {
+  title: React.ReactNode;
+  body: string;
+  cta: string;
+  href: string;
+  variant: "light" | "dark";
+}) {
+  const light = variant === "light";
+  return (
+    <Link href={href}>
+      <article
+        className={`reveal drop-in group flex h-full flex-col justify-between rounded-[2rem] p-8 transition-transform duration-500 hover:-translate-y-1 md:min-h-[520px] md:p-12 ${
+          light ? "bg-[#e2d3fb] text-neutral-950" : "bg-[#4a1fb8] text-white"
+        }`}
+      >
+        <h2 className="font-display text-5xl font-bold uppercase leading-[0.92] tracking-tight md:text-6xl lg:text-7xl">
+          {title}
+        </h2>
+
+        <div className="mt-12">
+          <p
+            className={`max-w-md text-sm font-semibold leading-relaxed ${
+              light ? "text-neutral-800" : "text-white/85"
+            }`}
+          >
+            {body}
+          </p>
+          <div
+            className={`mt-6 flex items-center justify-between gap-4 rounded-full px-7 py-4 text-base font-bold transition-colors ${
+              light
+                ? "bg-[#d6c2f8] group-hover:bg-[#c9b0f5]"
+                : "bg-white/15 group-hover:bg-white/25"
+            }`}
+          >
+            <span>{cta}</span>
+            <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1.5" />
+          </div>
+        </div>
+      </article>
+    </Link>
+  );
+}
+
+/* ─── Newsletter ───────────────────────────────────────────────────────────── */
+function Newsletter({ images }: { images: Record<string, PublicMediaEntry> }) {
+  const [email, setEmail] = useState("");
+  const [consent, setConsent] = useState(true);
+  const [done, setDone] = useState(false);
+
+  const subscribe = trpc.newsletter.subscribe.useMutation({
+    onSuccess: () => {
+      setDone(true);
+      setEmail("");
+    },
+    onError: (e) => toast.error(e.message || "Could not subscribe"),
+  });
+
+  const onSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!consent) {
+      toast.error("Please tick the box to subscribe.");
+      return;
+    }
+    subscribe.mutate({ email: email.trim() });
+  };
+
   return (
     <section className="container pb-24">
-      <div className="reveal drop-in flex flex-col items-start gap-6 rounded-[2rem] border border-white/10 px-8 py-12 md:flex-row md:items-center md:justify-between md:px-12">
-        <div>
-          <div className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.25em] text-neutral-400">
-            <Store className="h-4 w-4" /> For retailers
-          </div>
-          <h2 className="mt-3 font-display text-3xl font-bold tracking-tight text-white sm:text-4xl">
-            Carry Beri In Your Store
-          </h2>
-          <p className="mt-3 max-w-lg text-sm text-neutral-400">
-            Displays, master cases and full flavor coverage across all four
-            lines. Apply for a wholesale account and our team will get back to
-            you with pricing.
-          </p>
+      <div className="reveal drop-in grid gap-8 rounded-[2rem] bg-gradient-to-b from-[#3a2b63] to-neutral-950 p-6 md:grid-cols-[minmax(0,320px)_1fr] md:items-center md:gap-10 md:p-8">
+        <div className="overflow-hidden rounded-[1.5rem]">
+          <PlaceholderImage
+            slot="newsletter_image"
+            imageMap={images}
+            width={640}
+            height={720}
+            label="Newsletter"
+            rounded="rounded-[1.5rem]"
+          />
         </div>
-        <Link
-          href="/wholesale"
-          className="press inline-flex shrink-0 items-center gap-2 rounded-full bg-white px-8 py-3.5 text-sm font-semibold text-neutral-950 transition-colors hover:bg-neutral-200"
-        >
-          Apply For Wholesale <ArrowRight className="h-4 w-4" />
-        </Link>
+
+        <div>
+          <span className="inline-block rounded-full border border-white/30 px-4 py-1 text-xs font-semibold text-white">
+            Subscribe
+          </span>
+          <h2 className="mt-5 font-display text-3xl font-bold leading-tight text-white md:text-4xl lg:text-5xl">
+            Be the first to know about new flavors, limited editions and drops
+          </h2>
+
+          {done ? (
+            <p className="mt-8 text-sm font-semibold text-emerald-300">
+              You&apos;re on the list. Watch your inbox.
+            </p>
+          ) : (
+            <form onSubmit={onSubmit} className="mt-8">
+              <input
+                type="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Email Address*"
+                aria-label="Email address"
+                className="w-full rounded-full bg-white px-6 py-4 text-neutral-900 outline-none ring-white/30 transition placeholder:text-neutral-500 focus:ring-4"
+              />
+              <label className="mt-4 flex items-start gap-2.5 text-sm text-white/85">
+                <input
+                  type="checkbox"
+                  checked={consent}
+                  onChange={(e) => setConsent(e.target.checked)}
+                  className="mt-0.5 h-4 w-4 shrink-0 accent-white"
+                />
+                Yes, subscribe me to your newsletter.*
+              </label>
+              <button
+                type="submit"
+                disabled={subscribe.isPending}
+                className="press mt-6 inline-flex items-center gap-2 rounded-full bg-white px-8 py-3.5 text-sm font-semibold text-neutral-950 transition-colors hover:bg-neutral-200 disabled:opacity-60"
+              >
+                {subscribe.isPending ? "Subscribing…" : "Subscribe"}
+                <ArrowRight className="h-4 w-4" />
+              </button>
+            </form>
+          )}
+        </div>
       </div>
     </section>
   );

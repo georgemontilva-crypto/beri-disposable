@@ -86,6 +86,12 @@ function buildSlots(): SlotDef[] {
       section: "Hero Parallax",
       size: "1200×1600 PNG transparent",
     },
+    {
+      slot: "newsletter_image",
+      label: "Home — Newsletter image",
+      section: "Home",
+      size: "640×720 portrait",
+    },
     { slot: "authenticate_banner", label: "Authenticate — Banner", section: "Authenticate", size: "1600×600" },
     { slot: "wholesale_banner", label: "Wholesale — Banner", section: "Wholesale", size: "1600×600" },
   ];

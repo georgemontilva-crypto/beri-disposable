@@ -11,8 +11,7 @@ import {
   ScrollText,
   Store,
   Users,
-  X,
-} from "lucide-react";
+  X, Mail } from "lucide-react";
 import { useState } from "react";
 import { Link, useLocation } from "wouter";
 
@@ -22,6 +21,7 @@ const NAV = [
   { label: "Query Logs", href: "/admin/logs", icon: ScrollText },
   { label: "Wholesale Inquiries", href: "/admin/inquiries", icon: Store },
   { label: "Wholesale Users", href: "/admin/users", icon: Users },
+  { label: "Newsletter", href: "/admin/subscribers", icon: Mail },
   { label: "Site Images", href: "/admin/images", icon: ImageIcon },
 ];
 
