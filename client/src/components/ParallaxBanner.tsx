@@ -177,7 +177,7 @@ export default function ParallaxBanner({
   return (
     <section
       ref={sectionRef}
-      className={`relative overflow-hidden bg-neutral-950 ${className}`}
+      className={`relative overflow-hidden bg-neutral-900 ${className}`}
     >
       {layers.map((layer, i) => {
         const url = urlFor(layer);

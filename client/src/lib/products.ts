@@ -4,6 +4,8 @@ export type Flavor = {
   slot: string; // image slot key for admin-managed images
   /** Optional grouping shown on the product page, e.g. "Summer Edition". */
   edition?: string;
+  /** Taste family. Derived from the name unless set explicitly. */
+  profile: FlavorProfile;
 };
 
 /** Product identifiers used in URLs (/products/:key). */
@@ -48,6 +50,34 @@ export type Product = {
   flavors: Flavor[];
 };
 
+/** Taste families used to filter the flavour wall. */
+export const FLAVOR_PROFILES = ["Ice", "Fruit", "Sweet", "Mint", "Other"] as const;
+export type FlavorProfile = (typeof FLAVOR_PROFILES)[number];
+
+/**
+ * Derives a taste family from the flavour name.
+ *
+ * Rules are ordered because names overlap: "Miami Mint" is minty, "Blue Razz
+ * Ice" is a fruit but the ice is what you taste first, so ice wins over fruit
+ * and mint wins over ice. Derived rather than hand-tagged so a new flavour
+ * lands in a sensible bucket the moment it is added; anything misfiled can be
+ * corrected with an explicit `profile` on the flavour.
+ */
+function deriveProfile(name: string): FlavorProfile {
+  const n = name.toLowerCase();
+  // No word boundary: "Minty O's" is mint, and a strict \bmint\b would drop it
+  // through every other rule and land it in "Other".
+  if (/mint/.test(n)) return "Mint";
+  if (/(ice|frost|polar|frozen|cool)/.test(n)) return "Ice";
+  if (/(taffy|gami|pop|cream|caramel|cola|ropes|gelato|candy|drank|milk|saverz|slush|lemonade|punch|gush)/.test(n))
+    return "Sweet";
+  if (
+    /(berry|berries|razz|apple|banana|grape|mango|melon|watermelon|peach|strawberry|cherry|citrus|lime|lemon|coconut|pineapple|juice|tropical|rancher|sour)/.test(n)
+  )
+    return "Fruit";
+  return "Other";
+}
+
 const toSlug = (s: string) =>
   s
     .toLowerCase()
@@ -63,6 +93,7 @@ function buildFlavors(
     name,
     slug: toSlug(name),
     slot: `${productKey}_flavor_${toSlug(name)}`,
+    profile: deriveProfile(name),
     ...(edition ? { edition } : {}),
   }));
 }

@@ -113,7 +113,7 @@ export default function LoadingScreen({ onDone }: Props) {
           >
             {progress}
           </span>
-          <span className="text-[10px] font-semibold uppercase tracking-widest text-neutral-500">
+          <span className="text-[10px] font-semibold uppercase tracking-widest text-neutral-300">
             %
           </span>
         </div>

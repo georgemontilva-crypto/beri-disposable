@@ -85,7 +85,7 @@ export default function Authenticate() {
                     onChange={(e) => setCode(e.target.value)}
                     placeholder="e.g. 708839800535"
                     autoComplete="off"
-                    className="w-full rounded-xl border border-white/15 bg-white/5 px-4 py-3.5 font-mono text-base text-white outline-none transition placeholder:text-neutral-500 focus:border-white/40 focus:ring-2 focus:ring-white/10"
+                    className="w-full rounded-xl border border-white/15 bg-white/5 px-4 py-3.5 font-mono text-base text-white outline-none transition placeholder:text-neutral-400 focus:border-white/40 focus:ring-2 focus:ring-white/10"
                   />
                   <button
                     type="submit"
@@ -127,7 +127,7 @@ export default function Authenticate() {
 function ResultCard({ result }: { result: NonNullable<Result> }) {
   if (result.valid) {
     return (
-      <div className="mt-6 flex items-start gap-4 rounded-2xl border border-neutral-900 bg-neutral-950 p-5 text-white">
+      <div className="mt-6 flex items-start gap-4 rounded-2xl border border-neutral-900 bg-neutral-900 p-5 text-white">
         <CheckCircle2 className="mt-0.5 h-7 w-7 shrink-0" />
         <div>
           <div className="font-display text-lg font-bold">Authentic Product</div>

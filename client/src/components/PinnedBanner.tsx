@@ -55,8 +55,8 @@ export default function PinnedBanner({
           />
         </div>
       ) : (
-        <div className="absolute inset-0 flex items-center justify-center border border-dashed border-white/15 bg-white/[0.04]">
-          <span className="font-mono text-[11px] text-neutral-500">{slot}</span>
+        <div className="absolute inset-0 flex items-center justify-center border border-dashed border-white/15 bg-white/[0.07]">
+          <span className="font-mono text-[11px] text-neutral-300">{slot}</span>
         </div>
       )}
 

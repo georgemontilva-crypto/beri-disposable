@@ -41,11 +41,11 @@ function ViewerPlaceholder({ slot, label }: { slot: string; label: string }) {
   return (
     <div className="relative flex h-full w-full flex-col items-center justify-center gap-3 rounded-[1.75rem] border border-dashed border-white/15 bg-neutral-900/60 text-center">
       <div className="rounded-2xl bg-white/5 p-4">
-        <Box className="h-8 w-8 text-neutral-500" strokeWidth={1.5} />
+        <Box className="h-8 w-8 text-neutral-300" strokeWidth={1.5} />
       </div>
       <div>
         <p className="font-display text-lg tracking-wide text-neutral-300">{label}</p>
-        <p className="mt-1 text-xs text-neutral-500">
+        <p className="mt-1 text-xs text-neutral-300">
           Upload a .glb model to this slot from the admin panel
         </p>
         <p className="mt-2 font-mono text-[11px] text-neutral-600">{slot}</p>
@@ -116,7 +116,7 @@ export default function ProductViewer3D({
     <div
       ref={containerRef}
       className={`relative aspect-square w-full overflow-hidden ${
-        transparent ? "" : "rounded-[1.75rem] bg-neutral-950"
+        transparent ? "" : "rounded-[1.75rem] bg-neutral-900"
       } ${className}`}
     >
       {!url ? (

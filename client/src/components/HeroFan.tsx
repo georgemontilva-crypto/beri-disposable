@@ -78,7 +78,7 @@ export default function HeroFan() {
   }, [videoUrl]);
 
   return (
-    <section className="relative overflow-hidden bg-neutral-950 text-white">
+    <section className="relative overflow-hidden bg-neutral-900 text-white">
       {useLayers ? (
         /* Layered banner instead of the video, with its own drop-in, float and
            scroll parallax. */
@@ -216,7 +216,7 @@ export default function HeroFan() {
                   <div className="font-display text-2xl font-bold tracking-wide">
                     {product.name}
                   </div>
-                  <div className="mt-0.5 text-xs text-neutral-400">{product.tagline}</div>
+                  <div className="mt-0.5 text-xs text-neutral-300">{product.tagline}</div>
                 </div>
               </Link>
             );

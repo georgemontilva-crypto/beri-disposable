@@ -155,7 +155,7 @@ export function SiteNavbar() {
               {l.label}
             </MobileLink>
           ))}
-          <div className="px-4 pb-1 pt-3 text-xs font-semibold uppercase tracking-wider text-neutral-500">
+          <div className="px-4 pb-1 pt-3 text-xs font-semibold uppercase tracking-wider text-neutral-300">
             Products
           </div>
           {PRODUCT_LINKS.map((p) => (

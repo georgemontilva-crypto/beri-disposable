@@ -38,7 +38,7 @@ export function SiteFooter() {
                 BERI DISPOSABLE
               </div>
             )}
-            <p className="mt-4 max-w-sm text-sm leading-relaxed text-neutral-400">
+            <p className="mt-4 max-w-sm text-sm leading-relaxed text-neutral-300">
               Premium disposable and pod systems. Verify the authenticity of your
               genuine BERI product and explore the full lineup.
             </p>
@@ -90,7 +90,7 @@ export function SiteFooter() {
           <NicotineWarning variant="footer" />
         </div>
 
-        <div className="mt-8 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-6 text-xs text-neutral-500 sm:flex-row">
+        <div className="mt-8 flex flex-col items-center justify-between gap-4 border-t border-white/15 pt-6 text-xs text-neutral-400 sm:flex-row">
           <span>© {year} Beri Disposable. All rights reserved.</span>
           <span>For adult use only. 21+</span>
         </div>

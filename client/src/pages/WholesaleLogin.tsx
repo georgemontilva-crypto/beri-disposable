@@ -44,7 +44,7 @@ export default function WholesaleLogin() {
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="mt-1.5 w-full rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-white outline-none transition placeholder:text-neutral-500 focus:border-white/40 focus:ring-2 focus:ring-white/10"
+                    className="mt-1.5 w-full rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-white outline-none transition placeholder:text-neutral-400 focus:border-white/40 focus:ring-2 focus:ring-white/10"
                   />
                 </div>
                 <div>
@@ -54,7 +54,7 @@ export default function WholesaleLogin() {
                     type="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="mt-1.5 w-full rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-white outline-none transition placeholder:text-neutral-500 focus:border-white/40 focus:ring-2 focus:ring-white/10"
+                    className="mt-1.5 w-full rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-white outline-none transition placeholder:text-neutral-400 focus:border-white/40 focus:ring-2 focus:ring-white/10"
                   />
                 </div>
                 {login.isError && (

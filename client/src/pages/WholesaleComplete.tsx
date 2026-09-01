@@ -80,7 +80,7 @@ export default function WholesaleComplete() {
                         type="password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        className="mt-1.5 w-full rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-white outline-none transition placeholder:text-neutral-500 focus:border-white/40 focus:ring-2 focus:ring-white/10"
+                        className="mt-1.5 w-full rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-white outline-none transition placeholder:text-neutral-400 focus:border-white/40 focus:ring-2 focus:ring-white/10"
                         placeholder="At least 8 characters"
                       />
                     </div>
@@ -91,7 +91,7 @@ export default function WholesaleComplete() {
                         type="password"
                         value={confirm}
                         onChange={(e) => setConfirm(e.target.value)}
-                        className="mt-1.5 w-full rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-white outline-none transition placeholder:text-neutral-500 focus:border-white/40 focus:ring-2 focus:ring-white/10"
+                        className="mt-1.5 w-full rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-white outline-none transition placeholder:text-neutral-400 focus:border-white/40 focus:ring-2 focus:ring-white/10"
                       />
                     </div>
                     {error && <p className="text-sm text-destructive">{error}</p>}

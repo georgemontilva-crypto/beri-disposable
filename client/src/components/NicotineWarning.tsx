@@ -30,7 +30,7 @@ export function NicotineWarning({
   return (
     <div
       className={cn(
-        "w-full bg-black text-white",
+        "w-full bg-neutral-900 text-white",
         className
       )}
     >

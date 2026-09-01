@@ -69,7 +69,7 @@ export function PlaceholderImage({
   return (
     <div
       className={cn(
-        "relative flex flex-col items-center justify-center gap-2 overflow-hidden border border-dashed border-white/15 bg-white/[0.04] text-neutral-400 select-none",
+        "relative flex flex-col items-center justify-center gap-2 overflow-hidden border border-dashed border-white/15 bg-white/[0.07] text-neutral-400 select-none",
         rounded,
         className
       )}
@@ -97,7 +97,7 @@ export function PlaceholderImage({
         </span>
       ) : null}
       {slot ? (
-        <span className="relative font-mono text-[10px] text-neutral-500">{slot}</span>
+        <span className="relative font-mono text-[10px] text-neutral-300">{slot}</span>
       ) : null}
     </div>
   );

@@ -47,7 +47,7 @@ function Marquee() {
   ];
   const doubled = [...items, ...items];
   return (
-    <div className="overflow-hidden border-y border-white/10 bg-neutral-950/80 py-4 backdrop-blur-sm">
+    <div className="overflow-hidden border-y border-white/15 bg-neutral-900/80 py-4 backdrop-blur-sm">
       <div className="flex animate-marquee whitespace-nowrap">
         {doubled.map((item, i) => (
           <span
@@ -70,13 +70,13 @@ function ProductSummary({ images }: { images: Record<string, PublicMediaEntry> }
   return (
     <section className="container py-20 md:py-28">
       <div className="reveal mx-auto max-w-2xl text-center">
-        <span className="text-xs font-semibold uppercase tracking-[0.25em] text-neutral-400">
+        <span className="text-xs font-semibold uppercase tracking-[0.25em] text-neutral-300">
           The line-up
         </span>
         <h2 className="mt-3 font-display text-4xl font-bold tracking-tight text-white md:text-5xl">
           Four Devices, One Standard
         </h2>
-        <p className="mt-4 text-neutral-400">
+        <p className="mt-4 text-neutral-300">
           From the auto-adaptive flagship to authentic shisha and bottled
           e-liquid. Every Beri product runs the same flavor engineering and
           ships with a verifiable authenticity code.
@@ -121,10 +121,10 @@ function ProductCard({
         onPointerLeave={tilt.onPointerLeave}
         // The Tailwind hover translate is gone on purpose: useTilt owns
         // `transform`, and two sources writing the same property fight.
-        className="tilt-card group flex h-full flex-col overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.04] transition-colors duration-300 hover:border-white/20 hover:bg-white/[0.07]"
+        className="tilt-card group flex h-full flex-col overflow-hidden rounded-[2rem] border border-white/15 bg-white/[0.07] transition-colors duration-300 hover:border-white/20 hover:bg-white/[0.11]"
       >
         {/* Visual */}
-        <div className="rainbow-ring relative aspect-[16/10] overflow-hidden rounded-t-[2rem] bg-neutral-950">
+        <div className="rainbow-ring relative aspect-[16/10] overflow-hidden rounded-t-[2rem] bg-neutral-900">
           {/*
             Two nested wrappers on purpose. The float is a CSS animation and the
             hover zoom is a transition — both drive `transform`, so on one
@@ -172,7 +172,7 @@ function ProductCard({
           >
             {product.tagline}
           </p>
-          <p className="mt-4 text-sm leading-relaxed text-neutral-400">
+          <p className="mt-4 text-sm leading-relaxed text-neutral-300">
             {product.summary}
           </p>
 
@@ -190,7 +190,7 @@ function ProductCard({
           </ul>
 
           <div className="mt-auto flex items-center justify-between pt-6">
-            <span className="text-xs font-medium uppercase tracking-wider text-neutral-400">
+            <span className="text-xs font-medium uppercase tracking-wider text-neutral-300">
               {product.flavors.length} flavors
             </span>
             <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-white transition-transform duration-300 group-hover:translate-x-1">
@@ -337,7 +337,7 @@ function Newsletter({ images }: { images: Record<string, PublicMediaEntry> }) {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Email Address*"
                 aria-label="Email address"
-                className="w-full rounded-full bg-white px-6 py-4 text-neutral-900 outline-none ring-white/30 transition placeholder:text-neutral-500 focus:ring-4"
+                className="w-full rounded-full bg-white px-6 py-4 text-neutral-900 outline-none ring-white/30 transition placeholder:text-neutral-400 focus:ring-4"
               />
               <label className="mt-4 flex items-start gap-2.5 text-sm text-white/85">
                 <input

@@ -46,8 +46,8 @@ export function AdminLayout({
 
   if (isLoading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-neutral-950">
-        <Loader2 className="h-6 w-6 animate-spin text-neutral-400" />
+      <div className="flex min-h-screen items-center justify-center bg-neutral-900">
+        <Loader2 className="h-6 w-6 animate-spin text-neutral-300" />
       </div>
     );
   }
@@ -61,12 +61,12 @@ export function AdminLayout({
       {/* Sidebar */}
       <aside
         className={cn(
-          "fixed inset-y-0 left-0 z-40 w-64 transform bg-neutral-950 text-neutral-300 transition-transform duration-300 md:static md:translate-x-0",
+          "fixed inset-y-0 left-0 z-40 w-64 transform bg-neutral-900 text-neutral-300 transition-transform duration-300 md:static md:translate-x-0",
           open ? "translate-x-0" : "-translate-x-full"
         )}
         style={{ transitionTimingFunction: "var(--ease-out-expo)" }}
       >
-        <div className="flex h-16 items-center justify-between border-b border-white/10 px-5">
+        <div className="flex h-16 items-center justify-between border-b border-white/15 px-5">
           <Link href="/admin" className="font-display text-lg font-bold tracking-[0.2em] text-white">
             BERI ADMIN
           </Link>
@@ -92,8 +92,8 @@ export function AdminLayout({
             </Link>
           ))}
         </nav>
-        <div className="absolute inset-x-0 bottom-0 border-t border-white/10 p-3">
-          <div className="px-3.5 pb-2 text-xs text-neutral-500">{admin.email}</div>
+        <div className="absolute inset-x-0 bottom-0 border-t border-white/15 p-3">
+          <div className="px-3.5 pb-2 text-xs text-neutral-300">{admin.email}</div>
           <button
             onClick={() => logout.mutate()}
             className="flex w-full items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-medium text-neutral-400 transition-colors hover:bg-white/5 hover:text-white"
@@ -118,7 +118,7 @@ export function AdminLayout({
           <h1 className="font-display text-xl font-bold tracking-tight">{title}</h1>
           <Link
             href="/"
-            className="ml-auto text-sm font-medium text-neutral-500 underline-offset-4 hover:text-neutral-900 hover:underline"
+            className="ml-auto text-sm font-medium text-neutral-400 underline-offset-4 hover:text-neutral-900 hover:underline"
           >
             View site →
           </Link>

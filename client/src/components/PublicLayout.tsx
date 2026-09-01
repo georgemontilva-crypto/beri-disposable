@@ -41,7 +41,7 @@ export function PublicLayout({
     // `dark` flips the theme variables, so every text-foreground /
     // text-muted-foreground / bg-card on the public pages inverts at once
     // instead of needing a per-class rewrite.
-    <div className="dark flex min-h-screen flex-col bg-neutral-950 text-foreground">
+    <div className="dark flex min-h-screen flex-col bg-neutral-900 text-foreground">
       {/* Ambient layer, shared by every public page */}
       <CursorGlow />
 
