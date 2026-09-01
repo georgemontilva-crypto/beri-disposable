@@ -80,8 +80,8 @@ export default function HeroFan() {
   return (
     <section className="relative overflow-hidden bg-neutral-950 text-white">
       {useLayers ? (
-        /* Layered banner instead of the video: same drop-in and float, driven
-           by ParallaxBanner so the hero and the mid-page banner behave alike. */
+        /* Layered banner instead of the video, with its own drop-in, float and
+           scroll parallax. */
         <ParallaxBanner layers={HERO_LAYERS} className="absolute inset-0" />
       ) : (
       <>

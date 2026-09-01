@@ -86,42 +86,6 @@ function buildSlots(): SlotDef[] {
       section: "Hero Parallax",
       size: "1200×1600 PNG transparent",
     },
-    {
-      slot: "home_parallax_back",
-      label: "Back layer — desktop",
-      section: "Mid-page Parallax",
-      size: "2400×1200 — sky / distant",
-    },
-    {
-      slot: "home_parallax_back_mobile",
-      label: "Back layer — phone",
-      section: "Mid-page Parallax",
-      size: "1200×1400 vertical",
-    },
-    {
-      slot: "home_parallax_mid",
-      label: "Middle layer — desktop",
-      section: "Mid-page Parallax",
-      size: "2400×1200 PNG transparent",
-    },
-    {
-      slot: "home_parallax_mid_mobile",
-      label: "Middle layer — phone",
-      section: "Mid-page Parallax",
-      size: "1200×1400 PNG transparent",
-    },
-    {
-      slot: "home_parallax_front",
-      label: "Front layer — desktop",
-      section: "Mid-page Parallax",
-      size: "2400×1200 PNG transparent",
-    },
-    {
-      slot: "home_parallax_front_mobile",
-      label: "Front layer — phone",
-      section: "Mid-page Parallax",
-      size: "1200×1400 PNG transparent",
-    },
     { slot: "authenticate_banner", label: "Authenticate — Banner", section: "Authenticate", size: "1600×600" },
     { slot: "wholesale_banner", label: "Wholesale — Banner", section: "Wholesale", size: "1600×600" },
   ];
