@@ -94,12 +94,14 @@ function ProductSummary({ images }: { images: Record<string, PublicMediaEntry> }
 
       <div className="mt-14 grid gap-6 md:grid-cols-2">
         {PRODUCTS.map((product, i) => (
-          <ProductCard
+          <div
             key={product.key}
-            product={product}
-            images={images}
-            index={i}
-          />
+            className="drop-in"
+            // Staggered so the four land in sequence rather than as one block.
+            style={{ animationDelay: `${180 + i * 130}ms` }}
+          >
+            <ProductCard product={product} images={images} index={i} />
+          </div>
         ))}
       </div>
     </section>

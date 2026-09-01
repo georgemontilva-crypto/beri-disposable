@@ -25,6 +25,23 @@ export type ParallaxLayer = {
   className?: string;
 };
 
+/** Entrance: how far above its resting place a layer starts, in pixels. */
+const DROP_DISTANCE = 220;
+/** Seconds a layer takes to fall, and the gap between consecutive layers. */
+const DROP_DURATION = 1.1;
+const DROP_STAGGER = 0.16;
+
+/**
+ * Overshooting ease. Nothing heavy stops dead — the layer passes its resting
+ * point and settles back, which is what makes the landing feel like weight
+ * rather than a slide.
+ */
+function easeOutBack(t: number): number {
+  const c1 = 1.4;
+  const c3 = c1 + 1;
+  return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2);
+}
+
 export default function ParallaxBanner({
   layers,
   className = "",
@@ -52,11 +69,22 @@ export default function ParallaxBanner({
     const section = sectionRef.current;
     if (!section) return;
 
-    let frame = 0;
+    let raf = 0;
     let inView = false;
+    const started = performance.now();
 
-    const update = () => {
-      frame = 0;
+    /**
+     * One loop computes all three motions and writes a single transform.
+     *
+     * Doing it any other way means two sources fighting over `transform`: a CSS
+     * entrance animation would override the scroll offset while it ran, and a
+     * CSS float loop would override it forever after. Summed here, they simply
+     * add up.
+     */
+    const frame = (now: number) => {
+      raf = 0;
+      const elapsed = (now - started) / 1000;
+
       const rect = section.getBoundingClientRect();
       // -1 when the section is just below the fold, +1 when just above it, 0 as
       // it passes the middle of the screen. Anchoring to the centre means the
@@ -66,33 +94,59 @@ export default function ParallaxBanner({
         (rect.top + rect.height / 2 - window.innerHeight / 2) /
         (window.innerHeight / 2 + rect.height / 2);
 
+      let anyDropping = false;
+
       layerRefs.current.forEach((el, i) => {
         if (!el) return;
         const speed = layers[i]?.speed ?? 0;
-        el.style.transform = `translate3d(0, ${(progress * speed * 100).toFixed(2)}px, 0)`;
+
+        // Entrance: back layer lands first, so the scene assembles from the
+        // depth of the image forward.
+        const t = (elapsed - i * DROP_STAGGER) / DROP_DURATION;
+        let drop = 0;
+        let opacity = 1;
+        if (t < 0) {
+          drop = -DROP_DISTANCE;
+          opacity = 0;
+          anyDropping = true;
+        } else if (t < 1) {
+          drop = -DROP_DISTANCE * (1 - easeOutBack(t));
+          opacity = Math.min(1, t * 2.5);
+          anyDropping = true;
+        }
+
+        // Settled float. Periods are coprime across layers so the stack never
+        // bobs in unison, which would read as the whole image wobbling.
+        const floatY = Math.sin(elapsed * (0.34 + i * 0.11) + i * 1.7) * (5 + i * 3);
+
+        const parallax = progress * speed * 100;
+
+        el.style.opacity = String(opacity);
+        el.style.transform = `translate3d(0, ${(parallax + drop + floatY).toFixed(2)}px, 0)`;
       });
+
+      // Keep animating while in view; the drop must also finish even if the
+      // banner is still below the fold, or it would land already visible.
+      if (inView || anyDropping) raf = requestAnimationFrame(frame);
     };
 
-    const onScroll = () => {
-      if (inView && !frame) frame = requestAnimationFrame(update);
+    const start = () => {
+      if (!raf) raf = requestAnimationFrame(frame);
     };
 
     const io = new IntersectionObserver(
       ([entry]) => {
         inView = entry.isIntersecting;
-        if (inView) update();
+        if (inView) start();
       },
       { rootMargin: "10% 0px" }
     );
     io.observe(section);
+    start();
 
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll, { passive: true });
     return () => {
-      if (frame) cancelAnimationFrame(frame);
+      if (raf) cancelAnimationFrame(raf);
       io.disconnect();
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
     };
   }, [layers, reduced]);
 
@@ -118,6 +172,9 @@ export default function ParallaxBanner({
             // at 18% oversize the two are exactly equal and the edge grazes the
             // frame at the end of the scroll.
             className={`pointer-events-none absolute -inset-y-[25%] inset-x-0 will-change-transform ${layer.className ?? ""}`}
+            // Starts hidden so the first painted frame is the layer already
+            // lifted, not a flash of it in its final position.
+            style={reduced ? undefined : { opacity: 0 }}
           >
             {url && (
               <img
