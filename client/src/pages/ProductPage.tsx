@@ -357,7 +357,7 @@ export default function ProductPage() {
                 every switch instead of swapping content in place. */}
             <div
               key={activeEdition}
-              className="grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-4"
+              className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3"
             >
               {activeGroup?.flavors.map((f, i) => (
                 <div
@@ -369,9 +369,14 @@ export default function ProductPage() {
                     <PlaceholderImage
                       slot={f.slot}
                       imageMap={images}
-                      width={400}
-                      height={500}
+                      // Landscape cell with object-contain: the flavor shots
+                      // are wide (box beside device), so cover was cutting the
+                      // packaging off at both sides. contain shows the whole
+                      // asset whatever aspect it arrives in.
+                      width={800}
+                      height={600}
                       label={f.name}
+                      fit="contain"
                       rounded="rounded-2xl"
                     />
                   </div>

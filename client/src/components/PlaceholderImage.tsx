@@ -69,7 +69,7 @@ export function PlaceholderImage({
   return (
     <div
       className={cn(
-        "relative flex flex-col items-center justify-center gap-2 overflow-hidden border border-dashed border-neutral-300 bg-neutral-100 text-neutral-500 select-none",
+        "relative flex flex-col items-center justify-center gap-2 overflow-hidden border border-dashed border-white/15 bg-white/[0.04] text-neutral-400 select-none",
         rounded,
         className
       )}
@@ -80,7 +80,7 @@ export function PlaceholderImage({
         className="absolute inset-0 opacity-60"
         style={{
           backgroundImage:
-            "repeating-linear-gradient(45deg, rgba(0,0,0,0.03) 0 12px, transparent 12px 24px)",
+            "repeating-linear-gradient(45deg, rgba(255,255,255,0.03) 0 12px, transparent 12px 24px)",
         }}
       />
       {slot?.includes("video") ? (
@@ -92,12 +92,12 @@ export function PlaceholderImage({
         {width} × {height}
       </span>
       {label ? (
-        <span className="relative max-w-[90%] truncate px-2 text-center text-xs font-medium text-neutral-600">
+        <span className="relative max-w-[90%] truncate px-2 text-center text-xs font-medium text-neutral-300">
           {label}
         </span>
       ) : null}
       {slot ? (
-        <span className="relative font-mono text-[10px] text-neutral-400">{slot}</span>
+        <span className="relative font-mono text-[10px] text-neutral-500">{slot}</span>
       ) : null}
     </div>
   );
