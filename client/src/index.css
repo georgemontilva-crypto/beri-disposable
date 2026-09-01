@@ -462,14 +462,6 @@
   }
 }
 
-/* ─── Scroll-tinted drips ──────────────────────────────────────────────────
-   `--scroll-hue` is published by ScrollHue; the fallback keeps the drips a
-   sensible violet if that component ever isn't mounted. */
-.drip-path {
-  fill: hsl(var(--scroll-hue, 265) 85% 62%);
-  transition: fill 120ms linear;
-}
-
 /* ─── Cursor glow ─────────────────────────────────────────────────────────── */
 .cursor-glow {
   background: radial-gradient(
@@ -502,9 +494,8 @@
 
 ::-webkit-scrollbar-thumb {
   border-radius: 999px;
-  /* Fixed rainbow rather than one driven by --scroll-hue: the thumb is the
-     thing being dragged, and recolouring it under the pointer while scrolling
-     is distracting. */
+  /* Fixed rainbow: the thumb is the thing being dragged, and recolouring it
+     under the pointer while scrolling is distracting. */
   background: linear-gradient(
     180deg,
     #ff5f6d,

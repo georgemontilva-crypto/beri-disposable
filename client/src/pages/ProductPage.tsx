@@ -2,7 +2,7 @@ import { PlaceholderImage } from "@/components/PlaceholderImage";
 import { PublicLayout } from "@/components/PublicLayout";
 import { useReveal } from "@/hooks/useReveal";
 import AuroraGlow from "@/components/AuroraGlow";
-import DripDivider from "@/components/DripDivider";
+import PinnedBanner from "@/components/PinnedBanner";
 import EditionBackdrop, { type EditionTheme } from "@/components/EditionBackdrop";
 import ProductViewer3D from "@/components/ProductViewer3D";
 import { useSiteImages, type PublicMediaEntry } from "@/hooks/useSiteImages";
@@ -255,9 +255,6 @@ export default function ProductPage() {
           </div>
         </section>
 
-        {/* Liquid drips hanging off the hero, tinted by scroll position */}
-        <DripDivider className="-mt-px" />
-
         {/* ── Stats bar (black background) ─────────────────────────────── */}
         <section className="bg-black py-12 text-white">
           <div className="container">
@@ -274,19 +271,12 @@ export default function ProductPage() {
           </div>
         </section>
 
-        {/* ── Banner ───────────────────────────────────────────────────── */}
-        <section className="container py-14">
-          <div className="reveal">
-            <PlaceholderImage
-              slot={`${product.key}_banner`}
-              imageMap={images}
-              width={1280}
-              height={420}
-              label={`${product.name} lifestyle banner`}
-              rounded="rounded-[2rem]"
-            />
-          </div>
-        </section>
+        {/* ── Pinned banner: holds still while the page scrolls over it ── */}
+        <PinnedBanner
+          slot={`${product.key}_banner`}
+          label={`${product.name} lifestyle banner`}
+          className="h-[75vh] min-h-[420px]"
+        />
 
         {/* ── Bento Spec Grid (black bg) ───────────────────────────────── */}
         <SpecGrid specSlots={product.specSlots} images={images} productName={product.name} />
