@@ -395,9 +395,42 @@
   }
 }
 
+/* Second source, right side. Starts on a different hue and runs on timings
+   that share no common factor with the left one, so the two drift in and out
+   of phase instead of pulsing together. */
+.aurora-drift-2 {
+  background: radial-gradient(
+    closest-side,
+    rgba(0, 190, 210, 0.26) 0%,
+    rgba(0, 190, 210, 0.12) 42%,
+    rgba(0, 190, 210, 0.04) 62%,
+    transparent 78%
+  );
+  animation: aurora-drift-2 23s ease-in-out infinite alternate;
+  animation-delay: -7s;
+  will-change: transform;
+}
+
+.aurora-hue-2 {
+  animation: aurora-hue 55s linear infinite;
+  animation-delay: -19s;
+  will-change: filter;
+}
+
+@keyframes aurora-drift-2 {
+  from {
+    transform: translate(-50%, 0) scale(1.04);
+  }
+  to {
+    transform: translate(-50%, -11vh) scale(0.96);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .aurora-drift,
-  .aurora-hue {
+  .aurora-drift-2,
+  .aurora-hue,
+  .aurora-hue-2 {
     animation: none;
   }
 }
