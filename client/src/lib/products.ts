@@ -77,14 +77,14 @@ export const BERI_CRUSH: Product = {
   name: "Beri Crush",
   tagline: "Auto-Adaptive Draw.",
   summary:
-    "The flagship. Quad-mesh coil and up to 40W of auto-adaptive power, in the widest flavor range Beri makes.",
+    "The flagship. Quad-mesh coil and up to 40W of auto-adaptive power, reading your draw in real time.",
   description:
-    "Beri Crush reads your draw and adapts power in real time, delivering up to 40W through a quad-mesh coil. Up to 50,000 puffs of consistent flavor density, with a full-color display and the broadest flavor library in the line-up, including Summer and Winter limited editions and a zero-nicotine range.",
+    "Beri Crush reads your draw and adapts power in real time, delivering up to 40W through a quad-mesh coil. Up to 50,000 puffs of consistent flavor density, with a full-color display and thirteen signature flavors.",
   highlight: { value: "50K", unit: "Puffs" },
   keySpecs: ["Quad-Mesh Coil", "Up to 40W Power", "Auto-Adaptive Draw"],
   specs: [
     { label: "Puffs", value: "Up to 50,000" },
-    { label: "Nicotine", value: "5% (0% available)" },
+    { label: "Nicotine", value: "5%" },
     { label: "Coil", value: "Quad-Mesh" },
     { label: "Power", value: "Up to 40W" },
     { label: "Draw", value: "Auto-Adaptive" },
@@ -104,59 +104,23 @@ export const BERI_CRUSH: Product = {
     { slot: "crush_spec_puffs", label: "Up to 50,000 Puffs", bigValue: "50K", bigUnit: "Puffs" },
     { slot: "crush_spec_draw", label: "Auto-Adaptive Draw", bigValue: "40W", bigUnit: "Max Power" },
   ],
-  flavors: [
-    ...buildFlavors(
-      "crush",
-      [
-        "Banana Taffy",
-        "Blue Razz Ice",
-        "Blue Sour",
-        "Cherry B-Pop",
-        "Grape Ice",
-        "Green Apple",
-        "Juicy Peach",
-        "Mango Bomb",
-        "Melon Dragon Slush",
-        "Miami Mint",
-        "OG Lemonade",
-        "Polar Ice",
-        "Sour Neon Fab",
-        "Strawberry Cream",
-        "Strawberry Watermelon",
-        "Super Mint",
-        "Triple Berry",
-        "Watermelon Ice",
-        "Watermelon Refresh",
-        "White Strawberry",
-      ]
-    ),
-    ...buildFlavors(
-      "crush",
-      [
-        "Berry Peach Gush",
-        "Blue Coconut",
-        "Blueberry Watermelon",
-        "Pineapple Passion Punch",
-        "Sour Watermelon Gami",
-      ],
-      "Summer Edition"
-    ),
-    ...buildFlavors(
-      "crush",
-      ["Alaskan Mint", "Cherry Cola Gami", "Cran Apple Smash", "Punch Ice", "White Gami"],
-      "Winter Edition"
-    ),
-  ],
+  flavors: buildFlavors("crush", [
+    "Banana Taffy",
+    "Blue Razz Ice",
+    "Cherry B-Pop",
+    "Grape Ice",
+    "Green Apple",
+    "Mango Bomb",
+    "Miami Mint",
+    "Strawberry Cream",
+    "Strawberry Watermelon",
+    "Super Mint",
+    "Triple Berry",
+    "Watermelon Ice",
+    "White Strawberry",
+  ]),
 };
 
-/** Crush flavors also offered without nicotine. */
-export const CRUSH_ZERO_NICOTINE = [
-  "Blue Razz Ice",
-  "Grape Ice",
-  "Miami Mint",
-  "Strawberry Watermelon",
-  "Triple Berry",
-];
 
 /* ─── Beri Cliq ───────────────────────────────────────────────────────────── */
 
