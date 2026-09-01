@@ -74,45 +74,53 @@ export default function HeroFan() {
           poster={bg?.url}
           autoPlay
           muted
-          loop
           playsInline
           preload="auto"
           role="img"
           aria-hidden="true"
           tabIndex={-1}
           onCanPlay={() => setVideoReady(true)}
+          onEnded={(e) => {
+            // Hold the closing frame. Without pinning currentTime just short of
+            // the end, some browsers rewind to zero on 'ended' and flash the
+            // first frame before pausing.
+            const v = e.currentTarget;
+            v.pause();
+            if (Number.isFinite(v.duration)) {
+              v.currentTime = Math.max(0, v.duration - 0.05);
+            }
+          }}
           className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ${
             videoReady ? "opacity-100" : "opacity-0"
           }`}
         />
       )}
-      {/* Scrim: keeps the headline readable over any uploaded image */}
-      <div
-        className="absolute inset-0"
-        style={{
-          background:
-            bg?.url || videoUrl
-              ? "linear-gradient(180deg, rgba(10,10,10,0.82) 0%, rgba(10,10,10,0.68) 45%, rgba(10,10,10,0.94) 100%)"
+      {/* No scrim over video: the animation is the hero, and any wash on top
+          would mute the colours it was graded for. The still-image case keeps a
+          light vignette so the cards don't sit on a flat photo. */}
+      {!videoUrl && (
+        <div
+          className="absolute inset-0"
+          style={{
+            background: bg?.url
+              ? "linear-gradient(180deg, rgba(10,10,10,0.55) 0%, rgba(10,10,10,0.2) 45%, rgba(10,10,10,0.8) 100%)"
               : "radial-gradient(ellipse at 50% 0%, rgba(255,255,255,0.08) 0%, transparent 60%)",
-        }}
-      />
+          }}
+        />
+      )}
 
       <div
-        className="container relative z-10 flex flex-col items-center justify-center pb-20 pt-24 md:pb-28 md:pt-28"
-        style={showCards ? undefined : { minHeight: "min(80vh, 720px)" }}
+        className={`container relative z-10 flex flex-col items-center ${
+          showCards ? "justify-end pb-16 pt-24" : "justify-center py-16"
+        }`}
+        style={{ minHeight: showCards ? "min(94vh, 1000px)" : "min(88vh, 900px)" }}
       >
-        <span className="inline-block rounded-full border border-white/20 px-4 py-1 text-xs font-semibold uppercase tracking-[0.25em] text-white/60">
-          Four devices. One standard.
-        </span>
-
-        <h1 className="mt-6 max-w-4xl text-center font-display text-6xl font-bold leading-[0.95] tracking-tight sm:text-7xl lg:text-8xl">
-          Pick Your Beri
-        </h1>
-
-        <p className="mt-5 max-w-lg text-center text-neutral-400">
-          Crush, Cliq, Cirql and E-Liquid. Engineered for flavor that holds from
-          the first pull to the last, and verified authentic on every unit.
-        </p>
+        {/*
+          The video carries the message, so the headline is visually removed but
+          kept for assistive tech and search engines — a page with no h1 at all
+          reads as untitled to both.
+        */}
+        <h1 className="sr-only">Beri Disposable — Crush, Cliq, Cirql and E-Liquid</h1>
 
         {/* ── Fan (md and up) ────────────────────────────────────────── */}
         {showCards && (
@@ -169,7 +177,7 @@ export default function HeroFan() {
         </div>
         )}
 
-        <div className={`flex flex-wrap justify-center gap-3 ${showCards ? "mt-10" : "mt-12"}`}>
+        <div className={`flex flex-wrap justify-center gap-3 ${showCards ? "mt-10" : ""}`}>
           <Link
             href="/products/crush"
             className="press inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-sm font-semibold text-neutral-950 transition-colors hover:bg-neutral-200"
