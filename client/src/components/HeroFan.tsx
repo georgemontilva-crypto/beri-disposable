@@ -13,7 +13,8 @@
  *    stays legible whatever the client uploads.
  */
 import { useSiteImages } from "@/hooks/useSiteImages";
-import { useBooleanSetting } from "@/hooks/useSiteSettings";
+import { useBooleanSetting, useSiteSettings } from "@/hooks/useSiteSettings";
+import ParallaxBanner, { type ParallaxLayer } from "./ParallaxBanner";
 import { PRODUCTS } from "@/lib/products";
 import { ImageIcon } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -27,9 +28,24 @@ const FAN = [
   { tx: 279, ty: 46, rot: 12, z: 20 },
 ];
 
+/** Back to front. Speeds are far apart so the stack reads as depth. */
+const HERO_LAYERS: ParallaxLayer[] = [
+  { slot: "hero_layer_back", speed: 0.15 },
+  { slot: "hero_layer_mid", speed: 0.45 },
+  { slot: "hero_layer_front", speed: 0.9 },
+];
+
 export default function HeroFan() {
   const media = useSiteImages();
+  const settings = useSiteSettings();
   const showCards = useBooleanSetting("home_hero_cards", true);
+
+  const hasLayers = HERO_LAYERS.some((l) => media[l.slot]?.url);
+  const heroMode = settings.home_hero_mode ?? "auto";
+  // "auto" lets uploading a layer switch the hero on its own; an explicit
+  // choice keeps both sets uploaded while only one is shown.
+  const useLayers =
+    heroMode === "layers" || (heroMode === "auto" && hasLayers);
 
   const bg = media["home_hero_bg"];
   const videoDesktop = media["home_hero_video"]?.url;
@@ -52,6 +68,12 @@ export default function HeroFan() {
 
   return (
     <section className="relative overflow-hidden bg-neutral-950 text-white">
+      {useLayers ? (
+        /* Layered banner instead of the video: same drop-in and float, driven
+           by ParallaxBanner so the hero and the mid-page banner behave alike. */
+        <ParallaxBanner layers={HERO_LAYERS} className="absolute inset-0" />
+      ) : (
+      <>
       {/*
         Entrance and settle live on two nested wrappers, not on the media
         itself: the drop is a one-shot animation with `both` fill and the float
@@ -109,10 +131,13 @@ export default function HeroFan() {
         </div>
       </div>
 
+      </>
+      )}
+
       {/* No scrim over video: the animation is the hero, and any wash on top
           would mute the colours it was graded for. The still-image case keeps a
           light vignette so the cards don't sit on a flat photo. */}
-      {!videoUrl && (
+      {!videoUrl && !useLayers && (
         <div
           className="absolute inset-0"
           style={{

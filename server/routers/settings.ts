@@ -12,6 +12,15 @@ import * as db from "../db";
 export const SETTING_DEFAULTS = {
   /** Show the four fanned product cards in the homepage hero. */
   home_hero_cards: "true",
+  /**
+   * What fills the homepage hero.
+   *  auto   — parallax layers if any are uploaded, otherwise the video
+   *  video  — always the video
+   *  layers — always the parallax layers
+   * "auto" means uploading a layer is enough to switch, but an explicit choice
+   * lets both sets stay uploaded while only one is shown.
+   */
+  home_hero_mode: "auto",
 } as const;
 
 export type SettingKey = keyof typeof SETTING_DEFAULTS;

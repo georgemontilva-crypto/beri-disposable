@@ -43,6 +43,24 @@ function buildSlots(): SlotDef[] {
       type: "video",
     },
     {
+      slot: "hero_layer_back",
+      label: "Home — Hero Layer: Back",
+      section: "Home",
+      size: "2400×1400 — sky / distant",
+    },
+    {
+      slot: "hero_layer_mid",
+      label: "Home — Hero Layer: Middle",
+      section: "Home",
+      size: "2400×1400 PNG transparent",
+    },
+    {
+      slot: "hero_layer_front",
+      label: "Home — Hero Layer: Front",
+      section: "Home",
+      size: "2400×1400 PNG transparent",
+    },
+    {
       slot: "home_parallax_back",
       label: "Home — Parallax: Back layer",
       section: "Home",
@@ -130,6 +148,7 @@ export default function AdminImages() {
     onError: (e) => toast.error(e.message || "Could not save"),
   });
   const heroCardsOn = settings.data?.home_hero_cards !== "false";
+  const heroMode = settings.data?.home_hero_mode ?? "auto";
   const presign = trpc.images.adminPresignUpload.useMutation();
   const confirm = trpc.images.adminConfirmUpload.useMutation();
   const [uploadingSlot, setUploadingSlot] = useState<string | null>(null);
@@ -239,6 +258,42 @@ export default function AdminImages() {
         <p className="mt-3 text-xs font-medium text-neutral-400">
           Product cards: {heroCardsOn ? "visible" : "hidden"}
         </p>
+
+        <div className="mt-5 border-t border-neutral-100 pt-5">
+          <h3 className="text-sm font-semibold">Hero background</h3>
+          <p className="mt-1 text-sm text-neutral-500">
+            Choose what fills the hero. The layered option uses the three{" "}
+            <strong>Hero Layer</strong> slots and animates them in on load;
+            the video option uses the <strong>Hero Video</strong> slots.
+          </p>
+          <div className="mt-3 inline-flex rounded-xl border border-neutral-200 p-1">
+            {(
+              [
+                ["auto", "Auto"],
+                ["video", "Video"],
+                ["layers", "Layers"],
+              ] as const
+            ).map(([value, label]) => (
+              <button
+                key={value}
+                type="button"
+                disabled={settings.isLoading || setSetting.isPending}
+                onClick={() => setSetting.mutate({ key: "home_hero_mode", value })}
+                className={`rounded-lg px-4 py-1.5 text-sm font-semibold transition-colors disabled:opacity-50 ${
+                  heroMode === value
+                    ? "bg-neutral-950 text-white"
+                    : "text-neutral-600 hover:bg-neutral-100"
+                }`}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+          <p className="mt-2 text-xs text-neutral-400">
+            Auto picks the layers when at least one is uploaded, otherwise the
+            video.
+          </p>
+        </div>
       </div>
 
       <p className="mb-4 text-sm text-neutral-500">
