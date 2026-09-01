@@ -690,3 +690,13 @@
     transform: scale(1.06);
   }
 }
+
+/* Scroll strips keep their own affordances (snap, arrows, autoplay), so the
+   native bar is redundant noise across the middle of the layout. */
+.no-scrollbar {
+  scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}

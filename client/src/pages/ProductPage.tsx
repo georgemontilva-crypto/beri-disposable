@@ -4,6 +4,7 @@ import { useReveal } from "@/hooks/useReveal";
 import AuroraGlow from "@/components/AuroraGlow";
 import PinnedBanner from "@/components/PinnedBanner";
 import EditionBackdrop, { type EditionTheme } from "@/components/EditionBackdrop";
+import FlavorCarousel from "@/components/FlavorCarousel";
 import ProductViewer3D from "@/components/ProductViewer3D";
 import { useSiteImages, type PublicMediaEntry } from "@/hooks/useSiteImages";
 import { getNextProduct, getProductByKey, PRODUCTS } from "@/lib/products";
@@ -210,26 +211,19 @@ export default function ProductPage() {
               </div>
             )}
 
-            {/* Keyed on the tab so the grid re-runs its reveal animation on
-                every switch instead of swapping content in place. */}
-            <div
-              key={activeEdition}
-              className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3"
-            >
+            {/* Keyed on the tab so the strip re-runs its entrance and returns
+                to the first flavor when the edition changes. */}
+            <FlavorCarousel key={activeEdition} itemCount={activeGroup?.flavors.length ?? 0}>
               {activeGroup?.flavors.map((f, i) => (
                 <div
                   key={f.slug}
-                  className="reveal group"
+                  className="reveal group w-[78%] shrink-0 snap-start sm:w-[46%] lg:w-[calc((100%-3.75rem)/4)]"
                   data-reveal-delay={Math.min(i * 40, 320)}
                 >
                   <div className="overflow-hidden rounded-2xl transition-transform duration-300 group-hover:-translate-y-1.5">
                     <PlaceholderImage
                       slot={f.slot}
                       imageMap={images}
-                      // Landscape cell with object-contain: the flavor shots
-                      // are wide (box beside device), so cover was cutting the
-                      // packaging off at both sides. contain shows the whole
-                      // asset whatever aspect it arrives in.
                       width={800}
                       height={600}
                       label={f.name}
@@ -243,7 +237,7 @@ export default function ProductPage() {
                   </div>
                 </div>
               ))}
-            </div>
+            </FlavorCarousel>
           </div>
         </section>
 
