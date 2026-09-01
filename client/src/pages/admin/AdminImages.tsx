@@ -116,9 +116,6 @@ function buildSlots(): SlotDef[] {
       type: "model",
     });
     slots.push({ slot: `${p.key}_banner`, label: `${p.name} — Banner`, section, size: "1600×600" });
-    for (const sp of p.specSlots) {
-      slots.push({ slot: sp.slot, label: `${p.name} — ${sp.label}`, section, size: sp.tall ? "600×1200" : "600×600" });
-    }
     for (const f of p.flavors) {
       slots.push({ slot: f.slot, label: `${p.name} — ${f.name}`, section, size: "600×600" });
     }

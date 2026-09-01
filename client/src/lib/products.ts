@@ -6,19 +6,6 @@ export type Flavor = {
   edition?: string;
 };
 
-export type SpecSlot = {
-  slot: string;   // image slot key
-  label: string;  // caption shown under the image in the bento grid
-  /** Optional: show a large number/value prominently (e.g. "50K") */
-  bigValue?: string;
-  /** Optional: unit/description after bigValue (e.g. "Puffs") */
-  bigUnit?: string;
-  /** If true, this cell spans 2 columns in the bento grid */
-  wide?: boolean;
-  /** If true, this cell spans 2 rows */
-  tall?: boolean;
-};
-
 /** Product identifiers used in URLs (/products/:key). */
 export type ProductKey = "crush" | "cliq" | "cirql" | "eliquid";
 
@@ -39,15 +26,12 @@ export type Product = {
   /** Three specs at most for the home card. `specs` holds the full list. */
   keySpecs: string[];
   specs: { label: string; value: string }[];
-  /** Packaging info from the trade sheets, shown on the product page. */
-  packaging?: { label: string; value: string }[];
   heroSlot: string;
   /**
    * Media slot holding the interactive 3D model (.glb / .gltf).
    * When empty in the DB, ProductViewer3D renders its placeholder state.
    */
   modelSlot: string;
-  specSlots: SpecSlot[];
   flavors: Flavor[];
 };
 
@@ -90,20 +74,8 @@ export const BERI_CRUSH: Product = {
     { label: "Draw", value: "Auto-Adaptive" },
     { label: "Origin", value: "Designed in USA" },
   ],
-  packaging: [
-    { label: "Display Box", value: "5 single pieces" },
-    { label: "Master Box", value: "20 displays" },
-  ],
   heroSlot: "crush_hero",
   modelSlot: "crush_model_3d",
-  specSlots: [
-    { slot: "crush_spec_main", label: "Multi Curved Design", tall: true },
-    { slot: "crush_spec_coil", label: "Quad-Mesh Coil" },
-    { slot: "crush_spec_screen", label: "Full-Color Display" },
-    { slot: "crush_spec_power", label: "Up to 40W Power" },
-    { slot: "crush_spec_puffs", label: "Up to 50,000 Puffs", bigValue: "50K", bigUnit: "Puffs" },
-    { slot: "crush_spec_draw", label: "Auto-Adaptive Draw", bigValue: "40W", bigUnit: "Max Power" },
-  ],
   flavors: [
     ...buildFlavors("crush", [
       "Banana Taffy",
@@ -162,21 +134,8 @@ export const BERI_CLIQ: Product = {
     { label: "Modes", value: "Dual-Power" },
     { label: "Pod", value: "Refillable" },
   ],
-  packaging: [
-    { label: "Display Box", value: "5 single boxes" },
-    { label: "Master Case: Kits", value: "16 displays" },
-    { label: "Master Case: Pods", value: "20 displays" },
-  ],
   heroSlot: "cliq_hero",
   modelSlot: "cliq_model_3d",
-  specSlots: [
-    { slot: "cliq_spec_main", label: "Pod & Battery System", tall: true },
-    { slot: "cliq_spec_tank", label: "360° Crystal Tank" },
-    { slot: "cliq_spec_coil", label: "Dual Mesh Coil" },
-    { slot: "cliq_spec_battery", label: "900mAh USB-C Battery" },
-    { slot: "cliq_spec_puffs", label: "18 mL Pre-Filled Pod", bigValue: "18", bigUnit: "mL" },
-    { slot: "cliq_spec_modes", label: "Dual-Power Modes", bigValue: "50K", bigUnit: "Puffs" },
-  ],
   flavors: buildFlavors("cliq", [
     "Alaskan Mint",
     "Banana Ice",
@@ -243,14 +202,6 @@ export const BERI_CIRQL: Product = {
   ],
   heroSlot: "cirql_hero",
   modelSlot: "cirql_model_3d",
-  specSlots: [
-    { slot: "cirql_spec_main", label: "Hookah-Inspired Form", tall: true },
-    { slot: "cirql_spec_coil", label: "Quad Mesh Coil" },
-    { slot: "cirql_spec_flavor", label: "Authentic Shisha Flavor" },
-    { slot: "cirql_spec_display", label: "E-Liquid Level Display" },
-    { slot: "cirql_spec_puffs", label: "150,000 Puffs", bigValue: "150K", bigUnit: "Puffs" },
-    { slot: "cirql_spec_usa", label: "Made in USA", bigValue: "USA", bigUnit: "Made In" },
-  ],
   flavors: buildFlavors("cirql", [
     "Apple Caramel Pop",
     "Blue Razz",
@@ -290,14 +241,6 @@ export const BERI_ELIQUID: Product = {
   ],
   heroSlot: "eliquid_hero",
   modelSlot: "eliquid_model_3d",
-  specSlots: [
-    { slot: "eliquid_spec_main", label: "30 mL Bottle", tall: true },
-    { slot: "eliquid_spec_nic", label: "25 mg & 50 mg Options" },
-    { slot: "eliquid_spec_cap", label: "Child-Resistant Cap" },
-    { slot: "eliquid_spec_ca", label: "Bottled in California" },
-    { slot: "eliquid_spec_size", label: "30 mL Bottle", bigValue: "30", bigUnit: "mL" },
-    { slot: "eliquid_spec_flavors", label: "Flavor Profiles", bigValue: "12", bigUnit: "Flavors" },
-  ],
   flavors: buildFlavors("eliquid", [
     "Apple Caramel Pop",
     "Apple Juice",

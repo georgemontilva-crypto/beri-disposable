@@ -6,139 +6,11 @@ import PinnedBanner from "@/components/PinnedBanner";
 import EditionBackdrop, { type EditionTheme } from "@/components/EditionBackdrop";
 import ProductViewer3D from "@/components/ProductViewer3D";
 import { useSiteImages, type PublicMediaEntry } from "@/hooks/useSiteImages";
-import { getNextProduct, getProductByKey, PRODUCTS, type SpecSlot } from "@/lib/products";
+import { getNextProduct, getProductByKey, PRODUCTS } from "@/lib/products";
 import { ArrowLeft, ArrowRight, ShieldCheck } from "lucide-react";
 import { useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Link, useLocation, useParams } from "wouter";
 import NotFound from "./NotFound";
-
-/* ─── Bento Spec Grid ──────────────────────────────────────────────────── */
-function SpecGrid({
-  specSlots,
-  images,
-  productName,
-}: {
-  specSlots: SpecSlot[];
-  images: Record<string, PublicMediaEntry>;
-  productName: string;
-}) {
-  const gridRef = useRef<HTMLDivElement>(null);
-  const [rowHeight, setRowHeight] = useState(0);
-
-  // Square rows: measure the rendered column width and use it as the row
-  // height. Doing this in JS rather than CSS because a grid row can't size
-  // itself from its column width, and cells that span two rows rule out the
-  // usual aspect-ratio tricks.
-  useLayoutEffect(() => {
-    const el = gridRef.current;
-    if (!el) return;
-    const measure = () => {
-      const styles = getComputedStyle(el);
-      const columns = styles.gridTemplateColumns.split(" ").filter(Boolean).length;
-      const gap = parseFloat(styles.columnGap) || 0;
-      const width = el.clientWidth;
-      if (!columns || !width) return;
-      setRowHeight((width - gap * (columns - 1)) / columns);
-    };
-    measure();
-    const ro = new ResizeObserver(measure);
-    ro.observe(el);
-    return () => ro.disconnect();
-  }, []);
-
-  return (
-    <section className="bg-black py-20">
-      <div className="container">
-        <div className="reveal mb-10">
-          <span className="text-xs font-semibold uppercase tracking-[0.25em] text-neutral-500">
-            Engineering
-          </span>
-          <h2 className="mt-3 font-display text-4xl font-bold tracking-tight text-white">
-            Built Different
-          </h2>
-          <p className="mt-3 max-w-md text-neutral-400">
-            Every detail of the {productName} is engineered for a premium experience.
-          </p>
-        </div>
-
-        {/* Bento grid.
-            Row height is measured to equal the column width, so a normal cell
-            is exactly square and a tall cell exactly 1:2. Fixed 220px rows made
-            the real aspect depend on viewport width, so the sizes advertised in
-            the admin panel could never be right and object-cover cropped
-            whatever the designer supplied. */}
-        <div
-          ref={gridRef}
-          className="grid grid-cols-2 gap-3 md:grid-cols-4"
-          style={{ gridAutoRows: rowHeight ? `${rowHeight}px` : "220px" }}
-        >
-          {specSlots.map((s, i) => {
-            const entry = images[s.slot];
-            const hasMedia = !!entry;
-            const isStatCard = !hasMedia && (s.bigValue || s.bigUnit);
-
-            const cellClass = [
-              "reveal relative overflow-hidden rounded-2xl border border-neutral-800 bg-neutral-950 text-white transition-transform duration-300 hover:-translate-y-1",
-              s.tall ? "row-span-2" : "",
-              s.wide ? "col-span-2" : "",
-            ]
-              .filter(Boolean)
-              .join(" ");
-
-            return (
-              <div key={s.slot} className={cellClass} style={{ transitionDelay: `${i * 60}ms` }}>
-                {hasMedia ? (
-                  <>
-                    {entry.mimeType?.startsWith("video/") ? (
-                      <video
-                        src={entry.url}
-                        className="h-full w-full object-cover"
-                        autoPlay
-                        muted
-                        loop
-                        playsInline
-                      />
-                    ) : (
-                      <img
-                        src={entry.url}
-                        alt={s.label}
-                        className="h-full w-full object-cover"
-                        loading="lazy"
-                      />
-                    )}
-                    <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent px-4 pb-4 pt-10">
-                      <p className="text-sm font-semibold leading-tight">{s.label}</p>
-                    </div>
-                  </>
-                ) : isStatCard ? (
-                  <div className="flex h-full flex-col items-center justify-center gap-1 p-6 text-center">
-                    <span className="font-display text-5xl font-black tracking-tight text-white">
-                      {s.bigValue}
-                    </span>
-                    <span className="text-sm font-semibold text-neutral-300">{s.bigUnit}</span>
-                    <span className="mt-2 text-xs text-neutral-500">{s.label}</span>
-                  </div>
-                ) : (
-                  <div className="flex h-full flex-col items-center justify-center gap-2 border border-dashed border-neutral-700 bg-neutral-900 text-neutral-500">
-                    <div
-                      className="absolute inset-0 opacity-30"
-                      style={{
-                        backgroundImage:
-                          "repeating-linear-gradient(45deg, rgba(255,255,255,0.03) 0 12px, transparent 12px 24px)",
-                      }}
-                    />
-                    <span className="relative font-mono text-xs">{s.slot}</span>
-                    <span className="relative text-xs font-medium text-neutral-400">{s.label}</span>
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </div>
-      </div>
-    </section>
-  );
-}
 
 /* ─── Page ─────────────────────────────────────────────────────────────── */
 export default function ProductPage() {
@@ -271,37 +143,6 @@ export default function ProductPage() {
           </div>
         </section>
 
-        {/* ── Pinned banner: holds still while the page scrolls over it ── */}
-        <PinnedBanner
-          slot={`${product.key}_banner`}
-          label={`${product.name} lifestyle banner`}
-          className="h-[75vh] min-h-[420px]"
-        />
-
-        {/* ── Bento Spec Grid (black bg) ───────────────────────────────── */}
-        <SpecGrid specSlots={product.specSlots} images={images} productName={product.name} />
-
-        {/* ── Packaging (trade info) ───────────────────────────────────── */}
-        {product.packaging && (
-          <section className="container pb-14">
-            <div className="reveal rounded-[2rem] border border-white/10 px-8 py-8">
-              <div className="text-xs font-semibold uppercase tracking-[0.25em] text-neutral-400">
-                Packaging
-              </div>
-              <div className="mt-5 grid gap-6 sm:grid-cols-3">
-                {product.packaging.map((p) => (
-                  <div key={p.label}>
-                    <div className="text-xs uppercase tracking-wider text-neutral-500">
-                      {p.label}
-                    </div>
-                    <div className="mt-1 font-display text-xl font-bold">{p.value}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </section>
-        )}
-
         {/* ── Flavors grid ─────────────────────────────────────────────── */}
         <section className="relative overflow-hidden bg-black py-20 text-white">
           {/* Ambient particles themed to the selected edition. */}
@@ -389,6 +230,13 @@ export default function ProductPage() {
             </div>
           </div>
         </section>
+
+        {/* ── Pinned banner: holds still while the page scrolls over it ── */}
+        <PinnedBanner
+          slot={`${product.key}_banner`}
+          label={`${product.name} lifestyle banner`}
+          className="h-[75vh] min-h-[420px]"
+        />
 
         {/* ── Cross-sell (scroll to top + navigate) ────────────────────── */}
         <section className="container py-24">
