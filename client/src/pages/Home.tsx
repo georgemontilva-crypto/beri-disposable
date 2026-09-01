@@ -96,9 +96,9 @@ function ProductSummary({ images }: { images: Record<string, PublicMediaEntry> }
         {PRODUCTS.map((product, i) => (
           <div
             key={product.key}
-            className="drop-in"
+            className="reveal drop-in"
             // Staggered so the four land in sequence rather than as one block.
-            style={{ animationDelay: `${180 + i * 130}ms` }}
+            style={{ animationDelay: `${i * 130}ms` }}
           >
             <ProductCard product={product} images={images} index={i} />
           </div>
@@ -130,7 +130,7 @@ function ProductCard({
         onPointerLeave={tilt.onPointerLeave}
         // The Tailwind hover translate is gone on purpose: useTilt owns
         // `transform`, and two sources writing the same property fight.
-        className="tilt-card reveal group flex h-full flex-col overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.04] transition-colors duration-300 hover:border-white/20 hover:bg-white/[0.07]"
+        className="tilt-card group flex h-full flex-col overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.04] transition-colors duration-300 hover:border-white/20 hover:bg-white/[0.07]"
       >
         {/* Visual */}
         <div className="rainbow-ring relative aspect-[16/10] overflow-hidden rounded-t-[2rem] bg-neutral-950">
@@ -206,7 +206,7 @@ function ProductCard({
 function AuthCta() {
   return (
     <section className="container pb-10">
-      <div className="reveal relative overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.04] px-8 py-16 text-center text-white md:px-16">
+      <div className="reveal drop-in relative overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.04] px-8 py-16 text-center text-white md:px-16">
         <div
           className="absolute inset-0 opacity-20"
           style={{
@@ -238,7 +238,7 @@ function AuthCta() {
 function WholesaleCta() {
   return (
     <section className="container pb-24">
-      <div className="reveal flex flex-col items-start gap-6 rounded-[2rem] border border-white/10 px-8 py-12 md:flex-row md:items-center md:justify-between md:px-12">
+      <div className="reveal drop-in flex flex-col items-start gap-6 rounded-[2rem] border border-white/10 px-8 py-12 md:flex-row md:items-center md:justify-between md:px-12">
         <div>
           <div className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.25em] text-neutral-400">
             <Store className="h-4 w-4" /> For retailers

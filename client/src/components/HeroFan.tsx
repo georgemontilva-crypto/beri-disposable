@@ -52,49 +52,63 @@ export default function HeroFan() {
 
   return (
     <section className="relative overflow-hidden bg-neutral-950 text-white">
-      {/* Still background: paints immediately, and stays as the fallback for
-          devices that block autoplay or fail to load the video. */}
-      {bg?.url && (
-        <img
-          src={bg.url}
-          alt=""
-          aria-hidden="true"
-          className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ${
-            videoReady ? "opacity-0" : "opacity-100"
-          }`}
-        />
-      )}
+      {/*
+        Entrance and settle live on two nested wrappers, not on the media
+        itself: the drop is a one-shot animation with `both` fill and the float
+        is an infinite loop, and both drive `transform`. On one element the
+        infinite one would simply overwrite the other's final value.
 
-      {/* Looping background animation. role="img" with no controls: it is
-          decoration, not media the visitor is meant to operate. */}
-      {videoUrl && (
-        <video
-          key={videoUrl}
-          src={videoUrl}
-          poster={bg?.url}
-          autoPlay
-          muted
-          playsInline
-          preload="auto"
-          role="img"
-          aria-hidden="true"
-          tabIndex={-1}
-          onCanPlay={() => setVideoReady(true)}
-          onEnded={(e) => {
-            // Hold the closing frame. Without pinning currentTime just short of
-            // the end, some browsers rewind to zero on 'ended' and flash the
-            // first frame before pausing.
-            const v = e.currentTarget;
-            v.pause();
-            if (Number.isFinite(v.duration)) {
-              v.currentTime = Math.max(0, v.duration - 0.05);
-            }
-          }}
-          className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ${
-            videoReady ? "opacity-100" : "opacity-0"
-          }`}
-        />
-      )}
+        The base scale sits above 1 so neither the drop's overshoot nor the
+        float's travel can ever expose the edges of a cover-fitted video.
+      */}
+      <div className="hero-drop absolute inset-0">
+        <div className="hero-float absolute inset-0">
+      {/* Still background: paints immediately, and stays as the fallback for
+              devices that block autoplay or fail to load the video. */}
+          {bg?.url && (
+            <img
+              src={bg.url}
+              alt=""
+              aria-hidden="true"
+              className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ${
+                videoReady ? "opacity-0" : "opacity-100"
+              }`}
+            />
+          )}
+
+          {/* Looping background animation. role="img" with no controls: it is
+              decoration, not media the visitor is meant to operate. */}
+          {videoUrl && (
+            <video
+              key={videoUrl}
+              src={videoUrl}
+              poster={bg?.url}
+              autoPlay
+              muted
+              playsInline
+              preload="auto"
+              role="img"
+              aria-hidden="true"
+              tabIndex={-1}
+              onCanPlay={() => setVideoReady(true)}
+              onEnded={(e) => {
+                // Hold the closing frame. Without pinning currentTime just short of
+                // the end, some browsers rewind to zero on 'ended' and flash the
+                // first frame before pausing.
+                const v = e.currentTarget;
+                v.pause();
+                if (Number.isFinite(v.duration)) {
+                  v.currentTime = Math.max(0, v.duration - 0.05);
+                }
+              }}
+              className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ${
+                videoReady ? "opacity-100" : "opacity-0"
+              }`}
+            />
+          )}
+        </div>
+      </div>
+
       {/* No scrim over video: the animation is the hero, and any wash on top
           would mute the colours it was graded for. The still-image case keeps a
           light vignette so the cards don't sit on a flat photo. */}
