@@ -28,6 +28,8 @@ export default function ProductPage() {
 
   // Each product gets its own slice of the wheel, so the four pages read as
   // related but distinct without hand-picking colours.
+  const logoUrl = images[product.logoSlot]?.url;
+
   const productHue = PRODUCTS.findIndex((p) => p.key === product.key) * 78;
 
   // Flavors keep their sheet order but split by edition, so limited runs read
@@ -83,14 +85,37 @@ export default function ProductPage() {
             <div className="mt-8 grid items-center gap-12 md:grid-cols-2">
               {/* Left: title + text — title aligned LEFT */}
               <div className="reveal">
-                <span className="text-xs font-semibold uppercase tracking-[0.25em] text-neutral-500">
+                <span
+                  className="text-xs font-semibold uppercase tracking-[0.25em]"
+                  style={{ color: product.accent }}
+                >
                   Beri Disposable
                 </span>
-                {/* Title LEFT-aligned */}
-                <h1 className="mt-3 font-display text-5xl font-bold tracking-tight sm:text-6xl text-left">
-                  {product.name}
-                </h1>
-                <p className="mt-3 text-xl font-medium text-neutral-500 text-left">{product.tagline}</p>
+
+                {/*
+                  The uploaded lockup replaces the h1 visually but the h1 stays
+                  in the markup, screen-reader only: an image alone would leave
+                  the page with no heading for assistive tech or search engines.
+                */}
+                {logoUrl ? (
+                  <>
+                    <h1 className="sr-only">{product.name}</h1>
+                    <img
+                      src={logoUrl}
+                      alt={product.name}
+                      className="mt-4 h-20 w-auto object-contain sm:h-24"
+                      width={520}
+                      height={192}
+                    />
+                  </>
+                ) : (
+                  <h1 className="mt-3 text-left font-display text-5xl font-bold tracking-tight sm:text-6xl">
+                    {product.name}
+                  </h1>
+                )}
+                <p className="mt-3 text-left text-xl font-medium text-neutral-400">
+                  {product.tagline}
+                </p>
                 <p className="mt-5 max-w-md leading-relaxed text-neutral-400">
                   {product.description}
                 </p>
@@ -109,7 +134,8 @@ export default function ProductPage() {
                 </div>
                 <Link
                   href="/authenticate"
-                  className="press mt-7 inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-semibold text-neutral-950 transition-colors hover:bg-neutral-200"
+                  className="press mt-7 inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-neutral-950 transition-opacity hover:opacity-90"
+                  style={{ backgroundColor: product.accent }}
                 >
                   <ShieldCheck className="h-4 w-4" />
                   Verify Authenticity
@@ -149,7 +175,12 @@ export default function ProductPage() {
                         loading="lazy"
                       />
                     )}
-                    <div className="font-display text-3xl font-bold text-white">{s.value}</div>
+                    <div
+                      className="font-display text-3xl font-bold"
+                      style={{ color: product.accent }}
+                    >
+                      {s.value}
+                    </div>
                     <div className="mt-1 text-xs font-semibold uppercase tracking-widest text-neutral-500">
                       {s.label}
                     </div>
@@ -167,7 +198,10 @@ export default function ProductPage() {
 
           <div className="container relative">
             <div className="reveal mb-8">
-              <span className="text-xs font-semibold uppercase tracking-[0.25em] text-neutral-500">
+              <span
+                className="text-xs font-semibold uppercase tracking-[0.25em]"
+                style={{ color: product.accent }}
+              >
                 The Lineup
               </span>
               <h2 className="mt-3 font-display text-4xl font-bold tracking-tight text-white">
@@ -197,9 +231,10 @@ export default function ProductPage() {
                       onClick={() => setActiveEdition(i)}
                       className={`press rounded-full px-5 py-2.5 font-display text-sm font-bold uppercase tracking-[0.15em] transition-all duration-300 ${
                         active
-                          ? "bg-white text-neutral-950"
+                          ? "text-neutral-950"
                           : "border border-white/20 text-white/60 hover:border-white/40 hover:text-white"
                       }`}
+                      style={active ? { backgroundColor: product.accent } : undefined}
                     >
                       {group.title ?? "All"}
                       <span className="ml-2 text-[11px] font-medium opacity-60">

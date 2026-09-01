@@ -102,6 +102,12 @@ function buildSlots(): SlotDef[] {
   for (const p of PRODUCTS) {
     const section = p.name;
     slots.push({
+      slot: p.logoSlot,
+      label: `${p.name} — Product logo`,
+      section,
+      size: "1040×384 PNG transparent",
+    });
+    slots.push({
       slot: `${p.key}_hero_card`,
       label: `${p.name} — Home Fan Card`,
       section,

@@ -149,7 +149,10 @@ function ProductCard({
           </div>
           {/* Headline number */}
           <div className="pointer-events-none absolute bottom-0 left-0 flex items-end gap-2 bg-gradient-to-t from-black/80 to-transparent p-6 pr-16 pt-16 text-white">
-            <span className="font-display text-5xl font-bold leading-none">
+            <span
+              className="font-display text-5xl font-bold leading-none"
+              style={{ color: product.accent }}
+            >
               {product.highlight.value}
             </span>
             <span className="pb-1 text-sm font-medium text-neutral-300">
@@ -163,7 +166,10 @@ function ProductCard({
           <h3 className="font-display text-3xl font-bold tracking-tight text-white">
             {product.name}
           </h3>
-          <p className="mt-1 text-sm font-medium text-neutral-400">
+          <p
+            className="mt-1 text-sm font-medium"
+            style={{ color: product.accent }}
+          >
             {product.tagline}
           </p>
           <p className="mt-4 text-sm leading-relaxed text-neutral-400">
@@ -173,7 +179,11 @@ function ProductCard({
           <ul className="mt-5 space-y-2">
             {product.keySpecs.map((spec) => (
               <li key={spec} className="flex items-center gap-2 text-sm text-neutral-300">
-                <Check className="h-4 w-4 shrink-0 text-neutral-500" strokeWidth={2.5} />
+                <Check
+                  className="h-4 w-4 shrink-0"
+                  style={{ color: product.accent }}
+                  strokeWidth={2.5}
+                />
                 {spec}
               </li>
             ))}

@@ -31,6 +31,14 @@ export type Product = {
    * never looks broken.
    */
   specs: { label: string; value: string; iconSlot?: string }[];
+  /**
+   * Brand accent, used for the eyebrow, the active tab and card hovers. One
+   * colour per product rather than a palette per section: the accent is what
+   * tells the four pages apart, so it has to stay consistent within a page.
+   */
+  accent: string;
+  /** Media slot for the product's own lockup, shown in place of the h1. */
+  logoSlot: string;
   heroSlot: string;
   /**
    * Media slot holding the interactive 3D model (.glb / .gltf).
@@ -79,6 +87,8 @@ export const BERI_CRUSH: Product = {
     { label: "Draw", value: "Auto-Adaptive", iconSlot: "crush_icon_draw" },
     { label: "Origin", value: "Designed in USA", iconSlot: "crush_icon_origin" },
   ],
+  accent: "#4ade80",
+  logoSlot: "crush_logo",
   heroSlot: "crush_hero",
   modelSlot: "crush_model_3d",
   flavors: [
@@ -139,6 +149,8 @@ export const BERI_CLIQ: Product = {
     { label: "Modes", value: "Dual-Power", iconSlot: "cliq_icon_modes" },
     { label: "Pod", value: "Refillable", iconSlot: "cliq_icon_pod" },
   ],
+  accent: "#22d3ee",
+  logoSlot: "cliq_logo",
   heroSlot: "cliq_hero",
   modelSlot: "cliq_model_3d",
   flavors: buildFlavors("cliq", [
@@ -205,6 +217,8 @@ export const BERI_CIRQL: Product = {
     { label: "Flavor", value: "Authentic Shisha", iconSlot: "cirql_icon_flavor" },
     { label: "Origin", value: "USA", iconSlot: "cirql_icon_origin" },
   ],
+  accent: "#e0b44a",
+  logoSlot: "cirql_logo",
   heroSlot: "cirql_hero",
   modelSlot: "cirql_model_3d",
   flavors: buildFlavors("cirql", [
@@ -244,6 +258,8 @@ export const BERI_ELIQUID: Product = {
     { label: "Origin", value: "Bottled in California", iconSlot: "eliquid_icon_origin" },
     { label: "Cap", value: "Child-Resistant", iconSlot: "eliquid_icon_cap" },
   ],
+  accent: "#ec4899",
+  logoSlot: "eliquid_logo",
   heroSlot: "eliquid_hero",
   modelSlot: "eliquid_model_3d",
   flavors: buildFlavors("eliquid", [
