@@ -40,10 +40,10 @@ export default function Authenticate() {
   return (
     <PublicLayout>
       <div ref={revealRef}>
-        <section className="relative overflow-hidden noise-bg">
+        <section className="relative overflow-hidden noise-bg-dark">
           <div className="container py-16 md:py-20">
             <div className="reveal mx-auto max-w-2xl text-center">
-              <span className="inline-flex items-center gap-2 rounded-full border border-neutral-200 bg-white/60 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-neutral-600 backdrop-blur">
+              <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-neutral-300 backdrop-blur">
                 <ShieldCheck className="h-3.5 w-3.5" />
                 Product Authentication
               </span>
@@ -85,7 +85,7 @@ export default function Authenticate() {
                     onChange={(e) => setCode(e.target.value)}
                     placeholder="e.g. 708839800535"
                     autoComplete="off"
-                    className="w-full rounded-xl border border-neutral-300 bg-white px-4 py-3.5 font-mono text-base outline-none transition focus:border-foreground focus:ring-2 focus:ring-foreground/10"
+                    className="w-full rounded-xl border border-white/15 bg-white/5 px-4 py-3.5 font-mono text-base text-white outline-none transition placeholder:text-neutral-500 focus:border-white/40 focus:ring-2 focus:ring-white/10"
                   />
                   <button
                     type="submit"

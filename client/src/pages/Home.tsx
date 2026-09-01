@@ -37,7 +37,7 @@ function Marquee() {
   ];
   const doubled = [...items, ...items];
   return (
-    <div className="overflow-hidden border-y border-neutral-200 bg-neutral-950 py-4">
+    <div className="overflow-hidden border-y border-white/10 bg-neutral-950 py-4">
       <div className="flex animate-marquee whitespace-nowrap">
         {doubled.map((item, i) => (
           <span
@@ -63,10 +63,10 @@ function ProductSummary({ images }: { images: Record<string, PublicMediaEntry> }
         <span className="text-xs font-semibold uppercase tracking-[0.25em] text-neutral-400">
           The line-up
         </span>
-        <h2 className="mt-3 font-display text-4xl font-bold tracking-tight md:text-5xl">
+        <h2 className="mt-3 font-display text-4xl font-bold tracking-tight text-white md:text-5xl">
           Four Devices, One Standard
         </h2>
-        <p className="mt-4 text-neutral-500">
+        <p className="mt-4 text-neutral-400">
           From the auto-adaptive flagship to authentic shisha and bottled
           e-liquid. Every Beri product runs the same flavor engineering and
           ships with a verifiable authenticity code.
@@ -91,7 +91,7 @@ function ProductCard({
 }) {
   return (
     <Link href={`/products/${product.key}`}>
-      <article className="reveal group flex h-full flex-col overflow-hidden rounded-[2rem] border border-neutral-200 bg-white transition-all duration-300 hover:-translate-y-1 hover:border-neutral-300 hover:shadow-[0_24px_60px_-24px_rgba(0,0,0,0.3)]">
+      <article className="reveal group flex h-full flex-col overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.04] transition-all duration-300 hover:-translate-y-1 hover:border-white/20 hover:bg-white/[0.07]">
         {/* Visual */}
         <div className="relative aspect-[16/10] overflow-hidden bg-neutral-950">
           <PlaceholderImage
@@ -116,20 +116,20 @@ function ProductCard({
 
         {/* Copy */}
         <div className="flex flex-1 flex-col p-7">
-          <h3 className="font-display text-3xl font-bold tracking-tight">
+          <h3 className="font-display text-3xl font-bold tracking-tight text-white">
             {product.name}
           </h3>
           <p className="mt-1 text-sm font-medium text-neutral-400">
             {product.tagline}
           </p>
-          <p className="mt-4 text-sm leading-relaxed text-neutral-600">
+          <p className="mt-4 text-sm leading-relaxed text-neutral-400">
             {product.summary}
           </p>
 
           <ul className="mt-5 space-y-2">
             {product.keySpecs.map((spec) => (
-              <li key={spec} className="flex items-center gap-2 text-sm text-neutral-700">
-                <Check className="h-4 w-4 shrink-0 text-neutral-400" strokeWidth={2.5} />
+              <li key={spec} className="flex items-center gap-2 text-sm text-neutral-300">
+                <Check className="h-4 w-4 shrink-0 text-neutral-500" strokeWidth={2.5} />
                 {spec}
               </li>
             ))}
@@ -139,7 +139,7 @@ function ProductCard({
             <span className="text-xs font-medium uppercase tracking-wider text-neutral-400">
               {product.flavors.length} flavors
             </span>
-            <span className="inline-flex items-center gap-1.5 text-sm font-semibold transition-transform duration-300 group-hover:translate-x-1">
+            <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-white transition-transform duration-300 group-hover:translate-x-1">
               Explore <ArrowRight className="h-4 w-4" />
             </span>
           </div>
@@ -153,7 +153,7 @@ function ProductCard({
 function AuthCta() {
   return (
     <section className="container pb-10">
-      <div className="reveal relative overflow-hidden rounded-[2rem] bg-neutral-950 px-8 py-16 text-center text-white md:px-16">
+      <div className="reveal relative overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.04] px-8 py-16 text-center text-white md:px-16">
         <div
           className="absolute inset-0 opacity-20"
           style={{
@@ -185,15 +185,15 @@ function AuthCta() {
 function WholesaleCta() {
   return (
     <section className="container pb-24">
-      <div className="reveal flex flex-col items-start gap-6 rounded-[2rem] border border-neutral-200 px-8 py-12 md:flex-row md:items-center md:justify-between md:px-12">
+      <div className="reveal flex flex-col items-start gap-6 rounded-[2rem] border border-white/10 px-8 py-12 md:flex-row md:items-center md:justify-between md:px-12">
         <div>
           <div className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.25em] text-neutral-400">
             <Store className="h-4 w-4" /> For retailers
           </div>
-          <h2 className="mt-3 font-display text-3xl font-bold tracking-tight sm:text-4xl">
+          <h2 className="mt-3 font-display text-3xl font-bold tracking-tight text-white sm:text-4xl">
             Carry Beri In Your Store
           </h2>
-          <p className="mt-3 max-w-lg text-sm text-neutral-600">
+          <p className="mt-3 max-w-lg text-sm text-neutral-400">
             Displays, master cases and full flavor coverage across all four
             lines. Apply for a wholesale account and our team will get back to
             you with pricing.
@@ -201,7 +201,7 @@ function WholesaleCta() {
         </div>
         <Link
           href="/wholesale"
-          className="press inline-flex shrink-0 items-center gap-2 rounded-full bg-neutral-950 px-8 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-neutral-800"
+          className="press inline-flex shrink-0 items-center gap-2 rounded-full bg-white px-8 py-3.5 text-sm font-semibold text-neutral-950 transition-colors hover:bg-neutral-200"
         >
           Apply For Wholesale <ArrowRight className="h-4 w-4" />
         </Link>

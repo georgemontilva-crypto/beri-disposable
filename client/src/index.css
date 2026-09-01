@@ -316,6 +316,13 @@
     background-image: radial-gradient(oklch(0 0 0 / 4%) 1px, transparent 1px);
     background-size: 22px 22px;
   }
+
+  /* Same dot grid for dark surfaces: the black dots above are invisible on a
+     near-black background. */
+  .noise-bg-dark {
+    background-image: radial-gradient(oklch(1 0 0 / 5%) 1px, transparent 1px);
+    background-size: 22px 22px;
+  }
 }
 
 /* ─── Fan-card hero ────────────────────────────────────────────────────────

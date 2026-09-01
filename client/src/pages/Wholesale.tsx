@@ -38,10 +38,10 @@ export default function Wholesale() {
   return (
     <PublicLayout>
       <div ref={revealRef}>
-        <section className="relative overflow-hidden noise-bg">
+        <section className="relative overflow-hidden noise-bg-dark">
           <div className="container grid items-center gap-12 py-16 md:grid-cols-2 md:py-20">
             <div className="reveal">
-              <span className="inline-flex items-center gap-2 rounded-full border border-neutral-200 bg-white/60 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-neutral-600 backdrop-blur">
+              <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-neutral-300 backdrop-blur">
                 <Store className="h-3.5 w-3.5" />
                 Wholesale Program
               </span>
@@ -104,7 +104,7 @@ export default function Wholesale() {
                         required
                         value={form.name}
                         onChange={(e) => setForm({ ...form, name: e.target.value })}
-                        className="w-full rounded-xl border border-neutral-300 bg-white px-4 py-3 outline-none transition focus:border-foreground focus:ring-2 focus:ring-foreground/10"
+                        className="w-full rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-white outline-none transition placeholder:text-neutral-500 focus:border-white/40 focus:ring-2 focus:ring-white/10"
                         placeholder="Jane Doe"
                       />
                     </Field>
@@ -112,7 +112,7 @@ export default function Wholesale() {
                       <input
                         value={form.company}
                         onChange={(e) => setForm({ ...form, company: e.target.value })}
-                        className="w-full rounded-xl border border-neutral-300 bg-white px-4 py-3 outline-none transition focus:border-foreground focus:ring-2 focus:ring-foreground/10"
+                        className="w-full rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-white outline-none transition placeholder:text-neutral-500 focus:border-white/40 focus:ring-2 focus:ring-white/10"
                         placeholder="Your business name"
                       />
                     </Field>
@@ -122,7 +122,7 @@ export default function Wholesale() {
                         type="email"
                         value={form.email}
                         onChange={(e) => setForm({ ...form, email: e.target.value })}
-                        className="w-full rounded-xl border border-neutral-300 bg-white px-4 py-3 outline-none transition focus:border-foreground focus:ring-2 focus:ring-foreground/10"
+                        className="w-full rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-white outline-none transition placeholder:text-neutral-500 focus:border-white/40 focus:ring-2 focus:ring-white/10"
                         placeholder="you@company.com"
                       />
                     </Field>
@@ -130,7 +130,7 @@ export default function Wholesale() {
                       <input
                         value={form.phone}
                         onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                        className="w-full rounded-xl border border-neutral-300 bg-white px-4 py-3 outline-none transition focus:border-foreground focus:ring-2 focus:ring-foreground/10"
+                        className="w-full rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-white outline-none transition placeholder:text-neutral-500 focus:border-white/40 focus:ring-2 focus:ring-white/10"
                         placeholder="+1 555 000 0000"
                       />
                     </Field>

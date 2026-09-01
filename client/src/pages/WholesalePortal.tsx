@@ -54,7 +54,7 @@ export default function WholesalePortal() {
               </div>
               <button
                 onClick={() => logout.mutate()}
-                className="press inline-flex items-center gap-2 rounded-xl border border-neutral-300 bg-white px-5 py-2.5 text-sm font-semibold transition-colors hover:bg-neutral-50"
+                className="press inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-white/10"
               >
                 <LogOut className="h-4 w-4" />
                 Sign out
