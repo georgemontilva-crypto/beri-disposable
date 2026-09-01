@@ -11,11 +11,15 @@
  * the page scrolls, which reads as light in the room rather than a decal stuck
  * to the document.
  */
-export default function AuroraGlow() {
+export default function AuroraGlow({ hue = 0 }: { hue?: number }) {
   return (
     <div
       aria-hidden="true"
       className="pointer-events-none fixed inset-0 z-0 overflow-hidden"
+      // Rotating the whole layer shifts both sources together, keeping the
+      // violet/cyan relationship intact while moving the pair to a new base
+      // colour per product.
+      style={hue ? { filter: `hue-rotate(${hue}deg)` } : undefined}
     >
       {/* Left source. Centred on the very edge of the viewport, so only its
           inner half is visible and it reads as light coming from off-screen. */}

@@ -1,10 +1,12 @@
 import { PlaceholderImage } from "@/components/PlaceholderImage";
 import { PublicLayout } from "@/components/PublicLayout";
 import { useReveal } from "@/hooks/useReveal";
+import AuroraGlow from "@/components/AuroraGlow";
+import DripDivider from "@/components/DripDivider";
 import EditionBackdrop, { type EditionTheme } from "@/components/EditionBackdrop";
 import ProductViewer3D from "@/components/ProductViewer3D";
 import { useSiteImages, type PublicMediaEntry } from "@/hooks/useSiteImages";
-import { getNextProduct, getProductByKey, type SpecSlot } from "@/lib/products";
+import { getNextProduct, getProductByKey, PRODUCTS, type SpecSlot } from "@/lib/products";
 import { ArrowLeft, ArrowRight, ShieldCheck } from "lucide-react";
 import { useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Link, useLocation, useParams } from "wouter";
@@ -151,6 +153,10 @@ export default function ProductPage() {
 
   const next = getNextProduct(key);
 
+  // Each product gets its own slice of the wheel, so the four pages read as
+  // related but distinct without hand-picking colours.
+  const productHue = PRODUCTS.findIndex((p) => p.key === product.key) * 78;
+
   // Flavors keep their sheet order but split by edition, so limited runs read
   // as their own range instead of disappearing into one long grid.
   const flavorGroups = useMemo<
@@ -188,7 +194,8 @@ export default function ProductPage() {
 
   return (
     <PublicLayout>
-      <div ref={revealRef} className="bg-neutral-950 text-white">
+      <AuroraGlow hue={productHue} />
+      <div ref={revealRef} className="relative z-10 text-white">
         {/* ── Hero ─────────────────────────────────────────────────────── */}
         <section className="relative overflow-hidden border-b border-white/10">
           <div className="container py-12 md:py-16">
@@ -247,6 +254,9 @@ export default function ProductPage() {
             </div>
           </div>
         </section>
+
+        {/* Liquid drips hanging off the hero, tinted by scroll position */}
+        <DripDivider className="-mt-px" />
 
         {/* ── Stats bar (black background) ─────────────────────────────── */}
         <section className="bg-black py-12 text-white">

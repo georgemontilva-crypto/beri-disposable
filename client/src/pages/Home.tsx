@@ -1,4 +1,5 @@
 import AuroraGlow from "@/components/AuroraGlow";
+import { useTilt } from "@/hooks/useTilt";
 import SmokeVapor from "@/components/SmokeVapor";
 import HeroFan from "@/components/HeroFan";
 import { PlaceholderImage } from "@/components/PlaceholderImage";
@@ -105,10 +106,18 @@ function ProductCard({
   // Offset each card so the four don't bob in unison, which would read as the
   // whole grid pulsing rather than four objects floating independently.
   const floatDelay = -(index * 1.6);
+  const tilt = useTilt<HTMLElement>(7);
 
   return (
     <Link href={`/products/${product.key}`}>
-      <article className="reveal group flex h-full flex-col overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.04] transition-all duration-300 hover:-translate-y-1 hover:border-white/20 hover:bg-white/[0.07]">
+      <article
+        ref={tilt.ref}
+        onPointerMove={tilt.onPointerMove}
+        onPointerLeave={tilt.onPointerLeave}
+        // The Tailwind hover translate is gone on purpose: useTilt owns
+        // `transform`, and two sources writing the same property fight.
+        className="tilt-card reveal group flex h-full flex-col overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.04] transition-colors duration-300 hover:border-white/20 hover:bg-white/[0.07]"
+      >
         {/* Visual */}
         <div className="relative aspect-[16/10] overflow-hidden bg-neutral-950">
           {/*
