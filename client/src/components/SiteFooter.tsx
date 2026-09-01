@@ -10,7 +10,19 @@ export function SiteFooter() {
 
   const year = new Date().getFullYear();
   return (
-    <footer className="bg-neutral-950 text-neutral-300">
+    /*
+      `relative z-10` matters as much as the gradient here: the ambient glow and
+      vapour are fixed layers at z-0, and a footer with no stacking context of
+      its own paints underneath them — which is why the green wash was showing
+      straight through a supposedly solid background.
+    */
+    <footer
+      className="relative z-10 text-neutral-300"
+      style={{
+        background:
+          "linear-gradient(90deg, #0a0510 0%, #1a0b2e 45%, #3b1578 78%, #5b21b6 100%)",
+      }}
+    >
       <div className="container py-14">
         <div className="grid gap-10 md:grid-cols-4">
           <div className="md:col-span-2">
