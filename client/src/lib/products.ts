@@ -77,9 +77,9 @@ export const BERI_CRUSH: Product = {
   name: "Beri Crush",
   tagline: "Auto-Adaptive Draw.",
   summary:
-    "The flagship. Quad-mesh coil and up to 40W of auto-adaptive power, reading your draw in real time.",
+    "The flagship. Quad-mesh coil and up to 40W of auto-adaptive power, in the widest flavor range Beri makes.",
   description:
-    "Beri Crush reads your draw and adapts power in real time, delivering up to 40W through a quad-mesh coil. Up to 50,000 puffs of consistent flavor density, with a full-color display and thirteen signature flavors.",
+    "Beri Crush reads your draw and adapts power in real time, delivering up to 40W through a quad-mesh coil. Up to 50,000 puffs of consistent flavor density, with a full-color display and the broadest flavor library in the line-up, including Summer and Winter limited editions.",
   highlight: { value: "50K", unit: "Puffs" },
   keySpecs: ["Quad-Mesh Coil", "Up to 40W Power", "Auto-Adaptive Draw"],
   specs: [
@@ -104,21 +104,39 @@ export const BERI_CRUSH: Product = {
     { slot: "crush_spec_puffs", label: "Up to 50,000 Puffs", bigValue: "50K", bigUnit: "Puffs" },
     { slot: "crush_spec_draw", label: "Auto-Adaptive Draw", bigValue: "40W", bigUnit: "Max Power" },
   ],
-  flavors: buildFlavors("crush", [
-    "Banana Taffy",
-    "Blue Razz Ice",
-    "Cherry B-Pop",
-    "Grape Ice",
-    "Green Apple",
-    "Mango Bomb",
-    "Miami Mint",
-    "Strawberry Cream",
-    "Strawberry Watermelon",
-    "Super Mint",
-    "Triple Berry",
-    "Watermelon Ice",
-    "White Strawberry",
-  ]),
+  flavors: [
+    ...buildFlavors("crush", [
+      "Banana Taffy",
+      "Blue Razz Ice",
+      "Cherry B-Pop",
+      "Grape Ice",
+      "Green Apple",
+      "Mango Bomb",
+      "Miami Mint",
+      "Strawberry Cream",
+      "Strawberry Watermelon",
+      "Super Mint",
+      "Triple Berry",
+      "Watermelon Ice",
+      "White Strawberry",
+    ]),
+    ...buildFlavors(
+      "crush",
+      [
+        "Berry Peach Gush",
+        "Blue Coconut",
+        "Blueberry Watermelon",
+        "Pineapple Passion Punch",
+        "Sour Watermelon Gami",
+      ],
+      "Summer Edition"
+    ),
+    ...buildFlavors(
+      "crush",
+      ["Alaskan Mint", "Cherry Cola Gami", "Cran Apple Smash", "Punch Ice", "White Gami"],
+      "Winter Edition"
+    ),
+  ],
 };
 
 
