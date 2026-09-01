@@ -117,7 +117,10 @@ export default function HeroFan() {
           // The header overlays the hero, so reserve its height at the top:
           // the video runs behind the glass but the cards must not.
           paddingTop: "var(--header-h, 96px)",
-          minHeight: showCards ? "min(94vh, 1000px)" : "min(88vh, 900px)",
+          // Full viewport height. dvh rather than vh so mobile browsers measure
+          // the visible area instead of the taller layout viewport, which on
+          // iOS Safari would push the bottom of the hero under the URL bar.
+          minHeight: "100dvh",
         }}
       >
         {/*
