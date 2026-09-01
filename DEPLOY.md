@@ -270,7 +270,7 @@ pnpm drizzle-kit migrate      # aplica las migraciones a la base de datos
 ## 7. Checklist post‑deploy
 
 - [ ] `DATABASE_URL` y `JWT_SECRET` configurados
-- [ ] Migraciones aplicadas — **automático**: el servidor las corre al arrancar
+- [ ] Migraciones aplicadas — **automático**: el servidor las corre al arrancar (incluye `site_settings`)
 - [ ] R2 conectado (5 variables `R2_*`)
 - [ ] CORS del bucket R2 configurado con el dominio del sitio
 - [ ] Acceso público del bucket habilitado

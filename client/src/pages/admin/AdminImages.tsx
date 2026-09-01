@@ -17,10 +17,24 @@ type SlotDef = {
 function buildSlots(): SlotDef[] {
   const slots: SlotDef[] = [
     {
-      slot: "home_hero_bg",
-      label: "Home — Hero Background",
+      slot: "home_hero_video",
+      label: "Home — Hero Video (desktop)",
       section: "Home",
-      size: "2400×1400 (optional)",
+      size: "1920×1080 MP4, max 50 MB",
+      type: "video",
+    },
+    {
+      slot: "home_hero_video_mobile",
+      label: "Home — Hero Video (phone)",
+      section: "Home",
+      size: "1080×1920 MP4, max 50 MB",
+      type: "video",
+    },
+    {
+      slot: "home_hero_bg",
+      label: "Home — Hero Background (still)",
+      section: "Home",
+      size: "2400×1400 — poster / fallback",
     },
     { slot: "authenticate_banner", label: "Authenticate — Banner", section: "Authenticate", size: "1600×600" },
     { slot: "wholesale_banner", label: "Wholesale — Banner", section: "Wholesale", size: "1600×600" },
@@ -77,6 +91,15 @@ export default function AdminImages() {
   }, [list.data]);
 
   const storage = trpc.images.storageStatus.useQuery(undefined, { retry: false });
+  const settings = trpc.settings.adminList.useQuery();
+  const setSetting = trpc.settings.adminSet.useMutation({
+    onSuccess: () => {
+      utils.settings.adminList.invalidate();
+      toast.success("Saved");
+    },
+    onError: (e) => toast.error(e.message || "Could not save"),
+  });
+  const heroCardsOn = settings.data?.home_hero_cards !== "false";
   const presign = trpc.images.adminPresignUpload.useMutation();
   const confirm = trpc.images.adminConfirmUpload.useMutation();
   const [uploadingSlot, setUploadingSlot] = useState<string | null>(null);
@@ -149,8 +172,47 @@ export default function AdminImages() {
           <code className="font-mono text-xs">{storage.data.missing.join(", ")}</code>
         </div>
       )}
+      {/* Homepage hero switches live next to the media they control, so it's
+          obvious which uploads they affect. */}
+      <div className="mb-6 rounded-2xl border border-neutral-200 bg-white p-5">
+        <div className="flex items-start justify-between gap-6">
+          <div>
+            <h2 className="font-display text-base font-semibold">Homepage hero</h2>
+            <p className="mt-1 text-sm text-neutral-500">
+              Turn the four fanned product cards on or off. With them off the hero
+              shows only the background video and the headline.
+            </p>
+          </div>
+          <button
+            type="button"
+            role="switch"
+            aria-checked={heroCardsOn}
+            aria-label="Show product cards in the homepage hero"
+            disabled={settings.isLoading || setSetting.isPending}
+            onClick={() =>
+              setSetting.mutate({
+                key: "home_hero_cards",
+                value: heroCardsOn ? "false" : "true",
+              })
+            }
+            className={`relative mt-1 h-7 w-12 shrink-0 rounded-full transition-colors disabled:opacity-50 ${
+              heroCardsOn ? "bg-neutral-950" : "bg-neutral-300"
+            }`}
+          >
+            <span
+              className={`absolute top-1 h-5 w-5 rounded-full bg-white transition-transform ${
+                heroCardsOn ? "translate-x-6" : "translate-x-1"
+              }`}
+            />
+          </button>
+        </div>
+        <p className="mt-3 text-xs font-medium text-neutral-400">
+          Product cards: {heroCardsOn ? "visible" : "hidden"}
+        </p>
+      </div>
+
       <p className="mb-4 text-sm text-neutral-500">
-        Upload media for each section. The <strong>Home Fan Card</strong> slots are the four portrait cards in the homepage hero (480×640, the product on a clean background). <strong>Home Hero Background</strong> is optional — the hero falls back to solid black. The <strong>3D Model</strong> slots accept web-ready <strong>.glb</strong> files (max 25 MB) and power the interactive viewer on each product page — CAD files (STEP/IGES) must be converted to GLB first. All other slots accept images. Empty slots render placeholders on the public site.
+        Upload media for each section. The <strong>Home Hero Video</strong> slots play muted on loop behind the hero, with a separate vertical cut for phones; the <strong>still</strong> background shows while the video loads and on devices that block autoplay. The <strong>Home Fan Card</strong> slots are the four portrait cards in the hero (480×640, the product on a clean background). The <strong>3D Model</strong> slots accept web-ready <strong>.glb</strong> files (max 25 MB) and power the interactive viewer on each product page — CAD files (STEP/IGES) must be converted to GLB first. All other slots accept images. Empty slots render placeholders on the public site.
       </p>
 
       <div className="mb-5 flex flex-wrap gap-2">

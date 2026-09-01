@@ -5,6 +5,7 @@ import { publicProcedure, router } from "./_core/trpc";
 import { adminAuthRouter } from "./routers/adminAuth";
 import { codesRouter } from "./routers/codes";
 import { imagesRouter } from "./routers/images";
+import { settingsRouter } from "./routers/settings";
 import { wholesaleRouter } from "./routers/wholesale";
 
 export const appRouter = router({
@@ -23,6 +24,7 @@ export const appRouter = router({
   codes: codesRouter,
   wholesale: wholesaleRouter,
   images: imagesRouter,
+  settings: settingsRouter,
 });
 
 export type AppRouter = typeof appRouter;

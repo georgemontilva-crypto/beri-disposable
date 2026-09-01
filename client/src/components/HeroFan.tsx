@@ -13,8 +13,10 @@
  *    stays legible whatever the client uploads.
  */
 import { useSiteImages } from "@/hooks/useSiteImages";
+import { useBooleanSetting } from "@/hooks/useSiteSettings";
 import { PRODUCTS } from "@/lib/products";
 import { ArrowRight, ImageIcon, ShieldCheck } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Link } from "wouter";
 
 /** Resting position of each card in the arc, in DOM order. */
@@ -27,30 +29,78 @@ const FAN = [
 
 export default function HeroFan() {
   const media = useSiteImages();
+  const showCards = useBooleanSetting("home_hero_cards", true);
+
   const bg = media["home_hero_bg"];
+  const videoDesktop = media["home_hero_video"]?.url;
+  const videoMobile = media["home_hero_video_mobile"]?.url;
+
+  // Pick the cut in JS rather than with <source media="...">: browsers only
+  // evaluate those once, so a resize or an orientation change would keep the
+  // wrong file. Phones also shouldn't download the desktop cut at all.
+  const [isPhone, setIsPhone] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 767px)");
+    const update = () => setIsPhone(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
+
+  const videoUrl = (isPhone ? videoMobile : videoDesktop) ?? videoDesktop ?? videoMobile;
+  const [videoReady, setVideoReady] = useState(false);
 
   return (
     <section className="relative overflow-hidden bg-neutral-950 text-white">
-      {/* Background image (optional) */}
+      {/* Still background: paints immediately, and stays as the fallback for
+          devices that block autoplay or fail to load the video. */}
       {bg?.url && (
         <img
           src={bg.url}
           alt=""
           aria-hidden="true"
-          className="absolute inset-0 h-full w-full object-cover"
+          className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ${
+            videoReady ? "opacity-0" : "opacity-100"
+          }`}
+        />
+      )}
+
+      {/* Looping background animation. role="img" with no controls: it is
+          decoration, not media the visitor is meant to operate. */}
+      {videoUrl && (
+        <video
+          key={videoUrl}
+          src={videoUrl}
+          poster={bg?.url}
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          role="img"
+          aria-hidden="true"
+          tabIndex={-1}
+          onCanPlay={() => setVideoReady(true)}
+          className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ${
+            videoReady ? "opacity-100" : "opacity-0"
+          }`}
         />
       )}
       {/* Scrim: keeps the headline readable over any uploaded image */}
       <div
         className="absolute inset-0"
         style={{
-          background: bg?.url
-            ? "linear-gradient(180deg, rgba(10,10,10,0.82) 0%, rgba(10,10,10,0.68) 45%, rgba(10,10,10,0.94) 100%)"
-            : "radial-gradient(ellipse at 50% 0%, rgba(255,255,255,0.08) 0%, transparent 60%)",
+          background:
+            bg?.url || videoUrl
+              ? "linear-gradient(180deg, rgba(10,10,10,0.82) 0%, rgba(10,10,10,0.68) 45%, rgba(10,10,10,0.94) 100%)"
+              : "radial-gradient(ellipse at 50% 0%, rgba(255,255,255,0.08) 0%, transparent 60%)",
         }}
       />
 
-      <div className="container relative z-10 flex flex-col items-center pb-20 pt-24 md:pb-28 md:pt-28">
+      <div
+        className="container relative z-10 flex flex-col items-center justify-center pb-20 pt-24 md:pb-28 md:pt-28"
+        style={showCards ? undefined : { minHeight: "min(80vh, 720px)" }}
+      >
         <span className="inline-block rounded-full border border-white/20 px-4 py-1 text-xs font-semibold uppercase tracking-[0.25em] text-white/60">
           Four devices. One standard.
         </span>
@@ -65,6 +115,7 @@ export default function HeroFan() {
         </p>
 
         {/* ── Fan (md and up) ────────────────────────────────────────── */}
+        {showCards && (
         <div className="relative mt-14 hidden h-[420px] w-full max-w-[1300px] items-center justify-center md:flex">
           {PRODUCTS.map((product, i) => {
             const pos = FAN[i] ?? FAN[0];
@@ -93,8 +144,10 @@ export default function HeroFan() {
             );
           })}
         </div>
+        )}
 
         {/* ── Scrollable row (small screens) ─────────────────────────── */}
+        {showCards && (
         <div className="-mx-5 mt-12 flex w-[calc(100%+2.5rem)] snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-4 md:hidden">
           {PRODUCTS.map((product) => {
             const entry = media[`${product.key}_hero_card`];
@@ -114,8 +167,9 @@ export default function HeroFan() {
             );
           })}
         </div>
+        )}
 
-        <div className="mt-10 flex flex-wrap justify-center gap-3">
+        <div className={`flex flex-wrap justify-center gap-3 ${showCards ? "mt-10" : "mt-12"}`}>
           <Link
             href="/products/crush"
             className="press inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-sm font-semibold text-neutral-950 transition-colors hover:bg-neutral-200"

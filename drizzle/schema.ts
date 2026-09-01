@@ -180,3 +180,18 @@ export const siteImages = mysqlTable(
 
 export type SiteImage = typeof siteImages.$inferSelect;
 export type InsertSiteImage = typeof siteImages.$inferInsert;
+
+/**
+ * Key/value store for site-wide toggles and small settings.
+ *
+ * Deliberately schemaless: adding a switch to the admin panel shouldn't need a
+ * migration. Values are stored as text and parsed by the caller.
+ */
+export const siteSettings = mysqlTable("site_settings", {
+  key: varchar("key", { length: 128 }).primaryKey(),
+  value: text("value"),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type SiteSetting = typeof siteSettings.$inferSelect;
+export type InsertSiteSetting = typeof siteSettings.$inferInsert;

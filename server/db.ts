@@ -10,6 +10,7 @@ import {
   InsertWholesaleUser,
   queryLogs,
   siteImages,
+  siteSettings,
   users,
   wholesaleInquiries,
   wholesaleUsers,
@@ -349,4 +350,23 @@ export async function getDashboardStats() {
     totalInquiries: Number(totalInq?.c ?? 0),
     wholesaleUsers: Number(wsUsers?.c ?? 0),
   };
+}
+
+
+/* ─── Site settings (key/value) ───────────────────────────────────────────── */
+
+/** All settings as a plain object. Small table, always read whole. */
+export async function getSettings(): Promise<Record<string, string>> {
+  const db = await requireDb();
+  const rows = await db.select().from(siteSettings);
+  return Object.fromEntries(rows.map((r) => [r.key, r.value ?? ""]));
+}
+
+export async function setSetting(key: string, value: string) {
+  const db = await requireDb();
+  await db
+    .insert(siteSettings)
+    .values({ key, value })
+    .onDuplicateKeyUpdate({ set: { value } });
+  return { key, value };
 }
