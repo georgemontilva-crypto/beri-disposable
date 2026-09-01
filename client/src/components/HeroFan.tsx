@@ -15,7 +15,7 @@
 import { useSiteImages } from "@/hooks/useSiteImages";
 import { useBooleanSetting } from "@/hooks/useSiteSettings";
 import { PRODUCTS } from "@/lib/products";
-import { ArrowRight, ImageIcon, ShieldCheck } from "lucide-react";
+import { ImageIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link } from "wouter";
 
@@ -111,7 +111,7 @@ export default function HeroFan() {
 
       <div
         className={`container relative z-10 flex flex-col items-center ${
-          showCards ? "justify-end pb-16 pt-24" : "justify-center py-16"
+          showCards ? "justify-end pb-16 pt-24" : "justify-center py-0"
         }`}
         style={{ minHeight: showCards ? "min(94vh, 1000px)" : "min(88vh, 900px)" }}
       >
@@ -124,7 +124,7 @@ export default function HeroFan() {
 
         {/* ── Fan (md and up) ────────────────────────────────────────── */}
         {showCards && (
-        <div className="relative mt-14 hidden h-[420px] w-full max-w-[1300px] items-center justify-center md:flex">
+        <div className="relative hidden h-[420px] w-full max-w-[1300px] items-center justify-center md:flex">
           {PRODUCTS.map((product, i) => {
             const pos = FAN[i] ?? FAN[0];
             const entry = media[`${product.key}_hero_card`];
@@ -156,7 +156,7 @@ export default function HeroFan() {
 
         {/* ── Scrollable row (small screens) ─────────────────────────── */}
         {showCards && (
-        <div className="-mx-5 mt-12 flex w-[calc(100%+2.5rem)] snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-4 md:hidden">
+        <div className="-mx-5 flex w-[calc(100%+2.5rem)] snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-4 md:hidden">
           {PRODUCTS.map((product) => {
             const entry = media[`${product.key}_hero_card`];
             return (
@@ -177,20 +177,6 @@ export default function HeroFan() {
         </div>
         )}
 
-        <div className={`flex flex-wrap justify-center gap-3 ${showCards ? "mt-10" : ""}`}>
-          <Link
-            href="/products/crush"
-            className="press inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-sm font-semibold text-neutral-950 transition-colors hover:bg-neutral-200"
-          >
-            Explore The Line-Up <ArrowRight className="h-4 w-4" />
-          </Link>
-          <Link
-            href="/authenticate"
-            className="press inline-flex items-center gap-2 rounded-full border border-white/20 px-7 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-white/10"
-          >
-            <ShieldCheck className="h-4 w-4" /> Verify Your Device
-          </Link>
-        </div>
       </div>
     </section>
   );
