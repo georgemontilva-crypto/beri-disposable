@@ -63,7 +63,7 @@ export function SiteNavbar() {
               height={32}
             />
           ) : (
-            <span className="font-display text-xl font-bold tracking-[0.2em] text-foreground">
+            <span className="font-display text-xl font-bold tracking-[0.2em] text-white">
               BERI
             </span>
           )}
@@ -84,7 +84,7 @@ export function SiteNavbar() {
             <button
               className={cn(
                 "flex items-center gap-1 rounded-full px-4 py-2 text-sm font-semibold transition-colors",
-                productActive ? "text-foreground" : "text-muted-foreground hover:text-foreground"
+                productActive ? "text-white" : "text-neutral-400 hover:text-white"
               )}
               onClick={() => setProductsOpen((v) => !v)}
             >
@@ -107,7 +107,7 @@ export function SiteNavbar() {
                   <Link
                     key={p.href}
                     href={p.href}
-                    className="block rounded-xl px-4 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-foreground/5"
+                    className="block rounded-xl px-4 py-2.5 text-sm font-medium text-neutral-200 transition-colors hover:bg-white/10 hover:text-white"
                   >
                     {p.label}
                   </Link>
@@ -125,7 +125,7 @@ export function SiteNavbar() {
 
           <Link
             href="/authenticate"
-            className="press ml-3 rounded-full bg-foreground px-5 py-2 text-sm font-semibold text-background transition-colors hover:bg-foreground/90"
+            className="press ml-3 rounded-full bg-white px-5 py-2 text-sm font-semibold text-neutral-950 transition-colors hover:bg-neutral-200"
           >
             Verify Code
           </Link>
@@ -133,7 +133,7 @@ export function SiteNavbar() {
 
         {/* Mobile toggle */}
         <button
-          className="press rounded-full p-2 md:hidden"
+          className="press rounded-full p-2 text-white md:hidden"
           onClick={() => setMobileOpen((v) => !v)}
           aria-label="Toggle menu"
         >
@@ -155,7 +155,7 @@ export function SiteNavbar() {
               {l.label}
             </MobileLink>
           ))}
-          <div className="px-4 pb-1 pt-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+          <div className="px-4 pb-1 pt-3 text-xs font-semibold uppercase tracking-wider text-neutral-500">
             Products
           </div>
           {PRODUCT_LINKS.map((p) => (
@@ -189,13 +189,13 @@ function NavItem({
       href={href}
       className={cn(
         "relative rounded-full px-4 py-2 text-sm font-semibold transition-colors",
-        active ? "text-foreground" : "text-muted-foreground hover:text-foreground"
+        active ? "text-white" : "text-neutral-400 hover:text-white"
       )}
     >
       {children}
       <span
         className={cn(
-          "absolute inset-x-4 -bottom-0.5 h-0.5 rounded-full bg-foreground transition-transform duration-300",
+          "absolute inset-x-4 -bottom-0.5 h-0.5 rounded-full bg-white transition-transform duration-300",
           active ? "scale-x-100" : "scale-x-0"
         )}
         style={{ transformOrigin: "left", transitionTimingFunction: "var(--ease-out-expo)" }}
@@ -218,7 +218,7 @@ function MobileLink({
       href={href}
       className={cn(
         "block rounded-xl px-4 py-2.5 text-base font-medium transition-colors",
-        active ? "bg-foreground/5 text-foreground" : "text-muted-foreground hover:bg-foreground/5"
+        active ? "bg-white/10 text-white" : "text-neutral-400 hover:bg-white/10 hover:text-white"
       )}
     >
       {children}
