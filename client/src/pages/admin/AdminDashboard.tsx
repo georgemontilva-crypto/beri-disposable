@@ -27,6 +27,7 @@ function mediaGroups(): { section: string; slots: string[] }[] {
       section: p.name,
       slots: [
         p.logoSlot,
+        p.textureSlot,
         `${p.key}_hero_card`,
         p.heroSlot,
         p.modelSlot,

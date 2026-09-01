@@ -102,6 +102,12 @@ function buildSlots(): SlotDef[] {
   for (const p of PRODUCTS) {
     const section = p.name;
     slots.push({
+      slot: p.textureSlot,
+      label: `${p.name} — Background texture`,
+      section,
+      size: "seamless tile, ~700×700",
+    });
+    slots.push({
       slot: p.logoSlot,
       label: `${p.name} — Product logo`,
       section,

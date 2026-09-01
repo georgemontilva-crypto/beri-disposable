@@ -41,6 +41,8 @@ export type Product = {
   accent: string;
   /** Media slot for the product's own lockup, shown in place of the h1. */
   logoSlot: string;
+  /** Media slot for a tiling brand pattern used behind the flavour section. */
+  textureSlot: string;
   heroSlot: string;
   /**
    * Media slot holding the interactive 3D model (.glb / .gltf).
@@ -120,6 +122,7 @@ export const BERI_CRUSH: Product = {
   ],
   accent: "#4ade80",
   logoSlot: "crush_logo",
+  textureSlot: "crush_texture",
   heroSlot: "crush_hero",
   modelSlot: "crush_model_3d",
   flavors: [
@@ -182,6 +185,7 @@ export const BERI_CLIQ: Product = {
   ],
   accent: "#22d3ee",
   logoSlot: "cliq_logo",
+  textureSlot: "cliq_texture",
   heroSlot: "cliq_hero",
   modelSlot: "cliq_model_3d",
   flavors: buildFlavors("cliq", [
@@ -250,6 +254,7 @@ export const BERI_CIRQL: Product = {
   ],
   accent: "#e0b44a",
   logoSlot: "cirql_logo",
+  textureSlot: "cirql_texture",
   heroSlot: "cirql_hero",
   modelSlot: "cirql_model_3d",
   flavors: buildFlavors("cirql", [
@@ -291,6 +296,7 @@ export const BERI_ELIQUID: Product = {
   ],
   accent: "#ec4899",
   logoSlot: "eliquid_logo",
+  textureSlot: "eliquid_texture",
   heroSlot: "eliquid_hero",
   modelSlot: "eliquid_model_3d",
   flavors: buildFlavors("eliquid", [

@@ -13,7 +13,7 @@
  */
 import { PlaceholderImage } from "@/components/PlaceholderImage";
 import type { PublicMediaEntry } from "@/hooks/useSiteImages";
-import { FLAVOR_PROFILES, type Flavor, type Product } from "@/lib/products";
+import type { Flavor, Product } from "@/lib/products";
 import { useMemo, useState } from "react";
 
 export default function FlavorShowcase({
@@ -23,32 +23,75 @@ export default function FlavorShowcase({
   product: Product;
   images: Record<string, PublicMediaEntry>;
 }) {
-  const [filter, setFilter] = useState<string>("All");
-  const [selected, setSelected] = useState<string>(product.flavors[0]?.slug ?? "");
+  const texture = images[product.textureSlot]?.url;
+  const [filter, setFilter] = useState<string>("Regular");
 
-  // Only offer filters that would actually return something: an empty chip is
-  // a dead end the visitor has to discover by tapping it.
-  const availableProfiles = useMemo(() => {
-    const present = new Set(product.flavors.map((f) => f.profile));
-    return FLAVOR_PROFILES.filter((p) => present.has(p));
-  }, [product]);
+  /**
+   * Only flavours whose image has been uploaded. A tile with a placeholder is
+   * an advert for something the visitor can't see, so an unshot flavour simply
+   * isn't listed yet.
+   *
+   * If nothing at all has been uploaded the full list is shown instead —
+   * otherwise the section would vanish and there would be no sign of what is
+   * missing.
+   */
+  const mounted = useMemo(() => {
+    const withImages = product.flavors.filter((f) => images[f.slot]?.url);
+    return withImages.length ? withImages : product.flavors;
+  }, [product, images]);
+
+  /** Regular first, then whatever editions actually exist for this product. */
+  const chips = useMemo(() => {
+    const editions: string[] = [];
+    for (const f of mounted) {
+      if (f.edition && !editions.includes(f.edition)) editions.push(f.edition);
+    }
+    const hasRegular = mounted.some((f) => !f.edition);
+    return [...(hasRegular ? ["Regular"] : []), ...editions];
+  }, [mounted]);
 
   const visible = useMemo(
     () =>
-      filter === "All"
-        ? product.flavors
-        : product.flavors.filter((f) => f.profile === filter),
-    [product, filter]
+      filter === "Regular"
+        ? mounted.filter((f) => !f.edition)
+        : mounted.filter((f) => f.edition === filter),
+    [mounted, filter]
   );
 
+  const [selected, setSelected] = useState<string>("");
+  // Falls back to the first flavour of the active tab, so switching tabs never
+  // leaves the featured slot showing something the wall below no longer lists.
   const featured: Flavor | undefined =
-    product.flavors.find((f) => f.slug === selected) ?? product.flavors[0];
-
-  const chips = ["All", ...availableProfiles];
+    visible.find((f) => f.slug === selected) ?? visible[0];
 
   return (
-    <section className="py-20 text-white">
-      <div className="container">
+    <section className="relative overflow-hidden py-20 text-white">
+      {/* Tiling brand pattern. Held at low opacity under a dark scrim: at full
+          strength a repeating logo competes with the product shots, which are
+          the thing the section exists to show. */}
+      {texture && (
+        <>
+          <div
+            aria-hidden="true"
+            className="absolute inset-0 opacity-[0.13]"
+            style={{
+              backgroundImage: `url(${texture})`,
+              backgroundRepeat: "repeat",
+              backgroundSize: "340px auto",
+            }}
+          />
+          <div
+            aria-hidden="true"
+            className="absolute inset-0"
+            style={{
+              background:
+                "linear-gradient(180deg, rgba(15,15,17,0.85) 0%, rgba(15,15,17,0.6) 50%, rgba(15,15,17,0.9) 100%)",
+            }}
+          />
+        </>
+      )}
+
+      <div className="container relative">
         <div className="reveal mb-10">
           <span
             className="text-xs font-semibold uppercase tracking-[0.25em]"
@@ -60,7 +103,7 @@ export default function FlavorShowcase({
             {product.name} Flavors
           </h2>
           <p className="mt-3 max-w-md text-neutral-300">
-            {product.flavors.length} signature flavors. Pick one to see it up close.
+            {mounted.length} signature flavors. Pick one to see it up close.
           </p>
         </div>
 
@@ -86,16 +129,11 @@ export default function FlavorShowcase({
                 className="inline-block rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wider text-neutral-950"
                 style={{ backgroundColor: product.accent }}
               >
-                {featured.profile}
+                {featured.edition ?? "Regular"}
               </span>
               <h3 className="mt-4 font-display text-4xl font-bold leading-tight">
                 {featured.name}
               </h3>
-              {featured.edition && (
-                <p className="mt-2 text-sm font-semibold text-neutral-300">
-                  {featured.edition}
-                </p>
-              )}
               <p className="mt-4 text-neutral-300">
                 Available on {product.name}, with the same flavor engineering
                 across the range and a verifiable authenticity code on every unit.
@@ -105,7 +143,7 @@ export default function FlavorShowcase({
         )}
 
         {/* ── Filters ─────────────────────────────────────────────────── */}
-        <div role="tablist" aria-label="Flavor profiles" className="reveal mb-6 flex flex-wrap gap-2">
+        <div role="tablist" aria-label="Flavor ranges" className="reveal mb-6 flex flex-wrap gap-2">
           {chips.map((chip) => {
             const active = filter === chip;
             return (
@@ -124,9 +162,9 @@ export default function FlavorShowcase({
               >
                 {chip}
                 <span className="ml-1.5 text-xs opacity-70">
-                  {chip === "All"
-                    ? product.flavors.length
-                    : product.flavors.filter((f) => f.profile === chip).length}
+                  {chip === "Regular"
+                    ? mounted.filter((f) => !f.edition).length
+                    : mounted.filter((f) => f.edition === chip).length}
                 </span>
               </button>
             );
@@ -164,7 +202,9 @@ export default function FlavorShowcase({
                 </div>
                 <div className="mt-2 px-1 pb-1">
                   <div className="truncate text-sm font-semibold">{f.name}</div>
-                  <div className="text-[11px] text-neutral-300">{f.profile}</div>
+                  <div className="text-[11px] text-neutral-400">
+                    {f.edition ?? "Regular"}
+                  </div>
                 </div>
               </button>
             );
