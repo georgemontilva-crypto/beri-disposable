@@ -25,7 +25,12 @@ export type Product = {
   highlight: { value: string; unit: string };
   /** Three specs at most for the home card. `specs` holds the full list. */
   keySpecs: string[];
-  specs: { label: string; value: string }[];
+  /**
+   * Headline stats. `iconSlot` is a media slot for an optional uploaded icon;
+   * the row falls back to text alone when none is set, so a half-filled set
+   * never looks broken.
+   */
+  specs: { label: string; value: string; iconSlot?: string }[];
   heroSlot: string;
   /**
    * Media slot holding the interactive 3D model (.glb / .gltf).
@@ -67,12 +72,12 @@ export const BERI_CRUSH: Product = {
   highlight: { value: "50K", unit: "Puffs" },
   keySpecs: ["Quad-Mesh Coil", "Up to 40W Power", "Auto-Adaptive Draw"],
   specs: [
-    { label: "Puffs", value: "Up to 50,000" },
-    { label: "Nicotine", value: "5%" },
-    { label: "Coil", value: "Quad-Mesh" },
-    { label: "Power", value: "Up to 40W" },
-    { label: "Draw", value: "Auto-Adaptive" },
-    { label: "Origin", value: "Designed in USA" },
+    { label: "Puffs", value: "Up to 50,000", iconSlot: "crush_icon_puffs" },
+    { label: "Nicotine", value: "5%", iconSlot: "crush_icon_nicotine" },
+    { label: "Coil", value: "Quad-Mesh", iconSlot: "crush_icon_coil" },
+    { label: "Power", value: "Up to 40W", iconSlot: "crush_icon_power" },
+    { label: "Draw", value: "Auto-Adaptive", iconSlot: "crush_icon_draw" },
+    { label: "Origin", value: "Designed in USA", iconSlot: "crush_icon_origin" },
   ],
   heroSlot: "crush_hero",
   modelSlot: "crush_model_3d",
@@ -125,14 +130,14 @@ export const BERI_CLIQ: Product = {
   highlight: { value: "18", unit: "mL Pod" },
   keySpecs: ["Refillable Pod System", "360° Crystal Tank", "900mAh USB-C"],
   specs: [
-    { label: "Puffs", value: "Up to 50,000" },
-    { label: "Nicotine", value: "5%" },
-    { label: "Coil", value: "Dual Mesh" },
-    { label: "E-Liquid", value: "18 mL Pre-Filled" },
-    { label: "Battery", value: "900mAh USB-C" },
-    { label: "Tank", value: "360° Crystal" },
-    { label: "Modes", value: "Dual-Power" },
-    { label: "Pod", value: "Refillable" },
+    { label: "Puffs", value: "Up to 50,000", iconSlot: "cliq_icon_puffs" },
+    { label: "Nicotine", value: "5%", iconSlot: "cliq_icon_nicotine" },
+    { label: "Coil", value: "Dual Mesh", iconSlot: "cliq_icon_coil" },
+    { label: "E-Liquid", value: "18 mL Pre-Filled", iconSlot: "cliq_icon_e-liquid" },
+    { label: "Battery", value: "900mAh USB-C", iconSlot: "cliq_icon_battery" },
+    { label: "Tank", value: "360° Crystal", iconSlot: "cliq_icon_tank" },
+    { label: "Modes", value: "Dual-Power", iconSlot: "cliq_icon_modes" },
+    { label: "Pod", value: "Refillable", iconSlot: "cliq_icon_pod" },
   ],
   heroSlot: "cliq_hero",
   modelSlot: "cliq_model_3d",
@@ -195,10 +200,10 @@ export const BERI_CIRQL: Product = {
   highlight: { value: "150K", unit: "Puffs" },
   keySpecs: ["Authentic Shisha Flavor", "Quad Mesh Coil", "Made in USA"],
   specs: [
-    { label: "Puffs", value: "150,000" },
-    { label: "Coil", value: "Quad Mesh" },
-    { label: "Flavor", value: "Authentic Shisha" },
-    { label: "Origin", value: "USA" },
+    { label: "Puffs", value: "150,000", iconSlot: "cirql_icon_puffs" },
+    { label: "Coil", value: "Quad Mesh", iconSlot: "cirql_icon_coil" },
+    { label: "Flavor", value: "Authentic Shisha", iconSlot: "cirql_icon_flavor" },
+    { label: "Origin", value: "USA", iconSlot: "cirql_icon_origin" },
   ],
   heroSlot: "cirql_hero",
   modelSlot: "cirql_model_3d",
@@ -233,11 +238,11 @@ export const BERI_ELIQUID: Product = {
   highlight: { value: "30", unit: "mL Bottle" },
   keySpecs: ["25 mg & 50 mg", "Nicotine Salt", "Bottled in California"],
   specs: [
-    { label: "Bottle Size", value: "30 mL" },
-    { label: "Nicotine", value: "25 mg / 50 mg" },
-    { label: "Type", value: "Nicotine Salt" },
-    { label: "Origin", value: "Bottled in California" },
-    { label: "Cap", value: "Child-Resistant" },
+    { label: "Bottle Size", value: "30 mL", iconSlot: "eliquid_icon_bottle-size" },
+    { label: "Nicotine", value: "25 mg / 50 mg", iconSlot: "eliquid_icon_nicotine" },
+    { label: "Type", value: "Nicotine Salt", iconSlot: "eliquid_icon_type" },
+    { label: "Origin", value: "Bottled in California", iconSlot: "eliquid_icon_origin" },
+    { label: "Cap", value: "Child-Resistant", iconSlot: "eliquid_icon_cap" },
   ],
   heroSlot: "eliquid_hero",
   modelSlot: "eliquid_model_3d",

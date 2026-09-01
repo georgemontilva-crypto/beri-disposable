@@ -116,6 +116,16 @@ function buildSlots(): SlotDef[] {
       type: "model",
     });
     slots.push({ slot: `${p.key}_banner`, label: `${p.name} — Banner`, section, size: "1600×600" });
+    // One optional icon per headline stat.
+    for (const spec of p.specs) {
+      if (!spec.iconSlot) continue;
+      slots.push({
+        slot: spec.iconSlot,
+        label: `${p.name} — Icon: ${spec.label}`,
+        section,
+        size: "96×96 PNG/SVG transparent",
+      });
+    }
     for (const f of p.flavors) {
       slots.push({ slot: f.slot, label: `${p.name} — ${f.name}`, section, size: "600×600" });
     }

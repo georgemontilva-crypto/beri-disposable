@@ -131,14 +131,30 @@ export default function ProductPage() {
         <section className="bg-black py-12 text-white">
           <div className="container">
             <div className="grid grid-cols-2 gap-6 sm:grid-cols-4">
-              {product.specs.map((s) => (
-                <div key={s.label} className="reveal text-center">
-                  <div className="font-display text-3xl font-bold text-white">{s.value}</div>
-                  <div className="mt-1 text-xs font-semibold uppercase tracking-widest text-neutral-500">
-                    {s.label}
+              {product.specs.map((s) => {
+                const icon = s.iconSlot ? images[s.iconSlot]?.url : undefined;
+                return (
+                  <div key={s.label} className="reveal flex flex-col items-center text-center">
+                    {/* Icons are optional: with none uploaded the row is exactly
+                        what it was, so a partly filled set never looks broken. */}
+                    {icon && (
+                      <img
+                        src={icon}
+                        alt=""
+                        aria-hidden="true"
+                        className="mb-3 h-12 w-12 object-contain"
+                        width={96}
+                        height={96}
+                        loading="lazy"
+                      />
+                    )}
+                    <div className="font-display text-3xl font-bold text-white">{s.value}</div>
+                    <div className="mt-1 text-xs font-semibold uppercase tracking-widest text-neutral-500">
+                      {s.label}
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         </section>
