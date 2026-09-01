@@ -17,7 +17,7 @@
  * are then stamped with drawImage: generating noise per frame would be far too
  * expensive, while blitting a cached bitmap is nearly free.
  */
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type Puff = {
   x: number;
@@ -137,8 +137,33 @@ function spawn(p: Puff, w: number, h: number, initial = false) {
 export default function SmokeVapor() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
+  /**
+   * Off on phones. This is the heaviest thing on the page — a full-screen canvas
+   * restamping twenty-two large sprites every frame — and it is pure
+   * decoration, so it drains battery for no benefit on the devices least able
+   * to spare it. The colour glow behind it is CSS-only and stays.
+   *
+   * Tracked as state rather than an early return so that crossing the
+   * breakpoint (rotating a tablet, resizing a window) actually tears the canvas
+   * down or brings it back, instead of leaving whatever was decided at mount.
+   */
+  const [enabled, setEnabled] = useState(false);
+
   useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const phone = window.matchMedia("(max-width: 767px)");
+    const update = () => setEnabled(!reduced.matches && !phone.matches);
+    update();
+    reduced.addEventListener("change", update);
+    phone.addEventListener("change", update);
+    return () => {
+      reduced.removeEventListener("change", update);
+      phone.removeEventListener("change", update);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!enabled) return;
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
@@ -228,7 +253,11 @@ export default function SmokeVapor() {
       ro.disconnect();
       document.removeEventListener("visibilitychange", onVisibility);
     };
-  }, []);
+  }, [enabled]);
+
+  // Unmounted rather than hidden, so the canvas element and its backing store
+  // are released instead of sitting idle in memory.
+  if (!enabled) return null;
 
   return (
     <canvas
