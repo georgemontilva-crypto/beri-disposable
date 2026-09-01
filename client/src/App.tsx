@@ -1,5 +1,5 @@
 import LoadingScreen from "@/components/LoadingScreen";
-import { useEffect, useState, useCallback } from "react";
+import { useCallback, useLayoutEffect, useState } from "react";
 import { Route, Switch, useLocation } from "wouter";
 
 // Public pages
@@ -21,12 +21,36 @@ import AdminInquiries from "@/pages/admin/AdminInquiries";
 import AdminUsers from "@/pages/admin/AdminUsers";
 import AdminImages from "@/pages/admin/AdminImages";
 
-/* ─── Scroll-to-top on route change ──────────────────────────────────────── */
-function ScrollToTop() {
+/* ─── Scroll-to-top ──────────────────────────────────────────────────────────
+   Resetting on route change alone isn't enough:
+
+   1. Browsers default to scrollRestoration "auto" and restore the previous
+      offset on reload — after React has mounted, so it overwrites anything the
+      effect did. It has to be switched to "manual".
+   2. On first paint the page is still short (the video, images and lazily
+      revealed sections haven't laid out yet), so scrolling to 0 is a no-op and
+      the browser lands mid-page once the content arrives. Re-asserting across
+      the next couple of frames covers that.                                    */
+function ScrollToTop({ ready }: { ready: boolean }) {
   const [location] = useLocation();
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "instant" });
-  }, [location]);
+
+  useLayoutEffect(() => {
+    if ("scrollRestoration" in window.history) {
+      window.history.scrollRestoration = "manual";
+    }
+  }, []);
+
+  useLayoutEffect(() => {
+    const toTop = () => window.scrollTo(0, 0);
+    toTop();
+    const a = requestAnimationFrame(() => {
+      toTop();
+      // Second frame: catches layout that settles after the first paint.
+      requestAnimationFrame(toTop);
+    });
+    return () => cancelAnimationFrame(a);
+  }, [location, ready]);
+
   return null;
 }
 
@@ -38,7 +62,8 @@ export default function App() {
   return (
     <>
       {loading && <LoadingScreen onDone={handleDone} />}
-      <ScrollToTop />
+      {/* `ready` re-runs the reset once the loading screen releases the page. */}
+      <ScrollToTop ready={!loading} />
       <Switch>
         {/* Public */}
         <Route path="/" component={Home} />
