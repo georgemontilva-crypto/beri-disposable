@@ -1,18 +1,32 @@
 import { CONTACT_AUTHENTIC_EMAIL, CONTACT_WHOLESALE_EMAIL } from "@shared/const";
 import { Mail } from "lucide-react";
+import { useSiteImages } from "@/hooks/useSiteImages";
 import { Link } from "wouter";
 import { NicotineWarning } from "./NicotineWarning";
 
 export function SiteFooter() {
+  const media = useSiteImages();
+  const logo = media["site_logo_footer"]?.url;
+
   const year = new Date().getFullYear();
   return (
     <footer className="bg-neutral-950 text-neutral-300">
       <div className="container py-14">
         <div className="grid gap-10 md:grid-cols-4">
           <div className="md:col-span-2">
-            <div className="font-display text-2xl font-bold tracking-[0.25em] text-white">
-              BERI DISPOSABLE
-            </div>
+            {logo ? (
+              <img
+                src={logo}
+                alt="Beri Disposable"
+                className="h-14 w-auto object-contain"
+                width={280}
+                height={56}
+              />
+            ) : (
+              <div className="font-display text-2xl font-bold tracking-[0.25em] text-white">
+                BERI DISPOSABLE
+              </div>
+            )}
             <p className="mt-4 max-w-sm text-sm leading-relaxed text-neutral-400">
               Premium disposable and pod systems. Verify the authenticity of your
               genuine BERI product and explore the full lineup.

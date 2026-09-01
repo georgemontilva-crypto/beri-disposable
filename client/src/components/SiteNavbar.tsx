@@ -1,6 +1,7 @@
 import { cn } from "@/lib/utils";
 import { ChevronDown, Menu, X } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useSiteImages } from "@/hooks/useSiteImages";
 import { Link, useLocation } from "wouter";
 
 const NAV_LINKS = [
@@ -17,6 +18,9 @@ const PRODUCT_LINKS = [
 ];
 
 export function SiteNavbar() {
+  const media = useSiteImages();
+  const logo = media["site_logo_header"]?.url;
+
   const [location] = useLocation();
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -47,11 +51,22 @@ export function SiteNavbar() {
       style={{ transitionTimingFunction: "var(--ease-out-expo)" }}
     >
       <nav className="container flex h-16 items-center justify-between">
-        <Link
-          href="/"
-          className="font-display text-xl font-bold tracking-[0.2em] text-foreground"
-        >
-          BERI
+        <Link href="/" className="flex items-center" aria-label="Beri Disposable, home">
+          {logo ? (
+            // Height-constrained, width auto: a logo is delivered at whatever
+            // aspect its lettering needs, and forcing a box would distort it.
+            <img
+              src={logo}
+              alt="Beri"
+              className="h-8 w-auto object-contain"
+              width={160}
+              height={32}
+            />
+          ) : (
+            <span className="font-display text-xl font-bold tracking-[0.2em] text-foreground">
+              BERI
+            </span>
+          )}
         </Link>
 
         {/* Desktop nav */}

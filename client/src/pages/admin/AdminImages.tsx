@@ -17,6 +17,18 @@ type SlotDef = {
 function buildSlots(): SlotDef[] {
   const slots: SlotDef[] = [
     {
+      slot: "site_logo_header",
+      label: "Logo — Top Menu",
+      section: "Brand",
+      size: "~600×160 PNG transparent",
+    },
+    {
+      slot: "site_logo_footer",
+      label: "Logo — Footer",
+      section: "Brand",
+      size: "~900×240 PNG transparent",
+    },
+    {
       slot: "home_hero_video",
       label: "Home — Hero Video (desktop)",
       section: "Home",
@@ -212,7 +224,9 @@ export default function AdminImages() {
       </div>
 
       <p className="mb-4 text-sm text-neutral-500">
-        Upload media for each section. The <strong>Home Hero Video</strong> slots play muted on loop behind the hero, with a separate vertical cut for phones; the <strong>still</strong> background shows while the video loads and on devices that block autoplay. The <strong>Home Fan Card</strong> slots are the four portrait cards in the hero (480×640, the product on a clean background). The <strong>3D Model</strong> slots accept web-ready <strong>.glb</strong> files (max 25 MB) and power the interactive viewer on each product page — CAD files (STEP/IGES) must be converted to GLB first. All other slots accept images. Empty slots render placeholders on the public site.
+        Upload media for each section. The <strong>Logo</strong> slots replace the
+        BERI wordmark in the top bar and the footer — use a transparent PNG; the
+        site scales it by height, so any width works. The <strong>Home Hero Video</strong> slots play muted on loop behind the hero, with a separate vertical cut for phones; the <strong>still</strong> background shows while the video loads and on devices that block autoplay. The <strong>Home Fan Card</strong> slots are the four portrait cards in the hero (480×640, the product on a clean background). The <strong>3D Model</strong> slots accept web-ready <strong>.glb</strong> files (max 25 MB) and power the interactive viewer on each product page — CAD files (STEP/IGES) must be converted to GLB first. All other slots accept images. Empty slots render placeholders on the public site.
       </p>
 
       <div className="mb-5 flex flex-wrap gap-2">
