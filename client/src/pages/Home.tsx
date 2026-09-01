@@ -1,4 +1,5 @@
 import AuroraGlow from "@/components/AuroraGlow";
+import SmokeVapor from "@/components/SmokeVapor";
 import HeroFan from "@/components/HeroFan";
 import { PlaceholderImage } from "@/components/PlaceholderImage";
 import { PublicLayout } from "@/components/PublicLayout";
@@ -15,6 +16,8 @@ export default function Home() {
   return (
     <PublicLayout overlayHeader>
       <AuroraGlow />
+      {/* Sits above the glow so the vapour picks up its colour. */}
+      <SmokeVapor />
       {/* Sits above the glow; the hero's own video covers it at the top. */}
       <div ref={revealRef} className="relative z-10">
         <HeroFan />
