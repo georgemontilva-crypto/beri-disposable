@@ -1,4 +1,5 @@
 import AuroraGlow from "@/components/AuroraGlow";
+import ParallaxBanner, { type ParallaxLayer } from "@/components/ParallaxBanner";
 import { useTilt } from "@/hooks/useTilt";
 import SmokeVapor from "@/components/SmokeVapor";
 import HeroFan from "@/components/HeroFan";
@@ -9,6 +10,16 @@ import { useSiteImages, type PublicMediaEntry } from "@/hooks/useSiteImages";
 import { PRODUCTS, type Product } from "@/lib/products";
 import { ArrowRight, Check, ShieldCheck, Store } from "lucide-react";
 import { Link } from "wouter";
+
+/**
+ * Back to front. The speeds are deliberately far apart: layers moving at
+ * similar rates read as one slightly wobbly image rather than as depth.
+ */
+const PARALLAX_LAYERS: ParallaxLayer[] = [
+  { slot: "home_parallax_back", speed: 0.15 },
+  { slot: "home_parallax_mid", speed: 0.45 },
+  { slot: "home_parallax_front", speed: 0.9 },
+];
 
 export default function Home() {
   const images = useSiteImages();
@@ -24,6 +35,7 @@ export default function Home() {
         <HeroFan />
         <Marquee />
         <ProductSummary images={images} />
+        <ParallaxBanner layers={PARALLAX_LAYERS} className="h-[70vh] min-h-[420px]" />
         <AuthCta />
         <WholesaleCta />
       </div>

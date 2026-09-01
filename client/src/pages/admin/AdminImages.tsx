@@ -43,6 +43,24 @@ function buildSlots(): SlotDef[] {
       type: "video",
     },
     {
+      slot: "home_parallax_back",
+      label: "Home — Parallax: Back layer",
+      section: "Home",
+      size: "2400×1200 — sky / distant",
+    },
+    {
+      slot: "home_parallax_mid",
+      label: "Home — Parallax: Middle layer",
+      section: "Home",
+      size: "2400×1200 PNG transparent",
+    },
+    {
+      slot: "home_parallax_front",
+      label: "Home — Parallax: Front layer",
+      section: "Home",
+      size: "2400×1200 PNG transparent",
+    },
+    {
       slot: "home_hero_bg",
       label: "Home — Hero Background (still)",
       section: "Home",
@@ -226,7 +244,7 @@ export default function AdminImages() {
       <p className="mb-4 text-sm text-neutral-500">
         Upload media for each section. The <strong>Logo</strong> slots replace the
         BERI wordmark in the top bar and the footer — use a transparent PNG; the
-        site scales it by height, so any width works. The <strong>Home Hero Video</strong> slots play muted on loop behind the hero, with a separate vertical cut for phones; the <strong>still</strong> background shows while the video loads and on devices that block autoplay. The <strong>Home Fan Card</strong> slots are the four portrait cards in the hero (480×640, the product on a clean background). The <strong>3D Model</strong> slots accept web-ready <strong>.glb</strong> files (max 25 MB) and power the interactive viewer on each product page — CAD files (STEP/IGES) must be converted to GLB first. All other slots accept images. Empty slots render placeholders on the public site.
+        site scales it by height, so any width works. The <strong>Home Hero Video</strong> slots play muted on loop behind the hero, with a separate vertical cut for phones; the <strong>still</strong> background shows while the video loads and on devices that block autoplay. The three <strong>Parallax</strong> layers stack into one scene that gains depth as you scroll: back is the furthest and barely moves, front is closest and moves most, so the middle and front need transparent PNGs to let the layers behind show through. The <strong>Home Fan Card</strong> slots are the four portrait cards in the hero (480×640, the product on a clean background). The <strong>3D Model</strong> slots accept web-ready <strong>.glb</strong> files (max 25 MB) and power the interactive viewer on each product page — CAD files (STEP/IGES) must be converted to GLB first. All other slots accept images. Empty slots render placeholders on the public site.
       </p>
 
       <div className="mb-5 flex flex-wrap gap-2">
