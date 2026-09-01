@@ -65,6 +65,15 @@ export default function HeroFan() {
 
   const videoUrl = (isPhone ? videoMobile : videoDesktop) ?? videoDesktop ?? videoMobile;
   const [videoReady, setVideoReady] = useState(false);
+  const [videoEnded, setVideoEnded] = useState(false);
+
+  // A source swap — rotating a tablet across the breakpoint, or the admin
+  // replacing the file — restarts playback, so the frozen state has to clear or
+  // the new video would play underneath a paused float.
+  useEffect(() => {
+    setVideoEnded(false);
+    setVideoReady(false);
+  }, [videoUrl]);
 
   return (
     <section className="relative overflow-hidden bg-neutral-950 text-white">
@@ -84,7 +93,19 @@ export default function HeroFan() {
         float's travel can ever expose the edges of a cover-fitted video.
       */}
       <div className="hero-drop absolute inset-0">
-        <div className="hero-float absolute inset-0">
+          {/*
+            The float is frozen once the video holds its last frame. Left
+            running, a slow scale over a still image doesn't read as breathing —
+            it reads as a wobble, and scaling a paused video keeps nudging it
+            across subpixel boundaries, which shows up as a shimmer.
+
+            Paused rather than removed: dropping the class would snap the
+            transform back to its resting value and jolt the frame.
+          */}
+          <div
+            className="hero-float absolute inset-0"
+            style={videoEnded ? { animationPlayState: "paused" } : undefined}
+          >
       {/* Still background: paints immediately, and stays as the fallback for
               devices that block autoplay or fail to load the video. */}
           {bg?.url && (
