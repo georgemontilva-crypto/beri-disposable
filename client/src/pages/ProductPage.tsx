@@ -6,7 +6,7 @@ import ProductViewer3D from "@/components/ProductViewer3D";
 import { useSiteImages, type PublicMediaEntry } from "@/hooks/useSiteImages";
 import { getNextProduct, getProductByKey, type SpecSlot } from "@/lib/products";
 import { ArrowLeft, ArrowRight, ShieldCheck } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Link, useLocation, useParams } from "wouter";
 import NotFound from "./NotFound";
 
@@ -20,6 +20,30 @@ function SpecGrid({
   images: Record<string, PublicMediaEntry>;
   productName: string;
 }) {
+  const gridRef = useRef<HTMLDivElement>(null);
+  const [rowHeight, setRowHeight] = useState(0);
+
+  // Square rows: measure the rendered column width and use it as the row
+  // height. Doing this in JS rather than CSS because a grid row can't size
+  // itself from its column width, and cells that span two rows rule out the
+  // usual aspect-ratio tricks.
+  useLayoutEffect(() => {
+    const el = gridRef.current;
+    if (!el) return;
+    const measure = () => {
+      const styles = getComputedStyle(el);
+      const columns = styles.gridTemplateColumns.split(" ").filter(Boolean).length;
+      const gap = parseFloat(styles.columnGap) || 0;
+      const width = el.clientWidth;
+      if (!columns || !width) return;
+      setRowHeight((width - gap * (columns - 1)) / columns);
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
   return (
     <section className="bg-black py-20">
       <div className="container">
@@ -35,13 +59,16 @@ function SpecGrid({
           </p>
         </div>
 
-        {/* Bento grid */}
+        {/* Bento grid.
+            Row height is measured to equal the column width, so a normal cell
+            is exactly square and a tall cell exactly 1:2. Fixed 220px rows made
+            the real aspect depend on viewport width, so the sizes advertised in
+            the admin panel could never be right and object-cover cropped
+            whatever the designer supplied. */}
         <div
-          className="grid gap-3"
-          style={{
-            gridTemplateColumns: "repeat(4, 1fr)",
-            gridAutoRows: "220px",
-          }}
+          ref={gridRef}
+          className="grid grid-cols-2 gap-3 md:grid-cols-4"
+          style={{ gridAutoRows: rowHeight ? `${rowHeight}px` : "220px" }}
         >
           {specSlots.map((s, i) => {
             const entry = images[s.slot];
