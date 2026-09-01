@@ -1,6 +1,5 @@
 import { useLayoutEffect, useRef } from "react";
 import CursorGlow from "./CursorGlow";
-import FloatingBits from "./FloatingBits";
 import ScrollHue from "./ScrollHue";
 import { NicotineWarning } from "./NicotineWarning";
 import { SiteFooter } from "./SiteFooter";
@@ -46,7 +45,6 @@ export function PublicLayout({
     <div className="dark flex min-h-screen flex-col bg-neutral-950 text-foreground">
       {/* Ambient layer, shared by every public page */}
       <ScrollHue />
-      <FloatingBits />
       <CursorGlow />
 
       <div ref={headerRef} className="fixed inset-x-0 top-0 z-50">

@@ -119,7 +119,7 @@ function ProductCard({
         className="tilt-card reveal group flex h-full flex-col overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.04] transition-colors duration-300 hover:border-white/20 hover:bg-white/[0.07]"
       >
         {/* Visual */}
-        <div className="relative aspect-[16/10] overflow-hidden bg-neutral-950">
+        <div className="rainbow-ring relative aspect-[16/10] overflow-hidden rounded-t-[2rem] bg-neutral-950">
           {/*
             Two nested wrappers on purpose. The float is a CSS animation and the
             hover zoom is a transition — both drive `transform`, so on one

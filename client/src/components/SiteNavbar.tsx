@@ -45,7 +45,7 @@ export function SiteNavbar() {
   return (
     <header
       className={cn(
-        "glass-nav transition-all duration-300",
+        "glass-nav rainbow-edge transition-all duration-300",
         scrolled && "glass-nav-scrolled"
       )}
       style={{ transitionTimingFunction: "var(--ease-out-expo)" }}

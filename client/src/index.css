@@ -197,7 +197,6 @@
     );
     backdrop-filter: blur(72px) saturate(150%) brightness(0.3);
     -webkit-backdrop-filter: blur(72px) saturate(150%) brightness(0.3);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.09);
     box-shadow:
       inset 0 1px 0 0 rgba(255, 255, 255, 0.16),
       0 1px 24px -8px rgba(0, 0, 0, 0.75);
@@ -212,7 +211,6 @@
     );
     backdrop-filter: blur(84px) saturate(150%) brightness(0.24);
     -webkit-backdrop-filter: blur(84px) saturate(150%) brightness(0.24);
-    border-bottom-color: rgba(255, 255, 255, 0.13);
     box-shadow:
       inset 0 1px 0 0 rgba(255, 255, 255, 0.2),
       0 10px 34px -12px rgba(0, 0, 0, 0.85);
@@ -529,4 +527,88 @@
   transform-style: preserve-3d;
   transition: transform 400ms cubic-bezier(0.22, 1, 0.36, 1);
   will-change: transform;
+}
+
+/* ─── Animated colour outlines ─────────────────────────────────────────────
+   A gradient border isn't something CSS can animate directly, so the ring is a
+   pseudo-element: a gradient fill with a mask that punches out everything but a
+   1.5px frame. The colour movement comes from sliding an oversized background
+   rather than animating the gradient stops, which browsers can't interpolate.
+
+   The palette repeats its first colour at the end so the slide loops without a
+   visible seam. */
+.rainbow-ring {
+  position: relative;
+}
+
+.rainbow-ring::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.5px;
+  background: linear-gradient(
+    90deg,
+    #ff4d6d,
+    #ffb020,
+    #3ddc97,
+    #35b8ff,
+    #a06bff,
+    #ff4d6d
+  );
+  background-size: 300% 100%;
+  animation: rainbow-slide 9s linear infinite;
+  /* Two masks composited to exclude: the outer fills the whole box, the inner
+     covers the content area, and the difference is the frame. */
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Edge-to-edge bar: a full ring would run off both sides of the screen, so the
+   navigation gets a single moving line along its bottom edge instead. */
+.rainbow-edge {
+  position: relative;
+}
+
+.rainbow-edge::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 1.5px;
+  background: linear-gradient(
+    90deg,
+    #ff4d6d,
+    #ffb020,
+    #3ddc97,
+    #35b8ff,
+    #a06bff,
+    #ff4d6d
+  );
+  background-size: 300% 100%;
+  animation: rainbow-slide 9s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes rainbow-slide {
+  from {
+    background-position: 0% 50%;
+  }
+  to {
+    background-position: 300% 50%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rainbow-ring::after,
+  .rainbow-edge::after {
+    animation: none;
+  }
 }
