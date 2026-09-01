@@ -12,7 +12,7 @@ export default function Home() {
   const revealRef = useReveal<HTMLDivElement>();
 
   return (
-    <PublicLayout>
+    <PublicLayout overlayHeader>
       <div ref={revealRef}>
         <HeroFan />
         <Marquee />

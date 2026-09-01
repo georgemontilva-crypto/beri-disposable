@@ -111,9 +111,14 @@ export default function HeroFan() {
 
       <div
         className={`container relative z-10 flex flex-col items-center ${
-          showCards ? "justify-end pb-16 pt-24" : "justify-center py-0"
+          showCards ? "justify-end pb-16" : "justify-center"
         }`}
-        style={{ minHeight: showCards ? "min(94vh, 1000px)" : "min(88vh, 900px)" }}
+        style={{
+          // The header overlays the hero, so reserve its height at the top:
+          // the video runs behind the glass but the cards must not.
+          paddingTop: "var(--header-h, 96px)",
+          minHeight: showCards ? "min(94vh, 1000px)" : "min(88vh, 900px)",
+        }}
       >
         {/*
           The video carries the message, so the headline is visually removed but
