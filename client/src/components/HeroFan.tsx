@@ -30,9 +30,9 @@ const FAN = [
 
 /** Back to front. Speeds are far apart so the stack reads as depth. */
 const HERO_LAYERS: ParallaxLayer[] = [
-  { slot: "hero_layer_back", speed: 0.15 },
-  { slot: "hero_layer_mid", speed: 0.45 },
-  { slot: "hero_layer_front", speed: 0.9 },
+  { slot: "hero_layer_back", mobileSlot: "hero_layer_back_mobile", speed: 0.15 },
+  { slot: "hero_layer_mid", mobileSlot: "hero_layer_mid_mobile", speed: 0.45 },
+  { slot: "hero_layer_front", mobileSlot: "hero_layer_front_mobile", speed: 0.9 },
 ];
 
 export default function HeroFan() {
@@ -40,7 +40,9 @@ export default function HeroFan() {
   const settings = useSiteSettings();
   const showCards = useBooleanSetting("home_hero_cards", true);
 
-  const hasLayers = HERO_LAYERS.some((l) => media[l.slot]?.url);
+  const hasLayers = HERO_LAYERS.some(
+    (l) => media[l.slot]?.url || (l.mobileSlot && media[l.mobileSlot]?.url)
+  );
   const heroMode = settings.home_hero_mode ?? "auto";
   // "auto" lets uploading a layer switch the hero on its own; an explicit
   // choice keeps both sets uploaded while only one is shown.

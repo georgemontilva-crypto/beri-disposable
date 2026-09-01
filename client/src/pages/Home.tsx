@@ -16,9 +16,9 @@ import { Link } from "wouter";
  * similar rates read as one slightly wobbly image rather than as depth.
  */
 const PARALLAX_LAYERS: ParallaxLayer[] = [
-  { slot: "home_parallax_back", speed: 0.15 },
-  { slot: "home_parallax_mid", speed: 0.45 },
-  { slot: "home_parallax_front", speed: 0.9 },
+  { slot: "home_parallax_back", mobileSlot: "home_parallax_back_mobile", speed: 0.15 },
+  { slot: "home_parallax_mid", mobileSlot: "home_parallax_mid_mobile", speed: 0.45 },
+  { slot: "home_parallax_front", mobileSlot: "home_parallax_front_mobile", speed: 0.9 },
 ];
 
 export default function Home() {

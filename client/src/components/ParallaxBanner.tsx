@@ -17,6 +17,12 @@ import { useEffect, useRef, useState } from "react";
 export type ParallaxLayer = {
   slot: string;
   /**
+   * Portrait cut used on phones. A 2:1 scene cropped to a tall viewport loses
+   * most of its width, which is exactly where the depth cues live. Falls back
+   * to `slot` when not uploaded.
+   */
+  mobileSlot?: string;
+  /**
    * How far this layer travels, as a fraction of the scroll distance. Small
    * values sit far back; larger ones come toward the viewer. Keep the set
    * spread out — layers with similar speeds just look like a blurry stack.
@@ -53,6 +59,7 @@ export default function ParallaxBanner({
 }) {
   const media = useSiteImages();
   const sectionRef = useRef<HTMLDivElement>(null);
+  const [isPhone, setIsPhone] = useState(false);
   const layerRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [reduced, setReduced] = useState(false);
 
@@ -63,6 +70,21 @@ export default function ParallaxBanner({
     mq.addEventListener("change", update);
     return () => mq.removeEventListener("change", update);
   }, []);
+
+  // Re-evaluated on change rather than read once: rotating a phone crosses the
+  // breakpoint and should swap the cut.
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 767px)");
+    const update = () => setIsPhone(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
+
+  const urlFor = (layer: ParallaxLayer): string | undefined => {
+    const mobile = layer.mobileSlot ? media[layer.mobileSlot]?.url : undefined;
+    return (isPhone && mobile) || media[layer.slot]?.url;
+  };
 
   useEffect(() => {
     if (reduced) return;
@@ -150,7 +172,7 @@ export default function ParallaxBanner({
     };
   }, [layers, reduced]);
 
-  const hasAny = layers.some((l) => media[l.slot]?.url);
+  const hasAny = layers.some((l) => urlFor(l));
 
   return (
     <section
@@ -158,7 +180,7 @@ export default function ParallaxBanner({
       className={`relative overflow-hidden bg-neutral-950 ${className}`}
     >
       {layers.map((layer, i) => {
-        const url = media[layer.slot]?.url;
+        const url = urlFor(layer);
         return (
           <div
             key={layer.slot}
