@@ -1,3 +1,4 @@
+import AuroraGlow from "@/components/AuroraGlow";
 import HeroFan from "@/components/HeroFan";
 import { PlaceholderImage } from "@/components/PlaceholderImage";
 import { PublicLayout } from "@/components/PublicLayout";
@@ -13,7 +14,9 @@ export default function Home() {
 
   return (
     <PublicLayout overlayHeader>
-      <div ref={revealRef}>
+      <AuroraGlow />
+      {/* Sits above the glow; the hero's own video covers it at the top. */}
+      <div ref={revealRef} className="relative z-10">
         <HeroFan />
         <Marquee />
         <ProductSummary images={images} />
@@ -37,7 +40,7 @@ function Marquee() {
   ];
   const doubled = [...items, ...items];
   return (
-    <div className="overflow-hidden border-y border-white/10 bg-neutral-950 py-4">
+    <div className="overflow-hidden border-y border-white/10 bg-neutral-950/80 py-4 backdrop-blur-sm">
       <div className="flex animate-marquee whitespace-nowrap">
         {doubled.map((item, i) => (
           <span

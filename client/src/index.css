@@ -355,3 +355,49 @@
     transform: translate(var(--tx), var(--ty)) rotate(var(--rot));
   }
 }
+
+/* ─── Aurora glow ──────────────────────────────────────────────────────────
+   Ambient light rising from the footer. The gradient is soft enough on its own
+   that no blur filter is needed — blurring an element this large every frame
+   would cost far more than the effect is worth. */
+.aurora-drift {
+  background: radial-gradient(
+    closest-side,
+    rgba(124, 92, 255, 0.3) 0%,
+    rgba(124, 92, 255, 0.14) 42%,
+    rgba(124, 92, 255, 0.05) 62%,
+    transparent 78%
+  );
+  animation: aurora-drift 18s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+.aurora-hue {
+  animation: aurora-hue 42s linear infinite;
+  will-change: filter;
+}
+
+@keyframes aurora-drift {
+  from {
+    transform: translate(-50%, 0) scale(1);
+  }
+  to {
+    transform: translate(-50%, -8vh) scale(1.08);
+  }
+}
+
+@keyframes aurora-hue {
+  from {
+    filter: hue-rotate(0deg);
+  }
+  to {
+    filter: hue-rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aurora-drift,
+  .aurora-hue {
+    animation: none;
+  }
+}
