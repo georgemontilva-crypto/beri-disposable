@@ -79,19 +79,20 @@ export default function FlavorShowcase({
               backgroundRepeat: "repeat",
               // Deliberately huge: the pattern is a brand mark, so the
               // lettering has to be readable. At 340px it looked like woven
-              // mesh and at 760px like fine print; roughly two viewport widths
-              // is what finally lets a single BERI read as a word.
-              backgroundSize: "1600px auto",
+              // mesh and at 760px like fine print. At this size only a couple
+              // of repeats fit across the page, which is the point.
+              backgroundSize: "1900px auto",
             }}
           />
           <div
             aria-hidden="true"
             className="absolute inset-0"
             style={{
-              // Lighter than before: the scrim exists to keep text legible,
-              // and at 0.85 it was also erasing the pattern it sits over.
+              // Light at the top, heavy at the bottom: the pattern shows
+              // where the section opens and fades out as it goes, so the
+              // section hands off to the solid page below without a seam.
               background:
-                "linear-gradient(180deg, rgba(15,15,17,0.72) 0%, rgba(15,15,17,0.38) 50%, rgba(15,15,17,0.8) 100%)",
+                "linear-gradient(180deg, rgba(15,15,17,0.15) 0%, rgba(15,15,17,0.45) 45%, rgba(15,15,17,0.78) 75%, rgba(15,15,17,0.96) 100%)",
             }}
           />
         </>
