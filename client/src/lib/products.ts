@@ -96,15 +96,25 @@ const toSlug = (s: string) =>
 function buildFlavors(
   productKey: string,
   names: string[],
-  edition?: string
+  edition?: string,
+  /**
+   * Prefix for the slug and media slot. Needed when a range reuses names that
+   * already exist elsewhere in the same product — the Cliq batteries share four
+   * names with its pods, and without a prefix both would resolve to the same
+   * image slot and show the same photo.
+   */
+  slugPrefix = ""
 ): Flavor[] {
-  return names.map((name) => ({
-    name,
-    slug: toSlug(name),
-    slot: `${productKey}_flavor_${toSlug(name)}`,
-    profile: deriveProfile(name),
-    ...(edition ? { edition } : {}),
-  }));
+  return names.map((name) => {
+    const slug = `${slugPrefix}${toSlug(name)}`;
+    return {
+      name,
+      slug,
+      slot: `${productKey}_flavor_${slug}`,
+      profile: deriveProfile(name),
+      ...(edition ? { edition } : {}),
+    };
+  });
 }
 
 /* ─── Beri Crush ──────────────────────────────────────────────────────────── */
@@ -209,7 +219,8 @@ export const BERI_CLIQ: Product = {
   ],
   heroSlot: "cliq_hero",
   modelSlot: "cliq_model_3d",
-  flavors: buildFlavors("cliq", [
+  flavors: [
+    ...buildFlavors("cliq", [
     "Alaskan Mint",
     "Banana Ice",
     "Black Razz Ice",
@@ -230,18 +241,22 @@ export const BERI_CLIQ: Product = {
     "Watermelon Gami",
     "White Gami",
     "White Strawberry",
-  ]),
+    ]),
+    ...buildFlavors(
+      "cliq",
+      [
+        "Original",
+        "Blue Razz",
+        "Grape Ice",
+        "White Strawberry",
+        "Watermelon Ice",
+        "Green Apple",
+      ],
+      "Batteries",
+      "battery-"
+    ),
+  ],
 };
-
-/** Battery colors available for the Cliq. */
-export const CLIQ_BATTERY_COLORS = [
-  { name: "Black", hex: "#1a1a1a" },
-  { name: "Blue", hex: "#1a9fb5" },
-  { name: "Green", hex: "#2fa84f" },
-  { name: "Orange", hex: "#f07d1a" },
-  { name: "Purple", hex: "#6b3fc4" },
-  { name: "Red", hex: "#c8202e" },
-];
 
 /** Ready-to-vape kits (battery + pod). */
 export const CLIQ_KITS = [

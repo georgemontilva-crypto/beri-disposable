@@ -52,3 +52,32 @@ describe("edition chips", () => {
     expect(chips(out)).toEqual(["Summer Edition"]);
   });
 });
+
+describe("ranges that reuse names", () => {
+  const toSlug = (s: string) =>
+    s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+
+  const slot = (key: string, name: string, prefix = "") =>
+    `${key}_flavor_${prefix}${toSlug(name)}`;
+
+  it("keeps a battery apart from the pod of the same name", () => {
+    // Four Cliq batteries share a name with a pod. Without the prefix both
+    // resolve to one media slot and the tabs would show the same photo.
+    expect(slot("cliq", "Grape Ice")).not.toBe(
+      slot("cliq", "Grape Ice", "battery-")
+    );
+  });
+
+  it("gives every battery its own slot", () => {
+    const batteries = [
+      "Original",
+      "Blue Razz",
+      "Grape Ice",
+      "White Strawberry",
+      "Watermelon Ice",
+      "Green Apple",
+    ];
+    const slots = batteries.map((b) => slot("cliq", b, "battery-"));
+    expect(new Set(slots).size).toBe(batteries.length);
+  });
+});
