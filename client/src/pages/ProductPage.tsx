@@ -131,29 +131,38 @@ export default function ProductPage() {
               {product.specs.map((s) => {
                 const icon = s.iconSlot ? images[s.iconSlot]?.url : undefined;
                 return (
-                  <div key={s.label} className="reveal flex flex-col items-center text-center">
-                    {/* Icons are optional: with none uploaded the row is exactly
-                        what it was, so a partly filled set never looks broken. */}
-                    {icon && (
+                  <div
+                    key={s.label}
+                    className="reveal flex min-h-[7rem] flex-col items-center justify-center text-center"
+                  >
+                    {icon ? (
+                      /*
+                        The uploaded artwork already carries its own wording, so
+                        the value and label would just repeat it. They stay in
+                        the alt text, which is the only place a screen reader
+                        can read them.
+                      */
                       <img
                         src={icon}
-                        alt=""
-                        aria-hidden="true"
-                        className="mb-3 h-12 w-12 object-contain"
-                        width={96}
-                        height={96}
+                        alt={`${s.value} ${s.label}`}
+                        className="h-24 w-auto max-w-full object-contain md:h-28"
+                        width={224}
+                        height={224}
                         loading="lazy"
                       />
+                    ) : (
+                      <>
+                        <div
+                          className="font-display text-3xl font-bold"
+                          style={{ color: product.accent }}
+                        >
+                          {s.value}
+                        </div>
+                        <div className="mt-1 text-xs font-semibold uppercase tracking-widest text-neutral-400">
+                          {s.label}
+                        </div>
+                      </>
                     )}
-                    <div
-                      className="font-display text-3xl font-bold"
-                      style={{ color: product.accent }}
-                    >
-                      {s.value}
-                    </div>
-                    <div className="mt-1 text-xs font-semibold uppercase tracking-widest text-neutral-300">
-                      {s.label}
-                    </div>
                   </div>
                 );
               })}
