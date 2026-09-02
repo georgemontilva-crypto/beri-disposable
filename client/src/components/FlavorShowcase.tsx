@@ -15,6 +15,7 @@ import { PlaceholderImage } from "@/components/PlaceholderImage";
 import type { PublicMediaEntry } from "@/hooks/useSiteImages";
 import type { Flavor, Product } from "@/lib/products";
 import { useMemo, useState } from "react";
+import Snowfall from "./Snowfall";
 
 export default function FlavorShowcase({
   product,
@@ -66,6 +67,10 @@ export default function FlavorShowcase({
 
   return (
     <section className="relative overflow-hidden py-20 text-white">
+      {/* Page-wide, not section-wide: the flakes are meant to fall over the
+          whole site while the winter range is open. */}
+      <Snowfall active={/winter/i.test(filter)} />
+
       {/* Tiling brand pattern. Held at low opacity under a dark scrim: at full
           strength a repeating logo competes with the product shots, which are
           the thing the section exists to show. */}
