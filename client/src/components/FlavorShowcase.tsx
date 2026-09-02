@@ -15,7 +15,6 @@ import { PlaceholderImage } from "@/components/PlaceholderImage";
 import type { PublicMediaEntry } from "@/hooks/useSiteImages";
 import type { Flavor, Product } from "@/lib/products";
 import { useMemo, useState } from "react";
-import PlasmaLiquid from "./PlasmaLiquid";
 import Snowfall from "./Snowfall";
 import SummerEmbers from "./SummerEmbers";
 
@@ -73,8 +72,6 @@ export default function FlavorShowcase({
           whole site while the winter range is open. */}
       <Snowfall active={/winter/i.test(filter)} />
       <SummerEmbers active={/summer/i.test(filter)} />
-      {/* Regular gets the lamp; the two editions have their own weather. */}
-      <PlasmaLiquid active={filter === "Regular"} />
 
       {/* Tiling brand pattern. Held at low opacity under a dark scrim: at full
           strength a repeating logo competes with the product shots, which are

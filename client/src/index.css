@@ -770,38 +770,79 @@
   }
 }
 
-/* ─── Plasma blobs ─────────────────────────────────────────────────────────
-   Rise, wander sideways and swell. The horizontal drift is deliberately out of
-   step with the vertical travel: matched, every blob would climb the same
-   S-curve and the layer would read as a pattern instead of a liquid. */
-.plasma-blob {
-  bottom: -30vh;
-  animation-name: plasma-rise;
-  animation-timing-function: ease-in-out;
-  animation-iteration-count: infinite;
+/* Featured flavour swap: a short fade so picking a tile reads as a change
+   rather than the image blinking to a different one. */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 320ms ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-in {
+    animation: none;
+  }
+}
+
+/* ─── Summer lights ────────────────────────────────────────────────────────
+   Two orange washes behind the page while the summer range is open. Periods
+   are coprime so the pair never pulses in unison, which would read as the
+   whole page breathing. */
+.summer-light {
   will-change: transform;
 }
 
-@keyframes plasma-rise {
-  0% {
-    transform: translate(-50%, 0) scale(0.85);
+.summer-light-a {
+  background: radial-gradient(
+    closest-side,
+    rgba(255, 138, 30, 0.4) 0%,
+    rgba(255, 138, 30, 0.18) 45%,
+    transparent 76%
+  );
+  animation: summer-drift-a 17s ease-in-out infinite alternate;
+}
+
+.summer-light-b {
+  background: radial-gradient(
+    closest-side,
+    rgba(255, 96, 60, 0.34) 0%,
+    rgba(255, 96, 60, 0.15) 45%,
+    transparent 76%
+  );
+  animation: summer-drift-b 23s ease-in-out infinite alternate -8s;
+}
+
+@keyframes summer-drift-a {
+  from {
+    transform: translate(-50%, 0) scale(1);
   }
-  30% {
-    transform: translate(-30%, -55vh) scale(1.12);
+  to {
+    transform: translate(-50%, -9vh) scale(1.1);
   }
-  55% {
-    transform: translate(-70%, -95vh) scale(0.92);
+}
+
+@keyframes summer-drift-b {
+  from {
+    transform: translate(-50%, 0) scale(1.06);
   }
-  80% {
-    transform: translate(-40%, -135vh) scale(1.06);
-  }
-  100% {
-    transform: translate(-50%, -175vh) scale(0.85);
+  to {
+    transform: translate(-50%, -12vh) scale(0.95);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .plasma-blob {
+  .summer-light-a,
+  .summer-light-b {
     animation: none;
   }
 }
+
