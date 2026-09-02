@@ -32,7 +32,7 @@ function mediaGroups(): { section: string; slots: string[] }[] {
         p.heroSlot,
         p.modelSlot,
         `${p.key}_banner`,
-        ...p.specs.map((sp) => sp.iconSlot).filter((x): x is string => !!x),
+        ...p.highlights.map((h) => h.iconSlot),
         ...p.flavors.map((f) => f.slot),
       ],
     });

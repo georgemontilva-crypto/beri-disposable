@@ -127,9 +127,9 @@ export default function ProductPage() {
         {/* ── Stats bar (black background) ─────────────────────────────── */}
         <section className="border-y border-white/10 bg-white/[0.03] py-12 text-white">
           <div className="container">
-            <div className="grid grid-cols-2 gap-6 sm:grid-cols-4">
-              {product.specs.map((s) => {
-                const icon = s.iconSlot ? images[s.iconSlot]?.url : undefined;
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
+              {product.highlights.map((s) => {
+                const icon = images[s.iconSlot]?.url;
                 return (
                   <div
                     key={s.label}

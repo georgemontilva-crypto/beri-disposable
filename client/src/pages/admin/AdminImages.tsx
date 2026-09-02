@@ -128,12 +128,11 @@ function buildSlots(): SlotDef[] {
       type: "model",
     });
     slots.push({ slot: `${p.key}_banner`, label: `${p.name} — Banner`, section, size: "1600×600" });
-    // One optional icon per headline stat.
-    for (const spec of p.specs) {
-      if (!spec.iconSlot) continue;
+    // One icon per highlight.
+    for (const spec of p.highlights) {
       slots.push({
         slot: spec.iconSlot,
-        label: `${p.name} — Icon: ${spec.label}`,
+        label: `${p.name} — Icon: ${spec.value} ${spec.label}`,
         section,
         size: "~450×450 PNG transparent",
       });
