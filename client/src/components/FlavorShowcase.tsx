@@ -71,31 +71,33 @@ export default function FlavorShowcase({
           the thing the section exists to show. */}
       {texture && (
         <>
+          {/*
+            Solid black base. Without it the ambient colour glow sits behind the
+            pattern and tints it olive — the texture has to be embossed on black
+            to read as embossing rather than as a stain.
+          */}
+          <div aria-hidden="true" className="absolute inset-0 bg-black" />
+
           <div
             aria-hidden="true"
-            className="absolute inset-0 opacity-[0.28]"
+            className="absolute inset-0 opacity-[0.22]"
             style={{
               backgroundImage: `url(${texture})`,
               backgroundRepeat: "repeat",
-              // Deliberately huge: the pattern is a brand mark, so the
-              // lettering has to be readable. At 340px it looked like woven
-              // mesh and at 760px like fine print. At this size only a couple
-              // of repeats fit across the page, which is the point.
-              backgroundSize: "3200px auto",
+              backgroundSize: "1500px auto",
+              // Stripped of colour: the pattern is a surface finish, not
+              // artwork, and any hue in it competes with the product shots.
+              filter: "grayscale(1) brightness(0.55)",
             }}
           />
+
+          {/* Visible where the section opens, gone by the bottom. */}
           <div
             aria-hidden="true"
             className="absolute inset-0"
             style={{
-              // Dark from the very top: the heading sits there, and a busy
-              // pattern running behind type is the fastest way to make a
-              // section look cheap. The scrim lifts a little through the
-              // middle, where the cards are and the texture can be felt, then
-              // closes to near-black so the section joins the page below
-              // without a seam.
               background:
-                "linear-gradient(180deg, rgba(15,15,17,0.9) 0%, rgba(15,15,17,0.82) 18%, rgba(15,15,17,0.58) 45%, rgba(15,15,17,0.8) 80%, rgba(15,15,17,0.97) 100%)",
+                "linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.35) 30%, rgba(0,0,0,0.85) 62%, #000 88%)",
             }}
           />
         </>
