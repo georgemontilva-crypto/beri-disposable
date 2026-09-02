@@ -769,3 +769,39 @@
     animation: none;
   }
 }
+
+/* ─── Plasma blobs ─────────────────────────────────────────────────────────
+   Rise, wander sideways and swell. The horizontal drift is deliberately out of
+   step with the vertical travel: matched, every blob would climb the same
+   S-curve and the layer would read as a pattern instead of a liquid. */
+.plasma-blob {
+  bottom: -30vh;
+  animation-name: plasma-rise;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  will-change: transform;
+}
+
+@keyframes plasma-rise {
+  0% {
+    transform: translate(-50%, 0) scale(0.85);
+  }
+  30% {
+    transform: translate(-30%, -55vh) scale(1.12);
+  }
+  55% {
+    transform: translate(-70%, -95vh) scale(0.92);
+  }
+  80% {
+    transform: translate(-40%, -135vh) scale(1.06);
+  }
+  100% {
+    transform: translate(-50%, -175vh) scale(0.85);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .plasma-blob {
+    animation: none;
+  }
+}
