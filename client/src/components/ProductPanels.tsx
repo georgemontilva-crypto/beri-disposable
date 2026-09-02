@@ -71,16 +71,10 @@ export default function ProductPanels() {
                 <PanelVideo url={videoUrl} poster={url} active={active} />
               )}
 
-              {/* Accent wash: what makes the four read as one palette rather
-                  than four unrelated photographs. */}
-              <div
-                className="absolute inset-0 transition-opacity duration-500"
-                style={{
-                  background: `linear-gradient(180deg, ${product.accent}00 0%, ${product.accent}22 55%, ${product.accent}55 100%)`,
-                  opacity: active ? 0.85 : 1,
-                }}
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-black/40" />
+              {/* Only a foot of shade, and only where the logo and figure sit.
+                  The colour wash that used to cover the whole panel tinted the
+                  footage it was meant to frame. */}
+              <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/85 to-transparent" />
 
               {/* Copy */}
               <div className="absolute inset-x-0 bottom-0 flex flex-col items-center p-6 text-center md:p-8">
@@ -144,14 +138,15 @@ function PanelLogo({
 
 
 /**
- * Short loop shown over the panel image while its column is open.
+ * Short clip sitting on the panel.
  *
- * `preload="none"` so nothing downloads until a column is actually opened —
- * four autoplaying loops on one screen would cost several megabytes before the
- * visitor has expressed any interest at all.
+ * Always visible, not faded in on hover: `preload="metadata"` gets the browser
+ * to paint the opening frame, so a closed column already shows the footage
+ * rather than a separate still that then swaps.
  *
- * Paused and rewound on leave rather than left running: a loop continuing
- * behind a collapsed column burns decode work nobody can see.
+ * It plays once and holds its closing frame — no loop. Leaving mid-play pauses
+ * where it is rather than rewinding, so the column never snaps backwards under
+ * the pointer; a clip that already finished restarts on the next hover.
  */
 function PanelVideo({
   url,
@@ -163,19 +158,19 @@ function PanelVideo({
   active: boolean;
 }) {
   const ref = useRef<HTMLVideoElement>(null);
-  const [ready, setReady] = useState(false);
 
   useEffect(() => {
     const v = ref.current;
     if (!v) return;
+
     if (active) {
-      // play() rejects when autoplay is blocked; the still image stays, which
-      // is the right outcome, so the rejection is simply ignored.
+      // A finished clip has nothing left to show, so start it over.
+      if (v.ended) v.currentTime = 0;
+      // play() rejects when autoplay is blocked; the frame on screen stays,
+      // which is the right outcome, so the rejection is ignored.
       void v.play().catch(() => undefined);
     } else {
       v.pause();
-      v.currentTime = 0;
-      setReady(false);
     }
   }, [active]);
 
@@ -185,15 +180,20 @@ function PanelVideo({
       src={url}
       poster={poster}
       muted
-      loop
       playsInline
-      preload="none"
+      preload="metadata"
       aria-hidden="true"
       tabIndex={-1}
-      onPlaying={() => setReady(true)}
-      className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-500 ${
-        active && ready ? "opacity-100" : "opacity-0"
-      }`}
+      onEnded={(e) => {
+        // Pin just short of the end: some browsers rewind to zero on 'ended'
+        // and flash the opening frame before pausing.
+        const v = e.currentTarget;
+        v.pause();
+        if (Number.isFinite(v.duration)) {
+          v.currentTime = Math.max(0, v.duration - 0.05);
+        }
+      }}
+      className="absolute inset-0 h-full w-full object-cover"
     />
   );
 }
