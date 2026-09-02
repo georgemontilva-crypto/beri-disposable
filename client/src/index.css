@@ -726,3 +726,56 @@
     animation: none;
   }
 }
+
+/* ─── Summer lights ────────────────────────────────────────────────────────
+   Two orange washes behind the page while the summer range is open. Periods
+   are coprime so the pair never pulses in unison, which would read as the
+   whole page breathing. */
+.summer-light {
+  will-change: transform;
+}
+
+.summer-light-a {
+  background: radial-gradient(
+    closest-side,
+    rgba(255, 138, 30, 0.4) 0%,
+    rgba(255, 138, 30, 0.18) 45%,
+    transparent 76%
+  );
+  animation: summer-drift-a 17s ease-in-out infinite alternate;
+}
+
+.summer-light-b {
+  background: radial-gradient(
+    closest-side,
+    rgba(255, 96, 60, 0.34) 0%,
+    rgba(255, 96, 60, 0.15) 45%,
+    transparent 76%
+  );
+  animation: summer-drift-b 23s ease-in-out infinite alternate -8s;
+}
+
+@keyframes summer-drift-a {
+  from {
+    transform: translate(-50%, 0) scale(1);
+  }
+  to {
+    transform: translate(-50%, -9vh) scale(1.1);
+  }
+}
+
+@keyframes summer-drift-b {
+  from {
+    transform: translate(-50%, 0) scale(1.06);
+  }
+  to {
+    transform: translate(-50%, -12vh) scale(0.95);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .summer-light-a,
+  .summer-light-b {
+    animation: none;
+  }
+}

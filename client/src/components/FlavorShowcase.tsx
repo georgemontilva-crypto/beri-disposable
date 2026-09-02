@@ -16,6 +16,7 @@ import type { PublicMediaEntry } from "@/hooks/useSiteImages";
 import type { Flavor, Product } from "@/lib/products";
 import { useMemo, useState } from "react";
 import Snowfall from "./Snowfall";
+import SummerEmbers from "./SummerEmbers";
 
 export default function FlavorShowcase({
   product,
@@ -70,6 +71,7 @@ export default function FlavorShowcase({
       {/* Page-wide, not section-wide: the flakes are meant to fall over the
           whole site while the winter range is open. */}
       <Snowfall active={/winter/i.test(filter)} />
+      <SummerEmbers active={/summer/i.test(filter)} />
 
       {/* Tiling brand pattern. Held at low opacity under a dark scrim: at full
           strength a repeating logo competes with the product shots, which are
