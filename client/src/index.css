@@ -576,6 +576,9 @@
   content: "";
   position: absolute;
   inset: auto 0 0 0;
+  /* Kept below any panel that hangs off the bar; the line is trim, not
+     something that should cross a menu. */
+  z-index: 1;
   height: 1.5px;
   background: linear-gradient(
     90deg,

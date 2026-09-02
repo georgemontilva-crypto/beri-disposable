@@ -95,7 +95,11 @@ export function SiteNavbar() {
             </button>
             <div
               className={cn(
-                "absolute left-0 top-full w-48 origin-top pt-2 transition-all duration-200",
+                // z-20 puts the panel above the header's rainbow underline:
+                // that line is a ::after on the header, and a pseudo-element
+                // paints after its element's positioned children when both sit
+                // at z-index auto.
+                "absolute left-0 top-full z-20 w-48 origin-top pt-2 transition-all duration-200",
                 productsOpen
                   ? "pointer-events-auto translate-y-0 scale-100 opacity-100"
                   : "pointer-events-none -translate-y-1 scale-95 opacity-0"
