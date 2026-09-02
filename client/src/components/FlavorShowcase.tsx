@@ -81,18 +81,21 @@ export default function FlavorShowcase({
               // lettering has to be readable. At 340px it looked like woven
               // mesh and at 760px like fine print. At this size only a couple
               // of repeats fit across the page, which is the point.
-              backgroundSize: "1900px auto",
+              backgroundSize: "3200px auto",
             }}
           />
           <div
             aria-hidden="true"
             className="absolute inset-0"
             style={{
-              // Light at the top, heavy at the bottom: the pattern shows
-              // where the section opens and fades out as it goes, so the
-              // section hands off to the solid page below without a seam.
+              // Dark from the very top: the heading sits there, and a busy
+              // pattern running behind type is the fastest way to make a
+              // section look cheap. The scrim lifts a little through the
+              // middle, where the cards are and the texture can be felt, then
+              // closes to near-black so the section joins the page below
+              // without a seam.
               background:
-                "linear-gradient(180deg, rgba(15,15,17,0.15) 0%, rgba(15,15,17,0.45) 45%, rgba(15,15,17,0.78) 75%, rgba(15,15,17,0.96) 100%)",
+                "linear-gradient(180deg, rgba(15,15,17,0.9) 0%, rgba(15,15,17,0.82) 18%, rgba(15,15,17,0.58) 45%, rgba(15,15,17,0.8) 80%, rgba(15,15,17,0.97) 100%)",
             }}
           />
         </>
@@ -188,12 +191,13 @@ export default function FlavorShowcase({
                 type="button"
                 onClick={() => setSelected(f.slug)}
                 aria-pressed={active}
-                className="group rounded-2xl border p-2 text-left transition-all duration-200 hover:-translate-y-1"
+                className="group rounded-2xl border p-2 text-left backdrop-blur-xl backdrop-saturate-150 transition-all duration-200 hover:-translate-y-1 hover:bg-black/60"
                 style={{
-                  borderColor: active ? product.accent : "rgba(255,255,255,0.1)",
-                  backgroundColor: active
-                    ? "rgba(255,255,255,0.1)"
-                    : "rgba(255,255,255,0.04)",
+                  borderColor: active ? product.accent : "rgba(255,255,255,0.12)",
+                  // Dark glass rather than a white tint: over a patterned
+                  // backdrop a light panel goes milky, while a dark one keeps
+                  // the product shots reading against it.
+                  backgroundColor: active ? "rgba(0,0,0,0.62)" : "rgba(0,0,0,0.45)",
                 }}
               >
                 <div className="overflow-hidden rounded-xl">
