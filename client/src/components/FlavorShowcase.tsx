@@ -77,10 +77,11 @@ export default function FlavorShowcase({
             style={{
               backgroundImage: `url(${texture})`,
               backgroundRepeat: "repeat",
-              // Large tile on purpose: at 340px the lettering in the pattern
-              // shrinks to a fine mesh and reads as noise rather than as the
-              // brand mark.
-              backgroundSize: "760px auto",
+              // Deliberately huge: the pattern is a brand mark, so the
+              // lettering has to be readable. At 340px it looked like woven
+              // mesh and at 760px like fine print; roughly two viewport widths
+              // is what finally lets a single BERI read as a word.
+              backgroundSize: "1600px auto",
             }}
           />
           <div
