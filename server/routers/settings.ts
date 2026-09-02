@@ -10,8 +10,6 @@ import * as db from "../db";
  * adding a switch never needs a migration.
  */
 export const SETTING_DEFAULTS = {
-  /** Show the four fanned product cards in the homepage hero. */
-  home_hero_cards: "true",
   /**
    * What fills the homepage hero.
    *  auto   — parallax layers if any are uploaded, otherwise the video

@@ -15,7 +15,12 @@ import { useState } from "react";
 type Result = { valid: boolean; code: string } | null;
 
 export default function Authenticate() {
-  const [code, setCode] = useState("");
+  // Prefilled from ?code= so the homepage field can hand off here without the
+  // visitor retyping what they already entered.
+  const [code, setCode] = useState(() => {
+    if (typeof window === "undefined") return "";
+    return new URLSearchParams(window.location.search).get("code") ?? "";
+  });
   const [result, setResult] = useState<Result>(null);
   const revealRef = useReveal<HTMLDivElement>();
 

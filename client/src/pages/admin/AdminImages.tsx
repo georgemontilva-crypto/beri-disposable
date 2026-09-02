@@ -102,6 +102,12 @@ function buildSlots(): SlotDef[] {
   for (const p of PRODUCTS) {
     const section = p.name;
     slots.push({
+      slot: p.panelSlot,
+      label: `${p.name} — Home panel`,
+      section,
+      size: "1200×1800 vertical",
+    });
+    slots.push({
       slot: p.textureSlot,
       label: `${p.name} — Background texture`,
       section,
@@ -112,12 +118,6 @@ function buildSlots(): SlotDef[] {
       label: `${p.name} — Product logo`,
       section,
       size: "1040×384 PNG transparent",
-    });
-    slots.push({
-      slot: `${p.key}_hero_card`,
-      label: `${p.name} — Home Fan Card`,
-      section,
-      size: "480×640 (portrait)",
     });
     slots.push({ slot: p.heroSlot, label: `${p.name} — Hero`, section, size: "1200×900" });
     slots.push({
@@ -180,7 +180,6 @@ export default function AdminImages() {
     },
     onError: (e) => toast.error(e.message || "Could not save"),
   });
-  const heroCardsOn = settings.data?.home_hero_cards !== "false";
   const heroMode = settings.data?.home_hero_mode ?? "auto";
   const presign = trpc.images.adminPresignUpload.useMutation();
   const confirm = trpc.images.adminConfirmUpload.useMutation();
@@ -261,37 +260,11 @@ export default function AdminImages() {
           <div>
             <h2 className="font-display text-base font-semibold">Homepage hero</h2>
             <p className="mt-1 text-sm text-neutral-500">
-              Turn the four fanned product cards on or off. With them off the hero
-              shows only the background video and the headline.
+              Choose what fills the hero. Product cards now live in their own
+              full-screen panels below it.
             </p>
           </div>
-          <button
-            type="button"
-            role="switch"
-            aria-checked={heroCardsOn}
-            aria-label="Show product cards in the homepage hero"
-            disabled={settings.isLoading || setSetting.isPending}
-            onClick={() =>
-              setSetting.mutate({
-                key: "home_hero_cards",
-                value: heroCardsOn ? "false" : "true",
-              })
-            }
-            className={`relative mt-1 h-7 w-12 shrink-0 rounded-full transition-colors disabled:opacity-50 ${
-              heroCardsOn ? "bg-neutral-950" : "bg-neutral-300"
-            }`}
-          >
-            <span
-              className={`absolute top-1 h-5 w-5 rounded-full bg-white transition-transform ${
-                heroCardsOn ? "translate-x-6" : "translate-x-1"
-              }`}
-            />
-          </button>
         </div>
-        <p className="mt-3 text-xs font-medium text-neutral-400">
-          Product cards: {heroCardsOn ? "visible" : "hidden"}
-        </p>
-
         <div className="mt-5 border-t border-neutral-100 pt-5">
           <h3 className="text-sm font-semibold">Hero background</h3>
           <p className="mt-1 text-sm text-neutral-500">

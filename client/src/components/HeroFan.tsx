@@ -13,10 +13,9 @@
  *    stays legible whatever the client uploads.
  */
 import { useSiteImages } from "@/hooks/useSiteImages";
-import { useBooleanSetting, useSiteSettings } from "@/hooks/useSiteSettings";
+import { useSiteSettings } from "@/hooks/useSiteSettings";
 import ParallaxBanner, { type ParallaxLayer } from "./ParallaxBanner";
 import { PRODUCTS } from "@/lib/products";
-import { ImageIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link } from "wouter";
 
@@ -38,7 +37,6 @@ const HERO_LAYERS: ParallaxLayer[] = [
 export default function HeroFan() {
   const media = useSiteImages();
   const settings = useSiteSettings();
-  const showCards = useBooleanSetting("home_hero_cards", true);
 
   const hasLayers = HERO_LAYERS.some(
     (l) => media[l.slot]?.url || (l.mobileSlot && media[l.mobileSlot]?.url)
@@ -172,9 +170,7 @@ export default function HeroFan() {
       )}
 
       <div
-        className={`container relative z-10 flex flex-col items-center ${
-          showCards ? "justify-end pb-16" : "justify-center"
-        }`}
+        className="container relative z-10 flex flex-col items-center justify-center"
         style={{
           // The header overlays the hero, so reserve its height at the top:
           // the video runs behind the glass but the cards must not.
@@ -192,96 +188,7 @@ export default function HeroFan() {
         */}
         <h1 className="sr-only">Beri Disposable — Crush, Cliq, Cirql and E-Liquid</h1>
 
-        {/* ── Fan (md and up) ────────────────────────────────────────── */}
-        {showCards && (
-        <div className="relative hidden h-[420px] w-full max-w-[1300px] items-center justify-center md:flex">
-          {PRODUCTS.map((product, i) => {
-            const pos = FAN[i] ?? FAN[0];
-            const entry = media[`${product.key}_hero_card`];
-            return (
-              <Link
-                key={product.key}
-                href={`/products/${product.key}`}
-                className="fan-card group absolute h-[320px] w-[240px] overflow-hidden rounded-[24px] border-[1.5px] border-white/25 bg-neutral-900 shadow-[0_20px_40px_rgba(0,0,0,0.45)]"
-                style={{
-                  ["--tx" as string]: `${pos.tx}px`,
-                  ["--ty" as string]: `${pos.ty}px`,
-                  ["--rot" as string]: `${pos.rot}deg`,
-                  zIndex: pos.z,
-                }}
-                aria-label={product.name}
-              >
-                <CardMedia url={entry?.url} product={product.name} slot={`${product.key}_hero_card`} />
-                <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 to-transparent p-5 pt-12">
-                  <div className="font-display text-2xl font-bold tracking-wide">
-                    {product.name}
-                  </div>
-                  <div className="mt-0.5 text-xs text-neutral-300">{product.tagline}</div>
-                </div>
-              </Link>
-            );
-          })}
-        </div>
-        )}
-
-        {/* ── Scrollable row (small screens) ─────────────────────────── */}
-        {showCards && (
-        <div className="-mx-5 flex w-[calc(100%+2.5rem)] snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-4 md:hidden">
-          {PRODUCTS.map((product) => {
-            const entry = media[`${product.key}_hero_card`];
-            return (
-              <Link
-                key={product.key}
-                href={`/products/${product.key}`}
-                className="relative h-[300px] w-[225px] shrink-0 snap-center overflow-hidden rounded-[24px] border-[1.5px] border-white/25 bg-neutral-900"
-              >
-                <CardMedia url={entry?.url} product={product.name} slot={`${product.key}_hero_card`} />
-                <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 to-transparent p-4 pt-10">
-                  <div className="font-display text-xl font-bold tracking-wide">
-                    {product.name}
-                  </div>
-                </div>
-              </Link>
-            );
-          })}
-        </div>
-        )}
-
       </div>
     </section>
-  );
-}
-
-/* ─── Card media / placeholder ────────────────────────────────────────────── */
-
-function CardMedia({
-  url,
-  product,
-  slot,
-}: {
-  url?: string;
-  product: string;
-  slot: string;
-}) {
-  if (url) {
-    return (
-      <img
-        src={url}
-        alt={product}
-        className="h-full w-full object-cover"
-        width={240}
-        height={320}
-        loading="eager"
-      />
-    );
-  }
-  return (
-    <div className="flex h-full w-full flex-col items-center justify-center gap-2 bg-neutral-900 text-neutral-600">
-      <ImageIcon className="h-7 w-7" strokeWidth={1.5} />
-      <span className="font-mono text-[11px]">240 × 320</span>
-      <span className="max-w-[170px] text-center font-mono text-[10px] text-neutral-700">
-        {slot}
-      </span>
-    </div>
   );
 }
