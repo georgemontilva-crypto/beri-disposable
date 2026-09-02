@@ -73,19 +73,24 @@ export default function FlavorShowcase({
         <>
           <div
             aria-hidden="true"
-            className="absolute inset-0 opacity-[0.13]"
+            className="absolute inset-0 opacity-[0.28]"
             style={{
               backgroundImage: `url(${texture})`,
               backgroundRepeat: "repeat",
-              backgroundSize: "340px auto",
+              // Large tile on purpose: at 340px the lettering in the pattern
+              // shrinks to a fine mesh and reads as noise rather than as the
+              // brand mark.
+              backgroundSize: "760px auto",
             }}
           />
           <div
             aria-hidden="true"
             className="absolute inset-0"
             style={{
+              // Lighter than before: the scrim exists to keep text legible,
+              // and at 0.85 it was also erasing the pattern it sits over.
               background:
-                "linear-gradient(180deg, rgba(15,15,17,0.85) 0%, rgba(15,15,17,0.6) 50%, rgba(15,15,17,0.9) 100%)",
+                "linear-gradient(180deg, rgba(15,15,17,0.72) 0%, rgba(15,15,17,0.38) 50%, rgba(15,15,17,0.8) 100%)",
             }}
           />
         </>
