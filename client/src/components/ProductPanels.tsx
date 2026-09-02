@@ -71,10 +71,17 @@ export default function ProductPanels() {
                 <PanelVideo url={videoUrl} poster={url} active={active} />
               )}
 
-              {/* Only a foot of shade, and only where the logo and figure sit.
-                  The colour wash that used to cover the whole panel tinted the
-                  footage it was meant to frame. */}
-              <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/85 to-transparent" />
+              {/* Shade only under the copy. Four stops rather than two: a
+                  straight fade from solid to clear leaves a visible band across
+                  the middle of the panel, while an eased ramp reads as the
+                  footage darkening on its own. */}
+              <div
+                className="absolute inset-x-0 bottom-0 h-1/2"
+                style={{
+                  background:
+                    "linear-gradient(to top, rgba(0,0,0,0.96) 0%, rgba(0,0,0,0.82) 22%, rgba(0,0,0,0.42) 55%, rgba(0,0,0,0) 100%)",
+                }}
+              />
 
               {/* Copy */}
               <div className="absolute inset-x-0 bottom-0 flex flex-col items-center p-6 text-center md:p-8">
