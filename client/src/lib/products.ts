@@ -48,6 +48,8 @@ export type Product = {
   textureSlot: string;
   /** Tall, full-bleed shot for the homepage panel. */
   panelSlot: string;
+  /** Optional short loop that plays over the panel image while it is open. */
+  panelVideoSlot: string;
   heroSlot: string;
   /**
    * Media slot holding the interactive 3D model (.glb / .gltf).
@@ -129,6 +131,7 @@ export const BERI_CRUSH: Product = {
   logoSlot: "crush_logo",
   textureSlot: "crush_texture",
   panelSlot: "crush_panel",
+  panelVideoSlot: "crush_panel_video",
   highlights: [
     { value: "Interactive", label: "HD Screen", iconSlot: "crush_icon_hd_screen" },
     { value: "2.5x", label: "Charging Speed", iconSlot: "crush_icon_charging" },
@@ -198,6 +201,7 @@ export const BERI_CLIQ: Product = {
   logoSlot: "cliq_logo",
   textureSlot: "cliq_texture",
   panelSlot: "cliq_panel",
+  panelVideoSlot: "cliq_panel_video",
   highlights: [
     { value: "360°", label: "Crystal Tank", iconSlot: "cliq_icon_tank" },
     { value: "Dual Mesh", label: "Coil", iconSlot: "cliq_icon_coil" },
@@ -273,6 +277,7 @@ export const BERI_CIRQL: Product = {
   logoSlot: "cirql_logo",
   textureSlot: "cirql_texture",
   panelSlot: "cirql_panel",
+  panelVideoSlot: "cirql_panel_video",
   highlights: [
     { value: "150K", label: "Puffs", iconSlot: "cirql_icon_puffs" },
     { value: "Quad Mesh", label: "Coil", iconSlot: "cirql_icon_coil" },
@@ -321,6 +326,7 @@ export const BERI_ELIQUID: Product = {
   logoSlot: "eliquid_logo",
   textureSlot: "eliquid_texture",
   panelSlot: "eliquid_panel",
+  panelVideoSlot: "eliquid_panel_video",
   highlights: [
     { value: "30 mL", label: "Bottle", iconSlot: "eliquid_icon_bottle" },
     { value: "25 / 50 mg", label: "Nicotine Salt", iconSlot: "eliquid_icon_nicotine" },

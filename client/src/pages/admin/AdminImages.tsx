@@ -108,6 +108,13 @@ function buildSlots(): SlotDef[] {
       size: "1200×1800 vertical",
     });
     slots.push({
+      slot: p.panelVideoSlot,
+      label: `${p.name} — Home panel loop`,
+      section,
+      size: "1080×1620 MP4, 3-6s, max 50 MB",
+      type: "video",
+    });
+    slots.push({
       slot: p.textureSlot,
       label: `${p.name} — Background texture`,
       section,
@@ -304,7 +311,8 @@ export default function AdminImages() {
 
       <p className="mb-4 text-sm text-neutral-500">
         Each stat <strong>Icon</strong> replaces its text on the product page, so
-        the artwork should include the wording. The <strong>Background texture</strong>
+        the artwork should include the wording. A <strong>Home panel loop</strong>
+        is optional and plays over the panel image while that column is open. The <strong>Background texture</strong>
         must tile seamlessly and is rendered in greyscale, so its own colours
         don't matter. Upload media for each section. The <strong>Logo</strong> slots replace the
         BERI wordmark in the top bar and the footer — use a transparent PNG; the

@@ -13,7 +13,7 @@
 import { useSiteImages } from "@/hooks/useSiteImages";
 import { PRODUCTS } from "@/lib/products";
 import { ArrowRight, ImageIcon } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "wouter";
 
 export default function ProductPanels() {
@@ -31,6 +31,7 @@ export default function ProductPanels() {
       <div className="flex h-[100dvh] w-full flex-col md:flex-row">
         {PRODUCTS.map((product) => {
           const url = media[product.panelSlot]?.url;
+          const videoUrl = media[product.panelVideoSlot]?.url;
           const active = hovered === product.key;
           const dimmed = hovered !== null && !active;
 
@@ -49,7 +50,9 @@ export default function ProductPanels() {
                 transition: "flex-grow 620ms cubic-bezier(0.22, 1, 0.36, 1)",
               }}
             >
-              {/* Image */}
+              {/* Still image: always present, and the poster the loop fades
+                  over. Four videos playing at once would be both heavy and
+                  visually chaotic, so the loop belongs to the open column. */}
               {url ? (
                 <img
                   src={url}
@@ -62,6 +65,10 @@ export default function ProductPanels() {
                   <ImageIcon className="h-7 w-7" strokeWidth={1.5} />
                   <span className="font-mono text-[11px]">{product.panelSlot}</span>
                 </div>
+              )}
+
+              {videoUrl && (
+                <PanelVideo url={videoUrl} poster={url} active={active} />
               )}
 
               {/* Accent wash: what makes the four read as one palette rather
@@ -132,5 +139,61 @@ function PanelLogo({
     <div className="font-display text-2xl font-bold tracking-tight text-white md:text-3xl">
       {product.name}
     </div>
+  );
+}
+
+
+/**
+ * Short loop shown over the panel image while its column is open.
+ *
+ * `preload="none"` so nothing downloads until a column is actually opened —
+ * four autoplaying loops on one screen would cost several megabytes before the
+ * visitor has expressed any interest at all.
+ *
+ * Paused and rewound on leave rather than left running: a loop continuing
+ * behind a collapsed column burns decode work nobody can see.
+ */
+function PanelVideo({
+  url,
+  poster,
+  active,
+}: {
+  url: string;
+  poster?: string;
+  active: boolean;
+}) {
+  const ref = useRef<HTMLVideoElement>(null);
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    const v = ref.current;
+    if (!v) return;
+    if (active) {
+      // play() rejects when autoplay is blocked; the still image stays, which
+      // is the right outcome, so the rejection is simply ignored.
+      void v.play().catch(() => undefined);
+    } else {
+      v.pause();
+      v.currentTime = 0;
+      setReady(false);
+    }
+  }, [active]);
+
+  return (
+    <video
+      ref={ref}
+      src={url}
+      poster={poster}
+      muted
+      loop
+      playsInline
+      preload="none"
+      aria-hidden="true"
+      tabIndex={-1}
+      onPlaying={() => setReady(true)}
+      className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-500 ${
+        active && ready ? "opacity-100" : "opacity-0"
+      }`}
+    />
   );
 }
