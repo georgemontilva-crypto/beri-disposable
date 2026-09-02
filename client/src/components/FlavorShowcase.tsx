@@ -91,15 +91,6 @@ export default function FlavorShowcase({
             }}
           />
 
-          {/* Visible where the section opens, gone by the bottom. */}
-          <div
-            aria-hidden="true"
-            className="absolute inset-0"
-            style={{
-              background:
-                "linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.35) 30%, rgba(0,0,0,0.85) 62%, #000 88%)",
-            }}
-          />
         </>
       )}
 
