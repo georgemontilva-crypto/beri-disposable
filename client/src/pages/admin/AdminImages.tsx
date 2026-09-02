@@ -138,7 +138,14 @@ function buildSlots(): SlotDef[] {
       });
     }
     for (const f of p.flavors) {
-      slots.push({ slot: f.slot, label: `${p.name} — ${f.name}`, section, size: "600×600" });
+      // The edition is part of the label, not just the data: without it the
+      // limited runs sit among the regulars with nothing to tell them apart.
+      slots.push({
+        slot: f.slot,
+        label: f.edition ? `${f.edition} — ${f.name}` : `${p.name} — ${f.name}`,
+        section,
+        size: "800×600",
+      });
     }
   }
 
