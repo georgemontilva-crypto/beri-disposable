@@ -192,13 +192,9 @@ function PanelVideo({
       aria-hidden="true"
       tabIndex={-1}
       onEnded={(e) => {
-        // Pin just short of the end: some browsers rewind to zero on 'ended'
-        // and flash the opening frame before pausing.
-        const v = e.currentTarget;
-        v.pause();
-        if (Number.isFinite(v.duration)) {
-          v.currentTime = Math.max(0, v.duration - 0.05);
-        }
+        // Pause only, no seek: seeking decodes another frame and settles onto
+        // it, visible as a twitch right as the clip stops.
+        e.currentTarget.pause();
       }}
       className="absolute inset-0 h-full w-full object-cover"
     />

@@ -135,14 +135,14 @@ export default function HeroFan() {
               tabIndex={-1}
               onCanPlay={() => setVideoReady(true)}
               onEnded={(e) => {
-                // Hold the closing frame. Without pinning currentTime just short of
-                // the end, some browsers rewind to zero on 'ended' and flash the
-                // first frame before pausing.
-                const v = e.currentTarget;
-                v.pause();
-                if (Number.isFinite(v.duration)) {
-                  v.currentTime = Math.max(0, v.duration - 0.05);
-                }
+                // Pause only. Seeking here — even to a point just short of the
+                // end — makes the browser decode and settle onto another
+                // frame, which shows up as a twitch on an otherwise still
+                // image. A paused video already holds its final frame.
+                e.currentTarget.pause();
+                // Stops the float. Without this the frozen frame keeps being
+                // scaled up and down, which reads as a wobble.
+                setVideoEnded(true);
               }}
               className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ${
                 videoReady ? "opacity-100" : "opacity-0"
