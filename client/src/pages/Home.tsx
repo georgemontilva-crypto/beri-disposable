@@ -4,6 +4,7 @@ import ProductPanels from "@/components/ProductPanels";
 import { PublicLayout } from "@/components/PublicLayout";
 import SmokeVapor from "@/components/SmokeVapor";
 import { useReveal } from "@/hooks/useReveal";
+import { useSiteImages } from "@/hooks/useSiteImages";
 import { ArrowRight, ShieldCheck, Store } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -34,9 +35,32 @@ export default function Home() {
    Side by side rather than stacked: they speak to two different visitors, and
    one row makes that a choice instead of a sequence. */
 function ActionStrip() {
+  const media = useSiteImages();
+  const bg = media["home_action_bg"]?.url;
+
   return (
-    <section className="border-t border-white/10 bg-black">
-      <div className="container grid md:grid-cols-2">
+    <section className="relative overflow-hidden border-t border-white/10 bg-black">
+      {bg && (
+        <>
+          <img
+            src={bg}
+            alt=""
+            aria-hidden="true"
+            className="absolute inset-0 h-full w-full object-cover"
+            loading="lazy"
+          />
+          {/*
+            Two layers rather than one: a flat wash strong enough to carry body
+            text would bury the image, while a wash plus a left-to-right ramp
+            keeps the picture readable on the right of each column and dense
+            under the copy on the left, where the words actually sit.
+          */}
+          <div className="absolute inset-0 bg-black/55" />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/40 to-black/70" />
+        </>
+      )}
+
+      <div className="container relative grid md:grid-cols-2">
         <VerifyBand />
         <WholesaleBand />
       </div>
@@ -97,7 +121,7 @@ function VerifyBand() {
 
 function WholesaleBand() {
   return (
-    <div className="reveal flex flex-col justify-center border-white/10 px-6 py-16 md:border-l md:px-12">
+    <div className="reveal flex flex-col justify-center border-white/20 px-6 py-16 md:border-l md:px-12">
       <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.25em] text-neutral-500">
         <Store className="h-4 w-4" /> For retailers
       </div>
