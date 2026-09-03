@@ -293,7 +293,7 @@ export const BERI_CIRQL: Product = {
   summary:
     "Hookah, without the setup. 150,000 puffs of authentic shisha flavor through a quad mesh coil.",
   description:
-    "Beri Cirql brings the shisha lounge into a disposable. Built around authentic hookah flavor profiles like double apple, grape drank and love 66, with a quad mesh coil rated for 150,000 puffs. The longest-running device Beri makes by a wide margin.",
+    "Beri Cirql brings the shisha lounge into a disposable. Built around authentic hookah flavor profiles like double apple, lady killer and love 66, with a quad mesh coil rated for 150,000 puffs. The longest-running device Beri makes by a wide margin.",
   highlight: { value: "150K", unit: "Puffs" },
   keySpecs: ["Authentic Shisha Flavor", "Quad Mesh Coil", "Made in USA"],
   specs: [
@@ -315,16 +315,15 @@ export const BERI_CIRQL: Product = {
   heroSlot: "cirql_hero",
   modelSlot: "cirql_model_3d",
   flavors: buildFlavors("cirql", [
-    "Apple Caramel Pop",
     "Blue Razz",
+    "Blueberry Ice",
     "Cool Mint",
     "Double Apple",
-    "Grape Drank",
+    "Grape Ice",
+    "Lady Killer",
     "Lemon Mint",
-    "Lime Frost",
     "Love 66",
     "Lucid Dreams",
-    "Mixed Berries",
     "Peach Ice",
     "Peach Mango Watermelon",
     "Strawberry Punch",
