@@ -19,6 +19,54 @@ import { Link } from "wouter";
 export default function ProductPanels() {
   const media = useSiteImages();
   const [hovered, setHovered] = useState<string | null>(null);
+  const [isDesktop, setIsDesktop] = useState(true);
+  const trackRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 768px)");
+    const update = () => setIsDesktop(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
+
+  /**
+   * On a phone the panels become a horizontal strip, and there is no hover to
+   * decide which one is open. The card nearest the centre of the strip takes
+   * that role, so scrolling brings each card to life as it arrives.
+   *
+   * Tracking the ratio per card and picking the maximum, rather than reacting
+   * to whichever entry fired last: two cards are usually intersecting at once
+   * mid-swipe, and the last callback is not necessarily the nearer one.
+   */
+  useEffect(() => {
+    if (isDesktop) return;
+    const track = trackRef.current;
+    if (!track) return;
+
+    const cards = Array.from(track.children) as HTMLElement[];
+    const ratios = new Map<Element, number>();
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => ratios.set(e.target, e.intersectionRatio));
+        let best: Element | null = null;
+        let bestRatio = 0;
+        ratios.forEach((r, el) => {
+          if (r > bestRatio) {
+            bestRatio = r;
+            best = el;
+          }
+        });
+        const key = best && (best as HTMLElement).dataset.key;
+        setHovered(bestRatio > 0.55 && key ? key : null);
+      },
+      { root: track, threshold: [0, 0.25, 0.5, 0.75, 1] }
+    );
+
+    cards.forEach((c) => io.observe(c));
+    return () => io.disconnect();
+  }, [isDesktop]);
 
   return (
     <section
@@ -28,7 +76,12 @@ export default function ProductPanels() {
       style={{ minHeight: "100dvh" }}
       aria-label="The Beri line-up"
     >
-      <div className="flex h-[100dvh] w-full flex-col md:flex-row">
+      {/* Phone: a snapping horizontal strip, so each product still gets a full
+          card with its video instead of a quarter-height band. */}
+      <div
+        ref={trackRef}
+        className="no-scrollbar flex h-[100dvh] w-full snap-x snap-mandatory overflow-x-auto md:snap-none md:overflow-x-hidden"
+      >
         {PRODUCTS.map((product) => {
           const url = media[product.panelSlot]?.url;
           const videoUrl = media[product.panelVideoSlot]?.url;
@@ -39,16 +92,23 @@ export default function ProductPanels() {
             <Link
               key={product.key}
               href={`/products/${product.key}`}
-              onMouseEnter={() => setHovered(product.key)}
-              onMouseLeave={() => setHovered(null)}
-              onFocus={() => setHovered(product.key)}
-              onBlur={() => setHovered(null)}
-              className="group relative block overflow-hidden border-white/10 md:border-l md:first:border-l-0"
-              style={{
-                flexGrow: active ? 2.2 : dimmed ? 0.75 : 1,
-                flexBasis: 0,
-                transition: "flex-grow 620ms cubic-bezier(0.22, 1, 0.36, 1)",
-              }}
+              data-key={product.key}
+              onMouseEnter={() => isDesktop && setHovered(product.key)}
+              onMouseLeave={() => isDesktop && setHovered(null)}
+              onFocus={() => isDesktop && setHovered(product.key)}
+              onBlur={() => isDesktop && setHovered(null)}
+              className="group relative block shrink-0 snap-center overflow-hidden border-white/10 md:shrink md:border-l md:first:border-l-0"
+              style={
+                isDesktop
+                  ? {
+                      flexGrow: active ? 2.2 : dimmed ? 0.75 : 1,
+                      flexBasis: 0,
+                      transition: "flex-grow 620ms cubic-bezier(0.22, 1, 0.36, 1)",
+                    }
+                  : // Just under a full screen, so the edge of the next card is
+                    // visible and the strip reads as scrollable without a hint.
+                    { width: "86vw" }
+              }
             >
               {/* Still image: always present, and the poster the loop fades
                   over. Four videos playing at once would be both heavy and
