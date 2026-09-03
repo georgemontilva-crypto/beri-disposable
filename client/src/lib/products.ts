@@ -181,6 +181,20 @@ export const BERI_CRUSH: Product = {
       ["Alaskan Mint", "Cherry Cola Gami", "Cran Apple Smash", "Punch Ice", "White Gami"],
       "Winter Edition"
     ),
+    // All five repeat a regular Crush flavour, so they need their own slug
+    // prefix or both would resolve to the same media slot.
+    ...buildFlavors(
+      "crush",
+      [
+        "Blue Razz Ice",
+        "Grape Ice",
+        "Miami Mint",
+        "Strawberry Watermelon",
+        "Triple Berry",
+      ],
+      "Zero Nicotine",
+      "zero-"
+    ),
   ],
 };
 
