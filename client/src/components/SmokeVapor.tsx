@@ -17,6 +17,7 @@
  * are then stamped with drawImage: generating noise per frame would be far too
  * expensive, while blitting a cached bitmap is nearly free.
  */
+import { makeNoiseSprite } from "@/lib/noiseSprite";
 import { useEffect, useRef, useState } from "react";
 
 type Puff = {
@@ -41,77 +42,6 @@ type Puff = {
 const COUNT = 22;
 const SPRITE_VARIANTS = 4;
 const SPRITE_SIZE = 192;
-
-/* ─── Fractal value noise ─────────────────────────────────────────────────── */
-
-function hash2(x: number, y: number, seed: number): number {
-  let n = Math.imul(x, 374761393) + Math.imul(y, 668265263) + Math.imul(seed, 2147483647);
-  n = Math.imul(n ^ (n >>> 13), 1274126177);
-  return ((n ^ (n >>> 16)) >>> 0) / 4294967295;
-}
-
-/** Cubic smoothstep — linear interpolation would leave visible lattice creases. */
-const fade = (t: number) => t * t * (3 - 2 * t);
-
-function valueNoise(x: number, y: number, seed: number): number {
-  const xi = Math.floor(x);
-  const yi = Math.floor(y);
-  const xf = fade(x - xi);
-  const yf = fade(y - yi);
-  const a = hash2(xi, yi, seed);
-  const b = hash2(xi + 1, yi, seed);
-  const c = hash2(xi, yi + 1, seed);
-  const d = hash2(xi + 1, yi + 1, seed);
-  return a + (b - a) * xf + (c - a) * yf + (a - b - c + d) * xf * yf;
-}
-
-/** Four octaves: enough structure to look like vapour, cheap enough at mount. */
-function fbm(x: number, y: number, seed: number): number {
-  let value = 0;
-  let amplitude = 0.5;
-  let frequency = 1;
-  for (let i = 0; i < 4; i++) {
-    value += valueNoise(x * frequency, y * frequency, seed + i * 101) * amplitude;
-    amplitude *= 0.5;
-    frequency *= 2;
-  }
-  return value;
-}
-
-function makeSprite(seed: number): HTMLCanvasElement {
-  const size = SPRITE_SIZE;
-  const c = document.createElement("canvas");
-  c.width = size;
-  c.height = size;
-  const ctx = c.getContext("2d")!;
-  const img = ctx.createImageData(size, size);
-  const data = img.data;
-  const half = size / 2;
-
-  for (let y = 0; y < size; y++) {
-    for (let x = 0; x < size; x++) {
-      const n = fbm((x / size) * 3.2, (y / size) * 3.2, seed);
-
-      // Radial falloff, squared so the centre stays dense and the rim dissolves.
-      const dx = (x - half) / half;
-      const dy = (y - half) / half;
-      const dist = Math.sqrt(dx * dx + dy * dy);
-      const falloff = dist >= 1 ? 0 : Math.pow(1 - dist, 2.1);
-
-      // Lifting the threshold is what carves the ragged holes; without it the
-      // noise just modulates brightness and the silhouette stays a disc.
-      const density = Math.max(0, n * 1.9 - 0.5) * falloff;
-
-      const i = (y * size + x) * 4;
-      data[i] = 255;
-      data[i + 1] = 255;
-      data[i + 2] = 255;
-      data[i + 3] = Math.min(255, density * 255);
-    }
-  }
-  ctx.putImageData(img, 0, 0);
-  return c;
-}
 
 /* ─── Particles ───────────────────────────────────────────────────────────── */
 
@@ -169,7 +99,9 @@ export default function SmokeVapor() {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    const sprites = Array.from({ length: SPRITE_VARIANTS }, (_, i) => makeSprite(i * 7919 + 13));
+    const sprites = Array.from({ length: SPRITE_VARIANTS }, (_, i) =>
+      makeNoiseSprite(i * 7919 + 13, SPRITE_SIZE)
+    );
     // The effect is diffuse; extra resolution buys nothing and costs fill rate.
     const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
 

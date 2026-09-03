@@ -15,6 +15,7 @@ import { PlaceholderImage } from "@/components/PlaceholderImage";
 import type { PublicMediaEntry } from "@/hooks/useSiteImages";
 import type { Flavor, Product } from "@/lib/products";
 import { useMemo, useState } from "react";
+import ColoredSmoke from "./ColoredSmoke";
 import Snowfall from "./Snowfall";
 import SummerEmbers from "./SummerEmbers";
 
@@ -72,6 +73,7 @@ export default function FlavorShowcase({
           whole site while the winter range is open. */}
       <Snowfall active={/winter/i.test(filter)} />
       <SummerEmbers active={/summer/i.test(filter)} />
+      <ColoredSmoke active={/zero/i.test(filter)} />
 
       {/* Tiling brand pattern. Held at low opacity under a dark scrim: at full
           strength a repeating logo competes with the product shots, which are
