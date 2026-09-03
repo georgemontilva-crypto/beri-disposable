@@ -50,8 +50,8 @@ export type Product = {
   /** Overrides both background lights outright, as "r g b" strings. */
   glowColors?: [string, string];
   /**
-   * What the non-edition range is called. Not every product calls it
-   * "Regular": Cirql sells an Original and the e-liquid a salt nic line.
+   * What the non-edition range is called. Three products call it "Original";
+   * the e-liquid sells a salt nic line instead.
    */
   baseRangeLabel: string;
   /** Media slot for the product's own lockup, shown in place of the h1. */
@@ -150,7 +150,7 @@ export const BERI_CRUSH: Product = {
     { label: "Origin", value: "Designed in USA" },
   ],
   accent: "#4ade80",
-  baseRangeLabel: "Regular",
+  baseRangeLabel: "Original",
   logoSlot: "crush_logo",
   textureSlot: "crush_texture",
   panelSlot: "crush_panel",
@@ -235,7 +235,7 @@ export const BERI_CLIQ: Product = {
     { label: "Pod", value: "Refillable" },
   ],
   accent: "#22d3ee",
-  baseRangeLabel: "Regular",
+  baseRangeLabel: "Original",
   logoSlot: "cliq_logo",
   textureSlot: "cliq_texture",
   panelSlot: "cliq_panel",
