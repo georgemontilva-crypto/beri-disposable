@@ -73,7 +73,6 @@ export default function FlavorShowcase({
           whole site while the winter range is open. */}
       <Snowfall active={/winter/i.test(filter)} />
       <SummerEmbers active={/summer/i.test(filter)} />
-      <ColoredSmoke active={/zero/i.test(filter)} />
 
       {/* Tiling brand pattern. Held at low opacity under a dark scrim: at full
           strength a repeating logo competes with the product shots, which are
@@ -102,6 +101,14 @@ export default function FlavorShowcase({
 
         </>
       )}
+
+      {/*
+        After the texture, not before it: that block lays down a solid black
+        base at `absolute inset-0`, and anything declared earlier at the same
+        stacking level is painted straight over. The snow and embers escape
+        this because they are fixed to the viewport at z-40.
+      */}
+      <ColoredSmoke active={/zero/i.test(filter)} />
 
       <div className="container relative">
         <div className="reveal mb-10">
