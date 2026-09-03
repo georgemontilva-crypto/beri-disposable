@@ -11,15 +11,32 @@
  * the page scrolls, which reads as light in the room rather than a decal stuck
  * to the document.
  */
-export default function AuroraGlow({ hue = 0 }: { hue?: number }) {
+export default function AuroraGlow({
+  hue = 0,
+  colors,
+}: {
+  /** Rotates both lights together, preserving the violet/cyan relationship. */
+  hue?: number;
+  /**
+   * Overrides the pair outright, as `"r g b"` strings. Needed when a product
+   * wants both lights in one family: the two sit 66 degrees apart, so a single
+   * rotation that lands one on gold necessarily throws the other into pink.
+   */
+  colors?: [string, string];
+}) {
   return (
     <div
       aria-hidden="true"
       className="pointer-events-none fixed inset-0 z-0 overflow-hidden"
-      // Rotating the whole layer shifts both sources together, keeping the
-      // violet/cyan relationship intact while moving the pair to a new base
-      // colour per product.
-      style={hue ? { filter: `hue-rotate(${hue}deg)` } : undefined}
+      style={{
+        ...(hue && !colors ? { filter: `hue-rotate(${hue}deg)` } : {}),
+        ...(colors
+          ? ({
+              ["--aurora-a" as string]: colors[0],
+              ["--aurora-b" as string]: colors[1],
+            } as React.CSSProperties)
+          : {}),
+      }}
     >
       {/* Left source. Centred on the very edge of the viewport, so only its
           inner half is visible and it reads as light coming from off-screen. */}

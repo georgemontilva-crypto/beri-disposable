@@ -26,9 +26,10 @@ export default function ProductPage() {
   const next = getNextProduct(key);
 
 
-  // Each product gets its own slice of the wheel, so the four pages read as
-  // related but distinct without hand-picking colours.
-  const productHue = PRODUCTS.findIndex((p) => p.key === product.key) * 78;
+  // A slice of the wheel per product, so the four pages read as related but
+  // distinct; a product can override it when it needs a particular colour.
+  const productHue =
+    product.glowHue ?? PRODUCTS.findIndex((p) => p.key === product.key) * 78;
 
   const logoUrl = images[product.logoSlot]?.url;
 
@@ -39,7 +40,7 @@ export default function ProductPage() {
 
   return (
     <PublicLayout>
-      <AuroraGlow hue={productHue} />
+      <AuroraGlow hue={productHue} colors={product.glowColors} />
       <div ref={revealRef} className="relative z-10 text-white">
         {/* ── Hero ─────────────────────────────────────────────────────── */}
         <section className="relative overflow-hidden border-b border-white/15">

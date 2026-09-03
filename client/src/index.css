@@ -362,11 +362,15 @@
    that no blur filter is needed — blurring an element this large every frame
    would cost far more than the effect is worth. */
 .aurora-drift {
+  /* Colours come from custom properties so a product can override the pair
+     outright. A hue-rotate on the whole layer can't do this: the two lights sit
+     66 degrees apart, so landing one on gold necessarily throws the other into
+     pink. */
   background: radial-gradient(
     closest-side,
-    rgba(124, 92, 255, 0.42) 0%,
-    rgba(124, 92, 255, 0.2) 42%,
-    rgba(124, 92, 255, 0.07) 62%,
+    rgb(var(--aurora-a, 124 92 255) / 0.42) 0%,
+    rgb(var(--aurora-a, 124 92 255) / 0.2) 42%,
+    rgb(var(--aurora-a, 124 92 255) / 0.07) 62%,
     transparent 78%
   );
   animation: aurora-drift 18s ease-in-out infinite alternate;
@@ -402,9 +406,9 @@
 .aurora-drift-2 {
   background: radial-gradient(
     closest-side,
-    rgba(0, 190, 210, 0.38) 0%,
-    rgba(0, 190, 210, 0.18) 42%,
-    rgba(0, 190, 210, 0.06) 62%,
+    rgb(var(--aurora-b, 0 190 210) / 0.38) 0%,
+    rgb(var(--aurora-b, 0 190 210) / 0.18) 42%,
+    rgb(var(--aurora-b, 0 190 210) / 0.06) 62%,
     transparent 78%
   );
   animation: aurora-drift-2 23s ease-in-out infinite alternate;

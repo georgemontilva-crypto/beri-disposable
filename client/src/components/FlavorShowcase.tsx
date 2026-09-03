@@ -27,7 +27,7 @@ export default function FlavorShowcase({
   images: Record<string, PublicMediaEntry>;
 }) {
   const texture = images[product.textureSlot]?.url;
-  const [filter, setFilter] = useState<string>("Regular");
+  const [filter, setFilter] = useState<string>(product.baseRangeLabel);
 
   /**
    * Only flavours whose image has been uploaded. A tile with a placeholder is
@@ -49,16 +49,16 @@ export default function FlavorShowcase({
     for (const f of mounted) {
       if (f.edition && !editions.includes(f.edition)) editions.push(f.edition);
     }
-    const hasRegular = mounted.some((f) => !f.edition);
-    return [...(hasRegular ? ["Regular"] : []), ...editions];
-  }, [mounted]);
+    const hasBase = mounted.some((f) => !f.edition);
+    return [...(hasBase ? [product.baseRangeLabel] : []), ...editions];
+  }, [mounted, product.baseRangeLabel]);
 
   const visible = useMemo(
     () =>
-      filter === "Regular"
+      filter === product.baseRangeLabel
         ? mounted.filter((f) => !f.edition)
         : mounted.filter((f) => f.edition === filter),
-    [mounted, filter]
+    [mounted, filter, product.baseRangeLabel]
   );
 
   const [selected, setSelected] = useState<string>("");
@@ -148,7 +148,7 @@ export default function FlavorShowcase({
                 className="inline-block rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wider text-neutral-950"
                 style={{ backgroundColor: product.accent }}
               >
-                {featured.edition ?? "Regular"}
+                {featured.edition ?? product.baseRangeLabel}
               </span>
               <h3 className="mt-4 font-display text-4xl font-bold leading-tight">
                 {featured.name}
@@ -181,7 +181,7 @@ export default function FlavorShowcase({
               >
                 {chip}
                 <span className="ml-1.5 text-xs opacity-70">
-                  {chip === "Regular"
+                  {chip === product.baseRangeLabel
                     ? mounted.filter((f) => !f.edition).length
                     : mounted.filter((f) => f.edition === chip).length}
                 </span>
@@ -223,7 +223,7 @@ export default function FlavorShowcase({
                 <div className="mt-2 px-1 pb-1">
                   <div className="truncate text-sm font-semibold">{f.name}</div>
                   <div className="text-[11px] text-neutral-400">
-                    {f.edition ?? "Regular"}
+                    {f.edition ?? product.baseRangeLabel}
                   </div>
                 </div>
               </button>

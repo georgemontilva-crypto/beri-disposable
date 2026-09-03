@@ -42,6 +42,18 @@ export type Product = {
    * tells the four pages apart, so it has to stay consistent within a page.
    */
   accent: string;
+  /**
+   * Hue rotation applied to the ambient background glow, in degrees. Defaults
+   * to a slice of the wheel derived from position.
+   */
+  glowHue?: number;
+  /** Overrides both background lights outright, as "r g b" strings. */
+  glowColors?: [string, string];
+  /**
+   * What the non-edition range is called. Not every product calls it
+   * "Regular": Cirql sells an Original and the e-liquid a salt nic line.
+   */
+  baseRangeLabel: string;
   /** Media slot for the product's own lockup, shown in place of the h1. */
   logoSlot: string;
   /** Media slot for a tiling brand pattern used behind the flavour section. */
@@ -138,6 +150,7 @@ export const BERI_CRUSH: Product = {
     { label: "Origin", value: "Designed in USA" },
   ],
   accent: "#4ade80",
+  baseRangeLabel: "Regular",
   logoSlot: "crush_logo",
   textureSlot: "crush_texture",
   panelSlot: "crush_panel",
@@ -222,6 +235,7 @@ export const BERI_CLIQ: Product = {
     { label: "Pod", value: "Refillable" },
   ],
   accent: "#22d3ee",
+  baseRangeLabel: "Regular",
   logoSlot: "cliq_logo",
   textureSlot: "cliq_texture",
   panelSlot: "cliq_panel",
@@ -303,6 +317,9 @@ export const BERI_CIRQL: Product = {
     { label: "Origin", value: "USA" },
   ],
   accent: "#e0b44a",
+  // Both lights in gold: amber and a deeper bronze.
+  glowColors: ["224 180 74", "196 132 40"],
+  baseRangeLabel: "Original",
   logoSlot: "cirql_logo",
   textureSlot: "cirql_texture",
   panelSlot: "cirql_panel",
@@ -351,6 +368,7 @@ export const BERI_ELIQUID: Product = {
     { label: "Cap", value: "Child-Resistant" },
   ],
   accent: "#ec4899",
+  baseRangeLabel: "Salt Nic",
   logoSlot: "eliquid_logo",
   textureSlot: "eliquid_texture",
   panelSlot: "eliquid_panel",
