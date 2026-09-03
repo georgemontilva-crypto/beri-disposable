@@ -90,7 +90,7 @@ function buildSlots(): SlotDef[] {
       slot: "home_action_bg",
       label: "Home — Verify & Wholesale background",
       section: "Home",
-      size: "2400×900 — keep the sides quiet",
+      size: "stretched to fit — gradients work best",
     },
     { slot: "authenticate_banner", label: "Authenticate — Banner", section: "Authenticate", size: "1600×600" },
     { slot: "wholesale_banner", label: "Wholesale — Banner", section: "Wholesale", size: "1600×600" },

@@ -42,11 +42,20 @@ function ActionStrip() {
     <section className="relative overflow-hidden border-t border-white/10 bg-black">
       {bg && (
         <>
+          {/*
+            Stretched to the box, not cropped to it. This band is much wider
+            than it is tall, so object-cover on a portrait asset scales it to
+            the width, overflows the height and shows only the middle stripe —
+            which on a top-to-bottom gradient is exactly the part with no
+            colour in it. Filling guarantees both ends of the gradient land on
+            the edges of the band, which is the whole point of the artwork.
+          */}
           <img
             src={bg}
             alt=""
             aria-hidden="true"
-            className="absolute inset-0 h-full w-full object-cover"
+            className="absolute inset-0 h-full w-full"
+            style={{ objectFit: "fill" }}
             loading="lazy"
           />
           {/*
@@ -60,7 +69,7 @@ function ActionStrip() {
         </>
       )}
 
-      <div className="container relative grid md:grid-cols-2">
+      <div className="container relative grid min-h-[420px] md:grid-cols-2">
         <VerifyBand />
         <WholesaleBand />
       </div>
