@@ -581,6 +581,32 @@
   pointer-events: none;
 }
 
+/* Same moving line along the top edge, for dividers that sit above their
+   content instead of below it. */
+.rainbow-edge-top {
+  position: relative;
+}
+
+.rainbow-edge-top::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  z-index: 1;
+  height: 1.5px;
+  background: linear-gradient(
+    90deg,
+    #ff4d6d,
+    #ffb020,
+    #3ddc97,
+    #35b8ff,
+    #a06bff,
+    #ff4d6d
+  );
+  background-size: 300% 100%;
+  animation: rainbow-slide 9s linear infinite;
+  pointer-events: none;
+}
+
 @keyframes rainbow-slide {
   from {
     background-position: 0% 50%;
@@ -592,7 +618,8 @@
 
 @media (prefers-reduced-motion: reduce) {
   .rainbow-ring::after,
-  .rainbow-edge::after {
+  .rainbow-edge::after,
+  .rainbow-edge-top::before {
     animation: none;
   }
 }
