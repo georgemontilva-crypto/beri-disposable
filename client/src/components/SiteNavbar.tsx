@@ -83,7 +83,7 @@ export function SiteNavbar() {
           >
             <button
               className={cn(
-                "flex items-center gap-1 rounded-full px-4 py-2 text-sm font-semibold transition-colors",
+                "group relative flex items-center gap-1 rounded-full px-4 py-2 text-sm font-semibold transition-colors",
                 productActive ? "text-white" : "text-neutral-400 hover:text-white"
               )}
               onClick={() => setProductsOpen((v) => !v)}
@@ -91,6 +91,15 @@ export function SiteNavbar() {
               Products
               <ChevronDown
                 className={cn("h-3.5 w-3.5 transition-transform duration-200", productsOpen && "rotate-180")}
+              />
+              {/* Same underline as the plain links; it also shows while the
+                  dropdown is open, so the trigger doesn't look inactive with
+                  its own panel hanging off it. */}
+              <span
+                className={cn(
+                  "nav-underline absolute inset-x-4 -bottom-0.5 h-0.5 rounded-full transition-transform duration-300 group-hover:scale-x-100",
+                  productActive || productsOpen ? "scale-x-100" : "scale-x-0"
+                )}
               />
             </button>
             <div
@@ -192,14 +201,17 @@ function NavItem({
     <Link
       href={href}
       className={cn(
-        "relative rounded-full px-4 py-2 text-sm font-semibold transition-colors",
+        "group relative rounded-full px-4 py-2 text-sm font-semibold transition-colors",
         active ? "text-white" : "text-neutral-400 hover:text-white"
       )}
     >
       {children}
+      {/* Scales out from the centre on hover as well as when active, so the
+          moving gradient reads as the link lighting up rather than a static
+          marker appearing. */}
       <span
         className={cn(
-          "absolute inset-x-4 -bottom-0.5 h-0.5 rounded-full bg-white transition-transform duration-300",
+          "nav-underline absolute inset-x-4 -bottom-0.5 h-0.5 rounded-full transition-transform duration-300 group-hover:scale-x-100",
           active ? "scale-x-100" : "scale-x-0"
         )}
         style={{ transformOrigin: "left", transitionTimingFunction: "var(--ease-out-expo)" }}

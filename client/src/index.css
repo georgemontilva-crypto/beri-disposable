@@ -611,6 +611,30 @@
   pointer-events: none;
 }
 
+/* Underline for the navigation links. Its own class rather than reusing
+   .rainbow-edge: that one is a pseudo-element pinned to an element's edge,
+   while this needs to be a real node so it can be scaled from the centre. */
+.nav-underline {
+  transform-origin: center;
+  background: linear-gradient(
+    90deg,
+    #ff4d6d,
+    #ffb020,
+    #3ddc97,
+    #35b8ff,
+    #a06bff,
+    #ff4d6d
+  );
+  background-size: 300% 100%;
+  animation: rainbow-slide 5s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-underline {
+    animation: none;
+  }
+}
+
 @keyframes rainbow-slide {
   from {
     background-position: 0% 50%;
