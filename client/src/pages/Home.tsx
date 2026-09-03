@@ -43,20 +43,26 @@ function ActionStrip() {
       {bg && (
         <>
           {/*
-            Stretched to the box, not cropped to it. This band is much wider
-            than it is tall, so object-cover on a portrait asset scales it to
-            the width, overflows the height and shows only the middle stripe —
-            which on a top-to-bottom gradient is exactly the part with no
-            colour in it. Filling guarantees both ends of the gradient land on
-            the edges of the band, which is the whole point of the artwork.
+            Scaled to the band's height at its own aspect ratio and repeated
+            across, rather than stretched or cropped.
+
+            Cropping (object-cover) on a portrait asset scaled it to the width,
+            overflowed the height and left only the middle stripe visible —
+            the part of a top-to-bottom gradient with no colour in it.
+            Stretching fixed that but smeared the pattern sideways. Repeating
+            does neither: proportions are untouched, the full gradient always
+            reaches both edges, and because the colour bands run horizontally
+            they line up across every repeat, so the joins don't read as seams.
           */}
-          <img
-            src={bg}
-            alt=""
+          <div
             aria-hidden="true"
-            className="absolute inset-0 h-full w-full"
-            style={{ objectFit: "fill" }}
-            loading="lazy"
+            className="absolute inset-0"
+            style={{
+              backgroundImage: `url(${bg})`,
+              backgroundSize: "auto 100%",
+              backgroundRepeat: "repeat-x",
+              backgroundPosition: "center",
+            }}
           />
           {/*
             Two layers rather than one: a flat wash strong enough to carry body
