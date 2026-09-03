@@ -6,7 +6,7 @@ import SmokeVapor from "@/components/SmokeVapor";
 import { useReveal } from "@/hooks/useReveal";
 import { useSiteImages } from "@/hooks/useSiteImages";
 import { ArrowRight, ShieldCheck, Store } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { Link, useLocation } from "wouter";
 
@@ -38,8 +38,68 @@ function ActionStrip() {
   const media = useSiteImages();
   const bg = media["home_action_bg"]?.url;
 
+  const sectionRef = useRef<HTMLElement>(null);
+  const layerRef = useRef<HTMLDivElement>(null);
+
+  /**
+   * Parallax on the banner: the layer is taller than the band and slides
+   * within it as the section crosses the viewport.
+   *
+   * The travel is driven by a scroll listener coalesced into one rAF rather
+   * than `background-attachment: fixed`, which mobile browsers either ignore or
+   * repaint badly, and it stops entirely while the section is off screen.
+   */
+  useEffect(() => {
+    if (!bg) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const section = sectionRef.current;
+    const layer = layerRef.current;
+    if (!section || !layer) return;
+
+    let frame = 0;
+    let inView = false;
+
+    const update = () => {
+      frame = 0;
+      const rect = section.getBoundingClientRect();
+      // -1 just below the fold, +1 just above it, 0 as the band passes the
+      // middle of the screen — so the neutral position is the one on show.
+      const progress =
+        (rect.top + rect.height / 2 - window.innerHeight / 2) /
+        (window.innerHeight / 2 + rect.height / 2);
+      // Stays inside the 15% of extra height the layer has above and below.
+      layer.style.transform = `translate3d(0, ${(progress * 12).toFixed(2)}%, 0)`;
+    };
+
+    const onScroll = () => {
+      if (inView && !frame) frame = requestAnimationFrame(update);
+    };
+
+    const io = new IntersectionObserver(
+      ([e]) => {
+        inView = e.isIntersecting;
+        if (inView) update();
+      },
+      { rootMargin: "15% 0px" }
+    );
+    io.observe(section);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
+
+    return () => {
+      if (frame) cancelAnimationFrame(frame);
+      io.disconnect();
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }, [bg]);
+
   return (
-    <section className="relative overflow-hidden border-t border-white/10 bg-black">
+    <section
+      ref={sectionRef}
+      className="relative overflow-hidden border-t border-white/10 bg-black"
+    >
       {bg && (
         <>
           {/*
@@ -55,8 +115,11 @@ function ActionStrip() {
             they line up across every repeat, so the joins don't read as seams.
           */}
           <div
+            ref={layerRef}
             aria-hidden="true"
-            className="absolute inset-0"
+            // Taller than the band on both sides: the layer has to overhang or
+            // its edges appear as it travels.
+            className="absolute -inset-y-[15%] inset-x-0 will-change-transform"
             style={{
               backgroundImage: `url(${bg})`,
               backgroundSize: "auto 100%",
