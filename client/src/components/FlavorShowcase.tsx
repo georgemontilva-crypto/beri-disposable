@@ -98,14 +98,27 @@ export default function FlavorShowcase({
 
           <div
             aria-hidden="true"
-            className="absolute inset-0 opacity-[0.22]"
+            className="absolute inset-0 opacity-[0.32]"
             style={{
               backgroundImage: `url(${texture})`,
               backgroundRepeat: "repeat",
               backgroundSize: "1500px auto",
-              // Stripped of colour: the pattern is a surface finish, not
-              // artwork, and any hue in it competes with the product shots.
-              filter: "grayscale(1) brightness(0.55)",
+              // Colour kept, brightness pulled down instead: desaturating it
+              // threw away the artwork, while dimming lets it sit behind the
+              // product shots without competing with them.
+              filter: "brightness(0.75)",
+            }}
+          />
+
+          {/* Fades to black at both ends, so the section has no hard edge
+              where the pattern starts and stops. Four stops rather than two:
+              a straight ramp leaves a visible band across the middle. */}
+          <div
+            aria-hidden="true"
+            className="absolute inset-0"
+            style={{
+              background:
+                "linear-gradient(180deg, #000 0%, rgba(0,0,0,0.55) 18%, rgba(0,0,0,0.35) 50%, rgba(0,0,0,0.75) 82%, #000 100%)",
             }}
           />
 
