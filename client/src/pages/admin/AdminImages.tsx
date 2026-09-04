@@ -1,6 +1,6 @@
 import { AdminLayout } from "@/components/AdminLayout";
 import { TableCard } from "@/components/admin/AdminTable";
-import { PRODUCTS } from "@/lib/products";
+import { editionTextureSlot, PRODUCTS } from "@/lib/products";
 import { trpc } from "@/lib/trpc";
 import { Box, Film, Image as ImageIcon, Loader2, Trash2, Upload } from "lucide-react";
 import { useMemo, useRef, useState } from "react";
@@ -120,6 +120,18 @@ function buildSlots(): SlotDef[] {
       section,
       size: "1500×1500 seamless tile",
     });
+    // One optional pattern per edition; an edition without one falls back to
+    // the product's.
+    for (const edition of Array.from(
+      new Set(p.flavors.map((f) => f.edition).filter((e): e is string => !!e))
+    )) {
+      slots.push({
+        slot: editionTextureSlot(p.key, edition),
+        label: `${edition} — Background texture`,
+        section,
+        size: "1500×1500 seamless tile",
+      });
+    }
     slots.push({
       slot: p.logoSlot,
       label: `${p.name} — Product logo`,

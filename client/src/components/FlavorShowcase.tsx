@@ -13,7 +13,7 @@
  */
 import { PlaceholderImage } from "@/components/PlaceholderImage";
 import type { PublicMediaEntry } from "@/hooks/useSiteImages";
-import type { Flavor, Product } from "@/lib/products";
+import { editionTextureSlot, type Flavor, type Product } from "@/lib/products";
 import { useMemo, useState } from "react";
 import ColoredSmoke from "./ColoredSmoke";
 import Snowfall from "./Snowfall";
@@ -26,8 +26,18 @@ export default function FlavorShowcase({
   product: Product;
   images: Record<string, PublicMediaEntry>;
 }) {
-  const texture = images[product.textureSlot]?.url;
   const [filter, setFilter] = useState<string>(product.baseRangeLabel);
+
+  /**
+   * An edition can bring its own pattern; without one it falls back to the
+   * product's. Resolved from the active tab rather than stored per flavour,
+   * since the texture belongs to the range, not to any single flavour.
+   */
+  const texture =
+    (filter !== product.baseRangeLabel
+      ? images[editionTextureSlot(product.key, filter)]?.url
+      : undefined) ?? images[product.textureSlot]?.url;
+
 
   /**
    * Only flavours whose image has been uploaded. A tile with a placeholder is

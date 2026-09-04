@@ -99,6 +99,11 @@ function deriveProfile(name: string): FlavorProfile {
   return "Other";
 }
 
+/** Media slot for an edition's own background pattern, if one is uploaded. */
+export function editionTextureSlot(productKey: string, edition: string): string {
+  return `${productKey}_texture_${toSlug(edition)}`;
+}
+
 const toSlug = (s: string) =>
   s
     .toLowerCase()
