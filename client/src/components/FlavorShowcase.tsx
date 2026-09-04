@@ -110,15 +110,16 @@ export default function FlavorShowcase({
             }}
           />
 
-          {/* Fades to black at both ends, so the section has no hard edge
-              where the pattern starts and stops. Four stops rather than two:
-              a straight ramp leaves a visible band across the middle. */}
+          {/* Black rises from the bottom and closes over everything below the
+              middle of the featured card, leaving the pattern visible only
+              across the top of the section. Several stops rather than two: a
+              straight ramp leaves a visible band where it crosses. */}
           <div
             aria-hidden="true"
             className="absolute inset-0"
             style={{
               background:
-                "linear-gradient(180deg, #000 0%, rgba(0,0,0,0.55) 18%, rgba(0,0,0,0.35) 50%, rgba(0,0,0,0.75) 82%, #000 100%)",
+                "linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.1) 18%, rgba(0,0,0,0.45) 32%, rgba(0,0,0,0.85) 44%, #000 55%)",
             }}
           />
 
