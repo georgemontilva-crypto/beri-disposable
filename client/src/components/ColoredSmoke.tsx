@@ -41,7 +41,14 @@ const COLORS = [
 ];
 const SHAPES = 3;
 
-function spawn(p: Puff, w: number, h: number, variants: number, initial = false) {
+function spawn(
+  p: Puff,
+  w: number,
+  h: number,
+  variants: number,
+  intensity: number,
+  initial = false
+) {
   p.x = Math.random() * w;
   // Seeded puffs fill the height; later ones enter from below, so switching to
   // this tab doesn't paint a band along the bottom edge.
@@ -55,11 +62,22 @@ function spawn(p: Puff, w: number, h: number, variants: number, initial = false)
   p.spin = (Math.random() - 0.5) * 0.18;
   p.life = initial ? Math.random() * 0.7 : 0;
   p.lifeSpeed = 0.05 + Math.random() * 0.05;
-  p.alpha = 0.1 + Math.random() * 0.16;
+  p.alpha = (0.1 + Math.random() * 0.16) * intensity;
   p.sprite = Math.floor(Math.random() * variants);
 }
 
-export default function ColoredSmoke({ active }: { active: boolean }) {
+export default function ColoredSmoke({
+  active,
+  intensity = 1,
+}: {
+  active: boolean;
+  /**
+   * Scales opacity and puff count together. Raising only the opacity turns the
+   * ribbons into flat washes; adding puffs with it keeps the layering that
+   * makes them read as smoke.
+   */
+  intensity?: number;
+}) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [enabled, setEnabled] = useState(false);
 
@@ -88,11 +106,12 @@ export default function ColoredSmoke({ active }: { active: boolean }) {
     const sprites = COLORS.flatMap((color) => masks.map((m) => tintSprite(m, color)));
 
     const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+    const count = Math.round(COUNT * Math.min(intensity, 2));
     let w = 0;
     let h = 0;
     let raf = 0;
     let last = 0;
-    const puffs: Puff[] = Array.from({ length: COUNT }, () => ({}) as Puff);
+    const puffs: Puff[] = Array.from({ length: count }, () => ({}) as Puff);
 
     const resize = () => {
       const rect = canvas.getBoundingClientRect();
@@ -101,7 +120,7 @@ export default function ColoredSmoke({ active }: { active: boolean }) {
       canvas.width = Math.floor(w * dpr);
       canvas.height = Math.floor(h * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      puffs.forEach((p) => spawn(p, w, h, sprites.length, true));
+      puffs.forEach((p) => spawn(p, w, h, sprites.length, intensity, true));
     };
 
     const draw = (now: number) => {
@@ -114,7 +133,7 @@ export default function ColoredSmoke({ active }: { active: boolean }) {
       for (const p of puffs) {
         p.life += p.lifeSpeed * dt;
         if (p.life >= 1 || p.y + p.r < -80) {
-          spawn(p, w, h, sprites.length);
+          spawn(p, w, h, sprites.length, intensity);
           continue;
         }
         p.phase += dt * 0.5;
@@ -163,7 +182,7 @@ export default function ColoredSmoke({ active }: { active: boolean }) {
       ro.disconnect();
       document.removeEventListener("visibilitychange", onVisibility);
     };
-  }, [active, enabled]);
+  }, [active, enabled, intensity]);
 
   if (!active || !enabled) return null;
 

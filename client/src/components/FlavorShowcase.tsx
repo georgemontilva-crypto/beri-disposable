@@ -132,7 +132,12 @@ export default function FlavorShowcase({
         stacking level is painted straight over. The snow and embers escape
         this because they are fixed to the viewport at z-40.
       */}
-      <ColoredSmoke active={/zero/i.test(filter)} />
+      {/* Shared by both ranges, stronger on Graffiti so it matches the
+          louder artwork. */}
+      <ColoredSmoke
+        active={/zero|graffiti/i.test(filter)}
+        intensity={/graffiti/i.test(filter) ? 1.8 : 1}
+      />
 
       <div className="container relative">
         <div className="reveal mb-10">
