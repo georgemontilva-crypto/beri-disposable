@@ -207,9 +207,15 @@ function PanelLogo({
 /**
  * Short clip sitting on the panel.
  *
- * Always visible, not faded in on hover: `preload="metadata"` gets the browser
- * to paint the opening frame, so a closed column already shows the footage
- * rather than a separate still that then swaps.
+ * Always visible, not faded in on hover: the browser paints the opening frame,
+ * so a closed column already shows the footage rather than a separate still
+ * that then swaps.
+ *
+ * The `#t=0.1` fragment is what makes that work on iOS. Safari there loads
+ * metadata without ever rendering a frame, leaving the panel black until
+ * playback starts; asking for a time offset forces it to seek and decode that
+ * frame, which it then displays. Desktop browsers paint the first frame either
+ * way, so the fragment costs nothing and the two platforms finally match.
  *
  * It plays once and holds its closing frame — no loop. Leaving mid-play pauses
  * where it is rather than rewinding, so the column never snaps backwards under
@@ -226,13 +232,18 @@ function PanelVideo({
 }) {
   const ref = useRef<HTMLVideoElement>(null);
 
+  // Don't append twice if the URL already carries a fragment.
+  const posterFrameUrl = url.includes("#") ? url : `${url}#t=0.1`;
+
   useEffect(() => {
     const v = ref.current;
     if (!v) return;
 
     if (active) {
-      // A finished clip has nothing left to show, so start it over.
-      if (v.ended) v.currentTime = 0;
+      // A finished clip has nothing left to show, so start it over. The same
+      // rewind covers the fragment: playback would otherwise begin at 0.1s and
+      // clip the opening tenth of a second every time.
+      if (v.ended || v.currentTime <= 0.15) v.currentTime = 0;
       // play() rejects when autoplay is blocked; the frame on screen stays,
       // which is the right outcome, so the rejection is ignored.
       void v.play().catch(() => undefined);
@@ -244,7 +255,7 @@ function PanelVideo({
   return (
     <video
       ref={ref}
-      src={url}
+      src={posterFrameUrl}
       poster={poster}
       muted
       playsInline
