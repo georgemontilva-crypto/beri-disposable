@@ -87,10 +87,19 @@ export const wholesaleInquiries = mysqlTable(
   "wholesale_inquiries",
   {
     id: int("id").autoincrement().primaryKey(),
+    // Kept as the display name and filled from first + last, so every existing
+    // row and every list that reads `name` keeps working.
     name: varchar("name", { length: 255 }).notNull(),
+    firstName: varchar("firstName", { length: 128 }),
+    lastName: varchar("lastName", { length: 128 }),
     company: varchar("company", { length: 255 }),
     email: varchar("email", { length: 320 }).notNull(),
     phone: varchar("phone", { length: 64 }),
+    shippingAddress: text("shippingAddress"),
+    /** Uploaded compliance documents, stored as public R2 URLs. */
+    businessLicenseUrl: varchar("businessLicenseUrl", { length: 1024 }),
+    tobaccoLicenseUrl: varchar("tobaccoLicenseUrl", { length: 1024 }),
+    feinUrl: varchar("feinUrl", { length: 1024 }),
     status: mysqlEnum("status", ["pending", "approved", "rejected"])
       .default("pending")
       .notNull(),

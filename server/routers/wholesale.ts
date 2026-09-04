@@ -16,33 +16,100 @@ import {
 import * as db from "../db";
 import { buildApprovalEmail, sendEmail } from "../email";
 import { notifyOwner } from "../_core/notification";
+import { isStorageConfigured, storagePresignPut } from "../storage";
 
 const REG_TOKEN_TTL_MS = 1000 * 60 * 60 * 24 * 7; // 7 days
 
+/**
+ * What a licence document may be. Anything outside this list is refused before
+ * a URL is ever signed, so the public form can't be turned into open storage
+ * for arbitrary files.
+ */
+const DOC_TYPES = [
+  "application/pdf",
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+  "image/heic",
+] as const;
+
+function safeFileName(name: string): string {
+  return name.replace(/[^a-zA-Z0-9._-]/g, "_").slice(0, 120);
+}
+
 export const wholesaleRouter = beriRouter({
+  /**
+   * PUBLIC: hand the browser a presigned URL for one licence document.
+   *
+   * Applicants aren't logged in, so this has to be open — which is exactly why
+   * it is narrow: the key is forced under a single prefix, the content type is
+   * checked against a short list, and the URL expires in ten minutes. It signs
+   * one object at a time and grants nothing else in the bucket.
+   */
+  presignDocument: beriPublicProcedure
+    .input(
+      z.object({
+        kind: z.enum(["business-license", "tobacco-license", "fein"]),
+        fileName: z.string().min(1).max(200),
+        mimeType: z.enum(DOC_TYPES),
+      })
+    )
+    .mutation(async ({ input }) => {
+      if (!isStorageConfigured()) {
+        throw new TRPCError({
+          code: "PRECONDITION_FAILED",
+          message: "Document uploads are unavailable right now.",
+        });
+      }
+      const key = `wholesale-docs/${input.kind}/${Date.now()}-${safeFileName(input.fileName)}`;
+      const { uploadUrl, publicUrl } = await storagePresignPut(
+        key,
+        input.mimeType,
+        600
+      );
+      return { uploadUrl, publicUrl };
+    }),
+
   /** PUBLIC: submit a wholesale inquiry from the public form. */
   submitInquiry: beriPublicProcedure
     .input(
       z.object({
-        name: z.string().min(1).max(255),
-        company: z.string().max(255).optional(),
+        firstName: z.string().max(128).optional(),
+        lastName: z.string().max(128).optional(),
+        company: z.string().min(1).max(255),
         email: z.string().email(),
         phone: z.string().max(64).optional(),
+        shippingAddress: z.string().max(2000).optional(),
+        businessLicenseUrl: z.string().url().max(1024),
+        tobaccoLicenseUrl: z.string().url().max(1024),
+        feinUrl: z.string().url().max(1024),
       })
     )
     .mutation(async ({ input }) => {
+      const first = input.firstName?.trim() ?? "";
+      const last = input.lastName?.trim() ?? "";
+      // `name` stays the display field every existing list reads, so it is
+      // composed here rather than adding a special case to each of them.
+      const fullName = [first, last].filter(Boolean).join(" ") || input.company.trim();
+
       await db.createInquiry({
-        name: input.name.trim(),
-        company: input.company?.trim() || null,
+        name: fullName,
+        firstName: first || null,
+        lastName: last || null,
+        company: input.company.trim(),
         email: input.email.trim().toLowerCase(),
         phone: input.phone?.trim() || null,
+        shippingAddress: input.shippingAddress?.trim() || null,
+        businessLicenseUrl: input.businessLicenseUrl,
+        tobaccoLicenseUrl: input.tobaccoLicenseUrl,
+        feinUrl: input.feinUrl,
         status: "pending",
       });
       // Notify the project owner (best-effort).
       try {
         await notifyOwner({
           title: "New Beri Wholesale Inquiry",
-          content: `${input.name} (${input.company ?? "n/a"}) / ${input.email} ${input.phone ?? ""}`,
+          content: `${fullName} (${input.company}) / ${input.email} ${input.phone ?? ""}`,
         });
       } catch {
         /* best-effort */

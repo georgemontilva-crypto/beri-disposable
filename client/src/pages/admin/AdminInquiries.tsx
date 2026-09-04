@@ -125,13 +125,14 @@ export default function AdminInquiries() {
                 <th className="px-5 py-3 font-semibold">Phone</th>
                 <th className="px-5 py-3 font-semibold">Status</th>
                 <th className="px-5 py-3 font-semibold">Created</th>
+                <th className="px-5 py-3 font-semibold">Docs</th>
                 <th className="px-5 py-3 font-semibold">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-neutral-100">
               {list.isLoading ? (
                 <tr>
-                  <td colSpan={8} className="px-5 py-10 text-center text-neutral-400">
+                  <td colSpan={9} className="px-5 py-10 text-center text-neutral-400">
                     <Loader2 className="mx-auto h-5 w-5 animate-spin" />
                   </td>
                 </tr>
@@ -145,6 +146,16 @@ export default function AdminInquiries() {
                     <td className="px-5 py-3 text-neutral-600">{r.phone ?? "—"}</td>
                     <td className="px-5 py-3">
                       <StatusBadge status={r.status} />
+                    </td>
+                    <td className="px-5 py-3">
+                      {/* Compact initials rather than three long links: the
+                          table is already wide, and what matters at a glance is
+                          which of the three arrived. */}
+                      <div className="flex gap-1.5">
+                        <DocLink url={r.businessLicenseUrl} title="Business license" label="BL" />
+                        <DocLink url={r.tobaccoLicenseUrl} title="Tobacco / vape license" label="TL" />
+                        <DocLink url={r.feinUrl} title="Federal EIN document" label="EIN" />
+                      </div>
                     </td>
                     <td className="px-5 py-3 whitespace-nowrap text-neutral-500">
                       {r.createdAt ? new Date(r.createdAt).toLocaleDateString() : "—"}
@@ -177,7 +188,7 @@ export default function AdminInquiries() {
                 ))
               ) : (
                 <tr>
-                  <td colSpan={8} className="px-5 py-10 text-center text-neutral-400">
+                  <td colSpan={9} className="px-5 py-10 text-center text-neutral-400">
                     No inquiries found.
                   </td>
                 </tr>
@@ -203,5 +214,39 @@ function StatusBadge({ status }: { status: string }) {
     <span className={cn("inline-flex rounded-full px-2.5 py-0.5 text-xs font-semibold capitalize", map[status] ?? "bg-neutral-100 text-neutral-600")}>
       {status}
     </span>
+  );
+}
+
+
+/** One compliance document, or a placeholder when it wasn't supplied. */
+function DocLink({
+  url,
+  title,
+  label,
+}: {
+  url?: string | null;
+  title: string;
+  label: string;
+}) {
+  if (!url) {
+    return (
+      <span
+        title={`${title}: not provided`}
+        className="rounded bg-neutral-100 px-1.5 py-0.5 text-[10px] font-bold text-neutral-400"
+      >
+        {label}
+      </span>
+    );
+  }
+  return (
+    <a
+      href={url}
+      target="_blank"
+      rel="noreferrer"
+      title={title}
+      className="rounded bg-neutral-950 px-1.5 py-0.5 text-[10px] font-bold text-white hover:bg-neutral-700"
+    >
+      {label}
+    </a>
   );
 }

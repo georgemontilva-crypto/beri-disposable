@@ -135,13 +135,6 @@ export function SiteNavbar() {
           <NavItem href="/wholesale" active={isActive("/wholesale")}>
             Wholesale
           </NavItem>
-
-          <Link
-            href="/authenticate"
-            className="press ml-3 rounded-full bg-white px-5 py-2 text-sm font-semibold text-neutral-950 transition-colors hover:bg-neutral-200"
-          >
-            Verify Code
-          </Link>
         </div>
 
         {/* Mobile toggle */}
