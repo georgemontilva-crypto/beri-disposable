@@ -34,7 +34,17 @@ const DOC_TYPES = [
 ] as const;
 
 function safeFileName(name: string): string {
-  return name.replace(/[^a-zA-Z0-9._-]/g, "_").slice(0, 120);
+  return (
+    name
+      .replace(/[^a-zA-Z0-9._-]/g, "_")
+      // Collapse dot runs. Object keys are flat strings, so ".." can't traverse
+      // once the separators are gone — but leaving it in produces names like
+      // ".._.._file.pdf", which look alarming in a bucket listing for no
+      // reason.
+      .replace(/\.{2,}/g, ".")
+      .replace(/^[._-]+/, "")
+      .slice(0, 120) || "document"
+  );
 }
 
 export const wholesaleRouter = beriRouter({

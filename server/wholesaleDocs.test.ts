@@ -10,7 +10,12 @@ const DOC_TYPES = [
 
 /** Mirrors the key the presign endpoint builds. */
 function docKey(kind: string, fileName: string, now = 1700000000000) {
-  const safe = fileName.replace(/[^a-zA-Z0-9._-]/g, "_").slice(0, 120);
+  const safe =
+    fileName
+      .replace(/[^a-zA-Z0-9._-]/g, "_")
+      .replace(/\.{2,}/g, ".")
+      .replace(/^[._-]+/, "")
+      .slice(0, 120) || "document";
   return `wholesale-docs/${kind}/${now}-${safe}`;
 }
 
@@ -21,10 +26,16 @@ describe("wholesale document uploads", () => {
 
   it("neutralises path traversal in the supplied filename", () => {
     // The name comes from an anonymous form, so it can't be trusted to stay
-    // inside the prefix on its own.
+    // inside the prefix on its own. Stripping the separators is what makes it
+    // safe; collapsing the dots just keeps the bucket listing readable.
     const key = docKey("fein", "../../secrets.env");
     expect(key).not.toContain("..");
+    expect(key.split("/").length).toBe(3);
     expect(key).toMatch(/^wholesale-docs\/fein\//);
+  });
+
+  it("never produces an empty name", () => {
+    expect(docKey("fein", "...")).toMatch(/-document$/);
   });
 
   it("strips characters that would break the key", () => {
