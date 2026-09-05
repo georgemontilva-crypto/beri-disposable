@@ -60,7 +60,7 @@ export default function ProductPage() {
                   className="text-xs font-semibold uppercase tracking-[0.25em]"
                   style={{ color: product.accent }}
                 >
-                  Beri Disposable
+                  {product.eyebrow}
                 </span>
 
                 {/*

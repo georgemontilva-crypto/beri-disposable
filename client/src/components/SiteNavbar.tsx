@@ -6,7 +6,7 @@ import { Link, useLocation } from "wouter";
 
 const NAV_LINKS = [
   { label: "Home", href: "/" },
-  { label: "Authenticate", href: "/authenticate" },
+  { label: "Verify", href: "/authenticate" },
   { label: "Wholesale", href: "/wholesale" },
 ];
 
@@ -130,7 +130,7 @@ export function SiteNavbar() {
           </div>
 
           <NavItem href="/authenticate" active={isActive("/authenticate")}>
-            Authenticate
+            Verify
           </NavItem>
           <NavItem href="/wholesale" active={isActive("/wholesale")}>
             Wholesale
@@ -170,7 +170,7 @@ export function SiteNavbar() {
             </MobileLink>
           ))}
           <MobileLink href="/authenticate" active={isActive("/authenticate")}>
-            Authenticate
+            Verify
           </MobileLink>
           <MobileLink href="/wholesale" active={isActive("/wholesale")}>
             Wholesale

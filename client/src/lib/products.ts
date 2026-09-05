@@ -6,7 +6,16 @@ export type Flavor = {
   edition?: string;
   /** Taste family. Derived from the name unless set explicitly. */
   profile: FlavorProfile;
+  /** One line shown beside the featured shot. */
+  description?: string;
+  /** Two or three tasting keywords, shown as a row under the description. */
+  notes?: string[];
 };
+
+/** A flavour as authored: a bare name, or a name with its copy. */
+type FlavorInput =
+  | string
+  | { name: string; description?: string; notes?: string[] };
 
 /** Product identifiers used in URLs (/products/:key). */
 export type ProductKey = "crush" | "cliq" | "cirql" | "eliquid";
@@ -15,6 +24,10 @@ export type Product = {
   key: ProductKey;
   name: string;
   tagline: string;
+  /** Small line above the logo. Not every product is a disposable. */
+  eyebrow: string;
+  /** Headline that opens the product description. */
+  headline: string;
   /**
    * One or two sentences for the homepage summary card. The homepage is a
    * router, not a spec sheet — the full story lives on the product page, so
@@ -29,6 +42,8 @@ export type Product = {
   keySpecs: string[];
   /** Full spec list, shown as the small grid under the hero copy. */
   specs: { label: string; value: string }[];
+  /** Line under the flavour section heading. */
+  flavorIntro: string;
   /**
    * The two or three features worth their own icon, shown as a band under the
    * hero. Kept separate from `specs` because these are marketing claims chosen
@@ -112,7 +127,7 @@ const toSlug = (s: string) =>
 
 function buildFlavors(
   productKey: string,
-  names: string[],
+  names: FlavorInput[],
   edition?: string,
   /**
    * Prefix for the slug and media slot. Needed when a range reuses names that
@@ -122,13 +137,16 @@ function buildFlavors(
    */
   slugPrefix = ""
 ): Flavor[] {
-  return names.map((name) => {
-    const slug = `${slugPrefix}${toSlug(name)}`;
+  return names.map((entry) => {
+    const f = typeof entry === "string" ? { name: entry } : entry;
+    const slug = `${slugPrefix}${toSlug(f.name)}`;
     return {
-      name,
+      name: f.name,
       slug,
       slot: `${productKey}_flavor_${slug}`,
-      profile: deriveProfile(name),
+      profile: deriveProfile(f.name),
+      ...(f.description ? { description: f.description } : {}),
+      ...(f.notes ? { notes: f.notes } : {}),
       ...(edition ? { edition } : {}),
     };
   });
@@ -140,10 +158,12 @@ export const BERI_CRUSH: Product = {
   key: "crush",
   name: "Beri Crush",
   tagline: "Auto-Adaptive Draw.",
+  eyebrow: "Beri Disposable",
+  headline: "AUTO-ADAPTIVE POWER.",
   summary:
     "The flagship. Quad-mesh coil and up to 40W of auto-adaptive power, in the widest flavor range Beri makes.",
   description:
-    "Beri Crush reads your draw and adapts power in real time, delivering up to 40W through a quad-mesh coil. Up to 50,000 puffs of consistent flavor density, with a full-color display and an extensive flavor line-up, including Summer, Winter and Graffiti editions.",
+    "BERI CRUSH automatically adjusts power from 15 to 25W based on your draw. Activate CRUSH Mode for a 40W power boost, backed by quad-mesh performance, adjustable airflow, and a 1.77\" HD display.",
   highlight: { value: "50K", unit: "Puffs" },
   keySpecs: ["Quad-Mesh Coil", "Up to 40W Power", "Auto-Adaptive Draw"],
   specs: [
@@ -152,8 +172,12 @@ export const BERI_CRUSH: Product = {
     { label: "Coil", value: "Quad-Mesh" },
     { label: "Power", value: "Up to 40W" },
     { label: "Draw", value: "Auto-Adaptive" },
+    { label: "Battery", value: "1,000 mAh" },
+    { label: "Modes", value: "15-25W Adaptive / 40W CRUSH" },
+    { label: "Airflow", value: "Adjustable" },
     { label: "Origin", value: "Designed in USA" },
   ],
+  flavorIntro: "35 Flavors. One CRUSH lineup. Select a flavor to explore.",
   accent: "#4ade80",
   baseRangeLabel: "Classic",
   logoSlot: "crush_logo",
@@ -169,28 +193,118 @@ export const BERI_CRUSH: Product = {
   modelSlot: "crush_model_3d",
   flavors: [
     ...buildFlavors("crush", [
-      "Banana Taffy",
-      "Blue Razz Ice",
-      "Cherry B-Pop",
-      "Grape Ice",
-      "Green Apple",
-      "Mango Bomb",
-      "Miami Mint",
-      "Strawberry Cream",
-      "Strawberry Watermelon",
-      "Super Mint",
-      "Triple Berry",
-      "Watermelon Ice",
-      "White Strawberry",
+      {
+        name: "Banana Taffy",
+        description:
+          "Sweet banana candy with a smooth, creamy finish.",
+        notes: ["Banana", "Candy", "Sweet"],
+      },
+      {
+        name: "Blue Razz Ice",
+        description:
+          "Tangy blue raspberry with a crisp icy finish.",
+        notes: ["Blue Razz", "Tart", "Ice"],
+      },
+      {
+        name: "Cherry B-Pop",
+        description:
+          "Bright cherry candy with a sweet, punchy finish.",
+        notes: ["Cherry", "Candy", "Sweet"],
+      },
+      {
+        name: "Grape Ice",
+        description:
+          "Bold grape flavor with a crisp, icy finish.",
+        notes: ["Grape", "Sweet", "Cool"],
+      },
+      {
+        name: "Green Apple",
+        description:
+          "Crisp green apple with a bright sweet-and-tart bite.",
+        notes: ["Apple", "Tart", "Crisp"],
+      },
+      {
+        name: "Mango Bomb",
+        description:
+          "Juicy tropical mango with a bold, fruit-forward finish.",
+        notes: ["Mango", "Tropical", "Juicy"],
+      },
+      {
+        name: "Miami Mint",
+        description:
+          "Clean, refreshing mint with a smooth cooling finish.",
+        notes: ["Mint", "Fresh", "Cool"],
+      },
+      {
+        name: "Strawberry Cream",
+        description:
+          "Ripe strawberry layered with a smooth, creamy finish.",
+        notes: ["Strawberry", "Creamy", "Sweet"],
+      },
+      {
+        name: "Strawberry Watermelon",
+        description:
+          "Juicy watermelon blended with sweet ripe strawberry.",
+        notes: ["Strawberry", "Watermelon", "Juicy"],
+      },
+      {
+        name: "Super Mint",
+        description:
+          "An intense mint profile with an extra-cool finish.",
+        notes: ["Mint", "Bold", "Extra Cool"],
+      },
+      {
+        name: "Triple Berry",
+        description:
+          "A bold blend of sweet and tangy mixed berries.",
+        notes: ["Mixed Berry", "Sweet", "Tart"],
+      },
+      {
+        name: "Watermelon Ice",
+        description:
+          "Juicy watermelon balanced by a refreshing icy finish.",
+        notes: ["Watermelon", "Juicy", "Ice"],
+      },
+      {
+        name: "White Strawberry",
+        description:
+          "Smooth, sweet strawberry with a softer fruit-forward finish.",
+        notes: ["Strawberry", "Sweet", "Smooth"],
+      },
     ]),
     ...buildFlavors(
       "crush",
       [
-        "Berry Peach Gush",
-        "Blue Coconut",
-        "Blueberry Watermelon",
-        "Pineapple Passion Punch",
-        "Sour Watermelon Gami",
+        {
+          name: "Berry Peach Gush",
+          description:
+            "Ripe peach blended with sweet mixed berries for a juicy, fruit-forward finish.",
+          notes: ["Peach", "Berry", "Juicy"],
+        },
+        {
+          name: "Blue Coconut",
+          description:
+            "Sweet blue raspberry paired with smooth, tropical coconut.",
+          notes: ["Blue Razz", "Coconut", "Tropical"],
+        },
+        {
+          name: "Blueberry Watermelon",
+          description:
+            "Sweet blueberry blended with crisp, juicy watermelon.",
+          notes: ["Blueberry", "Watermelon", "Juicy"],
+        },
+        {
+          name: "Pineapple Passion Punch",
+          description:
+            "Bright pineapple and sweet passion fruit come together in a bold tropical blend.",
+          notes: ["Pineapple", "Passion Fruit", "Tropical"],
+        },
+        {
+          name: "Sour Watermelon Gami",
+          description:
+            "Tangy watermelon candy with a sweet gummy-inspired finish.",
+          notes: ["Watermelon", "Sour", "Candy"],
+        },
       ],
       "Summer Edition"
     ),
@@ -202,28 +316,88 @@ export const BERI_CRUSH: Product = {
     ...buildFlavors(
       "crush",
       [
-        "Blue Sour",
-        "Juicy Peach",
-        "Melon Dragon Slush",
-        "OG Watermelon",
-        "Polar Ice",
-        "Sour Neon Fab",
-        "Watermelon Refresh",
+        {
+          name: "Blue Sour",
+          description:
+            "A bold blue candy profile with a bright, tangy sour finish.",
+          notes: ["Blue Candy", "Sour", "Tangy"],
+        },
+        {
+          name: "Juicy Peach",
+          description:
+            "Ripe peach flavor with a smooth, juicy sweetness.",
+          notes: ["Peach", "Juicy", "Sweet"],
+        },
+        {
+          name: "Melon Dragon Slush",
+          description:
+            "Sweet melon and exotic dragon fruit with a frosty slush finish.",
+          notes: ["Melon", "Dragon Fruit", "Frosty"],
+        },
+        {
+          name: "OG Watermelon",
+          description:
+            "Classic juicy watermelon with a clean, refreshing finish.",
+          notes: ["Watermelon", "Juicy", "Classic"],
+        },
+        {
+          name: "Polar Ice",
+          description:
+            "An intensely cool profile with a crisp, refreshing finish.",
+          notes: ["Icy", "Crisp", "Extra Cool"],
+        },
+        {
+          name: "Sour Neon Fab",
+          description:
+            "A bright sour-candy blend with a punchy sweet-and-tart finish.",
+          notes: ["Sour Candy", "Sweet", "Tart"],
+        },
+        {
+          name: "Watermelon Refresh",
+          description:
+            "Juicy watermelon with a light, cooling finish.",
+          notes: ["Watermelon", "Fresh", "Cool"],
+        },
       ],
       "Graffiti Edition"
     ),
-    // All five repeat a regular Crush flavour, so they need their own slug
-    // prefix or both would resolve to the same media slot.
+    // All five repeat a Core flavour, so they need their own slug prefix or
+    // both would resolve to the same media slot.
     ...buildFlavors(
       "crush",
       [
-        "Blue Razz Ice",
-        "Grape Ice",
-        "Miami Mint",
-        "Strawberry Watermelon",
-        "Triple Berry",
+        {
+          name: "Blue Razz Ice",
+          description:
+            "Tangy blue raspberry with a crisp, icy finish, without nicotine.",
+          notes: ["Blue Razz", "Tart", "Ice"],
+        },
+        {
+          name: "Grape Ice",
+          description:
+            "Bold grape flavor with a crisp, cooling finish, without nicotine.",
+          notes: ["Grape", "Sweet", "Cool"],
+        },
+        {
+          name: "Miami Mint",
+          description:
+            "Clean, refreshing mint with a smooth cooling finish, without nicotine.",
+          notes: ["Mint", "Fresh", "Cool"],
+        },
+        {
+          name: "Strawberry Watermelon",
+          description:
+            "Sweet strawberry and juicy watermelon in a smooth, fruit-forward blend, without nicotine.",
+          notes: ["Strawberry", "Watermelon", "Juicy"],
+        },
+        {
+          name: "Triple Berry",
+          description:
+            "A bold blend of sweet and tangy berries, without nicotine.",
+          notes: ["Mixed Berry", "Sweet", "Tart"],
+        },
       ],
-      "Zero Nicotine",
+      "0% Nicotine",
       "zero-"
     ),
   ],
@@ -234,24 +408,27 @@ export const BERI_CRUSH: Product = {
 
 export const BERI_CLIQ: Product = {
   key: "cliq",
-  name: "Beri Cliq",
+  name: "BERI CLIQ",
   tagline: "Find Your Cliq.",
+  eyebrow: "Pod System",
+  headline: "ONE BATTERY. YOUR FLAVOR ROTATION.",
   summary:
     "A refillable pod system. Swap flavors in seconds on a 900mAh battery, with an 18mL pre-filled 360° crystal tank.",
   description:
-    "Beri Cliq separates the battery from the pod, so one device carries your whole flavor rotation. An 18mL pre-filled 360° crystal tank clicks into a 900mAh USB-C battery, running a dual mesh coil with dual power modes for up to 50,000 puffs. Batteries come in six colors.",
+    "BERI CLIQ pairs a rechargeable 900 mAh battery with interchangeable 18 mL pre-filled pods. A 360° crystal tank lets you see your e-liquid level, while dual-mesh technology, adjustable airflow, and two power modes deliver up to 50,000 puffs.",
   highlight: { value: "50K", unit: "Puffs" },
   keySpecs: ["Refillable Pod System", "360° Crystal Tank", "900mAh USB-C"],
   specs: [
     { label: "Puffs", value: "Up to 50,000" },
     { label: "Nicotine", value: "5%" },
-    { label: "Coil", value: "Dual Mesh" },
+    { label: "Coil", value: "Dual-Mesh" },
     { label: "E-Liquid", value: "18 mL Pre-Filled" },
-    { label: "Battery", value: "900mAh USB-C" },
+    { label: "Battery", value: "900 mAh" },
     { label: "Tank", value: "360° Crystal" },
-    { label: "Modes", value: "Dual-Power" },
-    { label: "Pod", value: "Refillable" },
+    { label: "Modes", value: "Normal / Eco Mode" },
+    { label: "Pod", value: "Replaceable" },
   ],
+  flavorIntro: "14 flavors. 6 battery colors. Build your CLIQ.",
   accent: "#22d3ee",
   baseRangeLabel: "Classic",
   logoSlot: "cliq_logo",
@@ -267,26 +444,90 @@ export const BERI_CLIQ: Product = {
   modelSlot: "cliq_model_3d",
   flavors: [
     ...buildFlavors("cliq", [
-    "Alaskan Mint",
-    "Banana Ice",
-    "Black Razz Ice",
-    "Blue Rancher",
-    "Blue Razz Ice",
-    "Clear",
-    "Grape Ice",
-    "Green Apple",
-    "Mango Bomb",
-    "Miami Mint",
-    "Peach Ice",
-    "Punch Ice",
-    "Sour Neon Fab",
-    "Super Mint",
-    "Tobacco",
-    "Triple Berry",
-    "Watermelon BG",
-    "Watermelon Gami",
-    "White Gami",
-    "White Strawberry",
+      {
+        name: "Alaskan Mint",
+        description:
+          "Crisp mint with a clean, intensely cool finish.",
+        notes: ["Mint", "Crisp", "Cool"],
+      },
+      {
+        name: "Banana Ice",
+        description:
+          "Smooth banana sweetness balanced by a refreshing icy finish.",
+        notes: ["Banana", "Sweet", "Ice"],
+      },
+      {
+        name: "Black Razz Ice",
+        description:
+          "Dark raspberry with a tangy berry bite and cool finish.",
+        notes: ["Raspberry", "Tart", "Ice"],
+      },
+      {
+        name: "Blue Razz Ice",
+        description:
+          "Tangy blue raspberry with a crisp icy finish.",
+        notes: ["Blue Razz", "Tart", "Ice"],
+      },
+      {
+        name: "Clear",
+        description:
+          "A clean, understated profile with minimal added flavor.",
+        notes: ["Clean", "Light", "Neutral"],
+      },
+      {
+        name: "Grape Ice",
+        description:
+          "Bold grape sweetness balanced by a chilled finish.",
+        notes: ["Grape", "Sweet", "Ice"],
+      },
+      {
+        name: "Green Apple",
+        description:
+          "Crisp green apple with a bright sweet-and-tart bite.",
+        notes: ["Apple", "Tart", "Crisp"],
+      },
+      {
+        name: "Mango Bomb",
+        description:
+          "Bold tropical mango with a smooth, juicy finish.",
+        notes: ["Mango", "Tropical", "Juicy"],
+      },
+      {
+        name: "Miami Mint",
+        description:
+          "Fresh mint with a smooth, refreshing cooling finish.",
+        notes: ["Mint", "Fresh", "Cool"],
+      },
+      {
+        name: "Peach Ice",
+        description:
+          "Ripe peach sweetness paired with a light icy finish.",
+        notes: ["Peach", "Sweet", "Ice"],
+      },
+      {
+        name: "Punch Ice",
+        description:
+          "Sweet mixed fruit punch with a crisp icy finish.",
+        notes: ["Fruit Punch", "Sweet", "Ice"],
+      },
+      {
+        name: "Sour Neon Fab",
+        description:
+          "Bright sour-candy flavor with a bold sweet-and-tart finish.",
+        notes: ["Sour Candy", "Sweet", "Tart"],
+      },
+      {
+        name: "Super Mint",
+        description:
+          "Strong, refreshing mint with an intensely cool finish.",
+        notes: ["Mint", "Fresh", "Extra Cool"],
+      },
+      {
+        name: "Tobacco",
+        description:
+          "A classic tobacco-style profile with a smooth, familiar finish.",
+        notes: ["Tobacco", "Rich", "Classic"],
+      },
     ]),
     ...buildFlavors(
       "cliq",
@@ -320,20 +561,23 @@ export const CLIQ_KITS = [
 
 export const BERI_CIRQL: Product = {
   key: "cirql",
-  name: "Beri Cirql",
+  name: "BERI CIRQL",
   tagline: "Authentic Shisha Flavor.",
+  eyebrow: "E-Hookah Series",
+  headline: "SHISHA, REIMAGINED.",
   summary:
     "Hookah, without the setup. 150,000 puffs of authentic shisha flavor through a quad mesh coil.",
   description:
-    "Beri Cirql brings the shisha lounge into a disposable. Built around authentic hookah flavor profiles like double apple, lady killer and love 66, with a quad mesh coil rated for 150,000 puffs. The longest-running device Beri makes by a wide margin.",
+    "BERI CIRQL brings the hookah-lounge flavor experience into a high-capacity disposable format. Built with quad-mesh technology and up to 150,000 puffs, CIRQL features shisha-inspired profiles such as Double Apple, Lady Killer and Love 66.",
   highlight: { value: "150K", unit: "Puffs" },
   keySpecs: ["Authentic Shisha Flavor", "Quad Mesh Coil", "Made in USA"],
   specs: [
-    { label: "Puffs", value: "150,000" },
-    { label: "Coil", value: "Quad Mesh" },
-    { label: "Flavor", value: "Authentic Shisha" },
-    { label: "Origin", value: "USA" },
+    { label: "Puffs", value: "Up to 150,000" },
+    { label: "Coil", value: "Quad-Mesh" },
+    { label: "Profile", value: "Shisha-Inspired" },
+    { label: "Modes", value: "Regular + Boost" },
   ],
+  flavorIntro: "13 flavors. Select one to explore.",
   accent: "#e0b44a",
   // Both lights in gold: amber and a deeper bronze.
   glowColors: ["224 180 74", "196 132 40"],
@@ -370,21 +614,24 @@ export const BERI_CIRQL: Product = {
 
 export const BERI_ELIQUID: Product = {
   key: "eliquid",
-  name: "Beri E-Liquid",
+  name: "BERI E-LIQUID",
   tagline: "The Flavor, Bottled.",
+  eyebrow: "Bottled E-Liquid",
+  headline: "THE FLAVOR, BOTTLED.",
   summary:
     "The Beri flavor library for your own device. 30 mL bottles in 25 mg or 50 mg, bottled in California.",
   description:
-    "The same flavor engineering behind the Beri disposables, bottled for your own setup. 30 mL child-resistant bottles in 25 mg and 50 mg nicotine salt, blended and bottled in California, across twelve profiles.",
+    "The signature flavor profiles behind BERI, now available in bottled form. Each 30 mL nicotine salt e-liquid features a child-resistant cap and is available in 25 mg and 50 mg strengths across 12 flavors.",
   highlight: { value: "30", unit: "mL Bottle" },
   keySpecs: ["25 mg & 50 mg", "Nicotine Salt", "Bottled in California"],
   specs: [
     { label: "Bottle Size", value: "30 mL" },
     { label: "Nicotine", value: "25 mg / 50 mg" },
-    { label: "Type", value: "Nicotine Salt" },
-    { label: "Origin", value: "Bottled in California" },
+    { label: "Formula", value: "Nicotine Salt" },
+    { label: "Flavors", value: "12" },
     { label: "Cap", value: "Child-Resistant" },
   ],
+  flavorIntro: "12 flavors. Select one to explore.",
   accent: "#ec4899",
   baseRangeLabel: "Salt Nic",
   logoSlot: "eliquid_logo",
@@ -399,7 +646,12 @@ export const BERI_ELIQUID: Product = {
   heroSlot: "eliquid_hero",
   modelSlot: "eliquid_model_3d",
   flavors: buildFlavors("eliquid", [
-    "Apple Caramel Pop",
+    {
+      name: "Apple Caramel Pop",
+      description:
+        "Crisp apple layered with smooth caramel sweetness for a rich, candy-inspired finish.",
+      notes: ["Apple", "Caramel", "Sweet"],
+    },
     "Apple Juice",
     "Blue Frost",
     "Citrus Squeeze",

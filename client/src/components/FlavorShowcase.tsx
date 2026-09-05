@@ -151,7 +151,7 @@ export default function FlavorShowcase({
             {product.name} Flavors
           </h2>
           <p className="mt-3 max-w-md text-neutral-300">
-            {mounted.length} signature flavors. Pick one to see it up close.
+            {product.flavorIntro}
           </p>
         </div>
 
@@ -182,10 +182,23 @@ export default function FlavorShowcase({
               <h3 className="mt-4 font-display text-4xl font-bold leading-tight">
                 {featured.name}
               </h3>
+              {/* The authored line when there is one; the generic sentence is a
+                  fallback for flavours whose copy hasn't been written yet. */}
               <p className="mt-4 text-neutral-300">
-                Available on {product.name}, with the same flavor engineering
-                across the range and a verifiable authenticity code on every unit.
+                {featured.description ??
+                  `Available on ${product.name}, with the same flavor engineering across the range and a verifiable authenticity code on every unit.`}
               </p>
+
+              {featured.notes && (
+                <div className="mt-4 flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-xs uppercase tracking-wider">
+                  {featured.notes.map((n, i) => (
+                    <span key={n} className="flex items-center gap-2">
+                      {i > 0 && <span className="text-neutral-600">&bull;</span>}
+                      <span style={{ color: product.accent }}>{n}</span>
+                    </span>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         )}
