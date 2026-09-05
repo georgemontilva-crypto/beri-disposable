@@ -23,7 +23,11 @@ export default function PageTexture({ slot }: { slot: string }) {
         style={{
           backgroundImage: `url(${url})`,
           backgroundRepeat: "repeat",
-          backgroundSize: "1200px auto",
+          // Large tile on purpose. A brand pattern has to stay readable as a
+          // mark: shrink it and the lettering turns into woven mesh, which
+          // reads as noise rather than as branding. Matches the scale used in
+          // the product sections for the same reason.
+          backgroundSize: "2600px auto",
           filter: "brightness(0.95)",
         }}
       />

@@ -97,14 +97,14 @@ function buildSlots(): SlotDef[] {
       slot: "authenticate_texture",
       label: "Verify — Background texture",
       section: "Authenticate",
-      size: "1200×1200 seamless tile",
+      size: "2000×2000 seamless tile",
     },
     { slot: "wholesale_banner", label: "Wholesale — Banner", section: "Wholesale", size: "1280×520" },
     {
       slot: "wholesale_texture",
       label: "Wholesale — Background texture",
       section: "Wholesale",
-      size: "1200×1200 seamless tile",
+      size: "2000×2000 seamless tile",
     },
   ];
 
