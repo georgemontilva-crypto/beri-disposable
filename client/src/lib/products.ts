@@ -133,6 +133,42 @@ export function editionTextureSlot(productKey: string, edition: string): string 
   return `${productKey}_texture_${toSlug(edition)}`;
 }
 
+/**
+ * Colour of the glow behind the featured flavour, as "r g b".
+ *
+ * Derived from the flavour's own name rather than stored per flavour: the list
+ * runs to seventy-odd entries across four products, and a table of hand-picked
+ * colours would drift out of sync the first time a flavour is renamed.
+ *
+ * Rules are ordered because names combine ingredients. "Blue Razz Ice" is both
+ * a berry and an ice, and the blue is what the eye expects; "Strawberry
+ * Watermelon" leads with strawberry. First match wins, so the more specific
+ * pairings sit above the generic fruits.
+ */
+export function flavorGlow(name: string): string {
+  const n = name.toLowerCase();
+  const rules: [RegExp, string][] = [
+    [/blue razz|blue sour|blue coconut/, "56 132 255"],
+    [/grape/, "150 90 240"],
+    [/strawberry/, "255 70 100"],
+    [/watermelon/, "255 84 122"],
+    [/cherry/, "230 45 70"],
+    [/blueberry|black razz|razz|berry|berries/, "170 70 220"],
+    [/mango|peach|caramel|sunni|orange/, "255 150 50"],
+    [/banana|lemon|citrus|sour neon|gold/, "245 205 60"],
+    [/lime|apple|melon|green/, "110 210 90"],
+    [/mint|polar|frost|alaskan|cool/, "70 220 210"],
+    [/coconut|cream|milk|gelato|pistachio/, "235 210 170"],
+    [/tobacco|cola/, "190 130 70"],
+    [/punch|pop|taffy|gami|ropes|candy/, "255 105 180"],
+    [/lucid|love|dream/, "200 120 255"],
+    [/lady killer|punch/, "225 55 85"],
+    [/ice|clear|frost/, "120 190 255"],
+  ];
+  for (const [re, rgb] of rules) if (re.test(n)) return rgb;
+  return "160 160 170";
+}
+
 const toSlug = (s: string) =>
   s
     .toLowerCase()

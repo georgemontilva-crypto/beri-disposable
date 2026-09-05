@@ -64,7 +64,12 @@ export default function Authenticate() {
   return (
     <PublicLayout>
       <div ref={revealRef}>
-        <section className="relative overflow-hidden noise-bg-dark">
+        {/* Calm and technical: a faint dot grid plus one soft pool of light
+            behind the form, rather than product imagery or strong colour. */}
+        <section
+          className="tech-grid form-glow relative overflow-hidden"
+          style={{ ["--form-glow" as string]: "74 222 128" }}
+        >
           <div className="container py-16 md:py-20">
             <div className="reveal mx-auto max-w-2xl text-center">
               <span

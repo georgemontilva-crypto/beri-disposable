@@ -901,3 +901,27 @@
   }
 }
 
+
+/* ─── Technical grid ───────────────────────────────────────────────────────
+   Dot grid for the functional pages. Deliberately fainter than the product
+   textures: these sections are meant to feel calm and precise, and a pattern
+   you consciously notice here starts competing with a form. */
+.tech-grid {
+  background-image: radial-gradient(rgb(255 255 255 / 6%) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+/* Soft pool of light behind a form, so the panel sits in something rather than
+   floating on flat black. */
+.form-glow::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    60% 55% at 50% 35%,
+    rgb(var(--form-glow, 74 222 128) / 0.1) 0%,
+    rgb(var(--form-glow, 74 222 128) / 0.04) 45%,
+    transparent 72%
+  );
+}

@@ -13,7 +13,7 @@
  */
 import { PlaceholderImage } from "@/components/PlaceholderImage";
 import type { PublicMediaEntry } from "@/hooks/useSiteImages";
-import { editionTextureSlot, type Flavor, type Product } from "@/lib/products";
+import { editionTextureSlot, flavorGlow, type Flavor, type Product } from "@/lib/products";
 import { useMemo, useState } from "react";
 import ColoredSmoke from "./ColoredSmoke";
 import Snowfall from "./Snowfall";
@@ -76,6 +76,8 @@ export default function FlavorShowcase({
   // leaves the featured slot showing something the wall below no longer lists.
   const featured: Flavor | undefined =
     visible.find((f) => f.slug === selected) ?? visible[0];
+
+  const glow = featured ? flavorGlow(featured.name) : "160 160 170";
 
   return (
     <section className="relative overflow-hidden py-20 text-white">
@@ -157,7 +159,24 @@ export default function FlavorShowcase({
 
         {/* ── Featured ────────────────────────────────────────────────── */}
         {featured && (
-          <div className="reveal mb-10 grid items-center gap-8 rounded-[2rem] border border-white/15 bg-white/[0.06] p-6 md:grid-cols-[1.3fr_1fr] md:p-8">
+          <div className="reveal relative mb-10 overflow-hidden rounded-[2rem] border border-white/15 bg-white/[0.06]">
+            {/*
+              Light, not paint: the selected flavour tints the space behind the
+              product rather than colouring the panel. A filled background would
+              fight the packaging, which is already saturated.
+
+              Transitioned rather than swapped, so moving along the wall reads
+              as the lighting changing instead of the card being replaced.
+            */}
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0 transition-[background] duration-700 ease-out"
+              style={{
+                background: `radial-gradient(120% 90% at 28% 45%, rgb(${glow} / 0.24) 0%, rgb(${glow} / 0.09) 42%, transparent 74%)`,
+              }}
+            />
+
+            <div className="relative grid items-center gap-8 p-6 md:grid-cols-[1.3fr_1fr] md:p-8">
             {/* Keyed on the flavour so the image re-runs its fade on each pick,
                 instead of swapping in place with no sense of change. */}
             <div key={featured.slug} className="animate-fade-in overflow-hidden rounded-[1.5rem]">
@@ -199,6 +218,7 @@ export default function FlavorShowcase({
                   ))}
                 </div>
               )}
+            </div>
             </div>
           </div>
         )}

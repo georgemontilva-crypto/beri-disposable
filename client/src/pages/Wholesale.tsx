@@ -128,7 +128,13 @@ export default function Wholesale() {
   return (
     <PublicLayout>
       <div ref={revealRef}>
-        <section className="relative overflow-hidden noise-bg-dark">
+        {/* Same treatment as verification but a different accent, so the two
+            functional pages read as a pair without looking like the same
+            section repeated. */}
+        <section
+          className="tech-grid form-glow relative overflow-hidden"
+          style={{ ["--form-glow" as string]: "124 92 255" }}
+        >
           <div className="container grid items-center gap-12 py-16 md:grid-cols-2 md:py-20">
             <div className="reveal">
               <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-neutral-300 backdrop-blur">
