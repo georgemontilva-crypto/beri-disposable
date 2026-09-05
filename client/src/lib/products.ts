@@ -522,11 +522,11 @@ export const BERI_CLIQ: Product = {
   eyebrow: "Pod System",
   headline: "ONE BATTERY. YOUR FLAVOR ROTATION.",
   summary:
-    "A refillable pod system. Swap flavors in seconds on a 900mAh battery, with an 18mL pre-filled 360° crystal tank.",
+    "A refillable pod system. Swap flavors in seconds on a 900 mAh battery, with an 18 mL pre-filled 360° crystal tank.",
   description:
     "BERI CLIQ pairs a rechargeable 900 mAh battery with interchangeable 18 mL pre-filled pods. A 360° crystal tank lets you see your e-liquid level, while dual-mesh technology, adjustable airflow, and two power modes deliver up to 50,000 puffs.",
   highlight: { value: "50K", unit: "Puffs" },
-  keySpecs: ["Refillable Pod System", "360° Crystal Tank", "900mAh USB-C"],
+  keySpecs: ["Refillable Pod System", "360° Crystal Tank", "900 mAh USB-C"],
   specs: [
     { label: "Puffs", value: "Up to 50,000" },
     { label: "Nicotine", value: "5%" },
@@ -572,7 +572,7 @@ export const BERI_CLIQ: Product = {
   highlights: [
     { value: "360°", label: "Crystal Tank", iconSlot: "cliq_icon_tank" },
     { value: "Dual Mesh", label: "Coil", iconSlot: "cliq_icon_coil" },
-    { value: "900mAh", label: "USB-C Battery", iconSlot: "cliq_icon_battery" },
+    { value: "900 mAh", label: "USB-C Battery", iconSlot: "cliq_icon_battery" },
   ],
   heroSlot: "cliq_hero",
   modelSlot: "cliq_model_3d",
@@ -806,17 +806,72 @@ export const BERI_ELIQUID: Product = {
         "Crisp apple layered with smooth caramel sweetness for a rich, candy-inspired finish.",
       notes: ["Apple", "Caramel", "Sweet"],
     },
-    "Apple Juice",
-    "Blue Frost",
-    "Citrus Squeeze",
-    "Grape Drank",
-    "Lime Frost",
-    "Minty O's",
-    "Mother's Milk",
-    "Pistachio Gelato",
-    "Red Ropes",
-    "Sunni Drank",
-    "Winter Green Saverz",
+    {
+      name: "Apple Juice",
+      description:
+        "Sweet pressed apple with a clean, juice-box finish.",
+      notes: ["Apple", "Juicy", "Sweet"],
+    },
+    {
+      name: "Blue Frost",
+      description:
+        "Blue raspberry chilled to a sharp, frosted finish.",
+      notes: ["Blue Razz", "Tart", "Ice"],
+    },
+    {
+      name: "Citrus Squeeze",
+      description:
+        "Bright mixed citrus with a zesty, freshly squeezed finish.",
+      notes: ["Citrus", "Zesty", "Fresh"],
+    },
+    {
+      name: "Grape Drank",
+      description:
+        "Rich purple grape soda with a smooth, syrupy finish.",
+      notes: ["Grape", "Soda", "Smooth"],
+    },
+    {
+      name: "Lime Frost",
+      description:
+        "Tart lime lifted by a cool, frosted edge.",
+      notes: ["Lime", "Tart", "Cool"],
+    },
+    {
+      name: "Minty O's",
+      description:
+        "Sweet cereal mint with a creamy, cooling finish.",
+      notes: ["Mint", "Cereal", "Creamy"],
+    },
+    {
+      name: "Mother's Milk",
+      description:
+        "Smooth cream layered with soft vanilla sweetness.",
+      notes: ["Cream", "Vanilla", "Smooth"],
+    },
+    {
+      name: "Pistachio Gelato",
+      description:
+        "Roasted pistachio folded into a rich, frozen cream.",
+      notes: ["Pistachio", "Nutty", "Creamy"],
+    },
+    {
+      name: "Red Ropes",
+      description:
+        "Chewy red licorice candy with a bright berry sweetness.",
+      notes: ["Licorice", "Berry", "Candy"],
+    },
+    {
+      name: "Sunni Drank",
+      description:
+        "Bright tropical punch with a sunny, citrus-forward finish.",
+      notes: ["Tropical", "Citrus", "Sweet"],
+    },
+    {
+      name: "Winter Green Saverz",
+      description:
+        "Cool wintergreen candy with a crisp, minty snap.",
+      notes: ["Wintergreen", "Mint", "Crisp"],
+    },
   ]),
 };
 
