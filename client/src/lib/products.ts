@@ -143,7 +143,7 @@ export const BERI_CRUSH: Product = {
   summary:
     "The flagship. Quad-mesh coil and up to 40W of auto-adaptive power, in the widest flavor range Beri makes.",
   description:
-    "Beri Crush reads your draw and adapts power in real time, delivering up to 40W through a quad-mesh coil. Up to 50,000 puffs of consistent flavor density, with a full-color display and the broadest flavor library in the line-up, including Summer and Winter limited editions.",
+    "Beri Crush reads your draw and adapts power in real time, delivering up to 40W through a quad-mesh coil. Up to 50,000 puffs of consistent flavor density, with a full-color display and an extensive flavor line-up, including Summer, Winter and Graffiti editions.",
   highlight: { value: "50K", unit: "Puffs" },
   keySpecs: ["Quad-Mesh Coil", "Up to 40W Power", "Auto-Adaptive Draw"],
   specs: [
