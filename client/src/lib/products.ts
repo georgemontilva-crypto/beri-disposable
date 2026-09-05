@@ -240,7 +240,7 @@ export const BERI_CLIQ: Product = {
     "A refillable pod system. Swap flavors in seconds on a 900mAh battery, with an 18mL pre-filled 360° crystal tank.",
   description:
     "Beri Cliq separates the battery from the pod, so one device carries your whole flavor rotation. An 18mL pre-filled 360° crystal tank clicks into a 900mAh USB-C battery, running a dual mesh coil with dual power modes for up to 50,000 puffs. Batteries come in six colors.",
-  highlight: { value: "18", unit: "mL Pod" },
+  highlight: { value: "50K", unit: "Puffs" },
   keySpecs: ["Refillable Pod System", "360° Crystal Tank", "900mAh USB-C"],
   specs: [
     { label: "Puffs", value: "Up to 50,000" },
