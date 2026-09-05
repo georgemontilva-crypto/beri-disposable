@@ -51,6 +51,12 @@ export type Product = {
    */
   howItWorks?: { title: string; body: string }[];
   /**
+   * Offer highlighted inside one range of the flavour section. Scoped to a
+   * range because an offer that applies to pods shouldn't follow the visitor
+   * into the batteries tab.
+   */
+  promo?: { range: string; badge: string; title: string; body: string };
+  /**
    * The two or three features worth their own icon, shown as a band under the
    * hero. Kept separate from `specs` because these are marketing claims chosen
    * per product, not the complete data sheet — Crush leads with its screen and
@@ -461,6 +467,12 @@ export const BERI_CLIQ: Product = {
     { label: "Pod", value: "Replaceable" },
   ],
   flavorIntro: "14 flavors. 6 battery colors. Build your CLIQ.",
+  promo: {
+    range: "Pods",
+    badge: "Limited Edition",
+    title: "5 + 1",
+    body: "Five pods and one limited edition battery, available on six of the fourteen flavors. While stocks last.",
+  },
   howItWorks: [
     {
       title: "1. Start with the CLIQ Kit",
@@ -480,7 +492,7 @@ export const BERI_CLIQ: Product = {
     },
   ],
   accent: "#22d3ee",
-  baseRangeLabel: "Classic",
+  baseRangeLabel: "Pods",
   logoSlot: "cliq_logo",
   textureSlot: "cliq_texture",
   panelSlot: "cliq_panel",

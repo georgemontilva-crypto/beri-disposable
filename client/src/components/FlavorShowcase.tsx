@@ -232,6 +232,35 @@ export default function FlavorShowcase({
           })}
         </div>
 
+        {/* Offer for the open range, above the wall it applies to. */}
+        {product.promo && product.promo.range === filter && (
+          <div
+            className="reveal mb-6 flex flex-col gap-4 rounded-2xl border p-5 sm:flex-row sm:items-center sm:gap-6"
+            style={{
+              borderColor: `${product.accent}66`,
+              backgroundColor: `${product.accent}12`,
+            }}
+          >
+            <div className="flex items-center gap-4">
+              <span
+                className="font-display text-4xl font-bold leading-none"
+                style={{ color: product.accent }}
+              >
+                {product.promo.title}
+              </span>
+              <span
+                className="rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-neutral-950"
+                style={{ backgroundColor: product.accent }}
+              >
+                {product.promo.badge}
+              </span>
+            </div>
+            <p className="text-sm leading-relaxed text-neutral-300">
+              {product.promo.body}
+            </p>
+          </div>
+        )}
+
         {/* ── Wall ────────────────────────────────────────────────────── */}
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
           {visible.map((f) => {

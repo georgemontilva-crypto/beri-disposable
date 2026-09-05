@@ -81,3 +81,19 @@ describe("ranges that reuse names", () => {
     expect(new Set(slots).size).toBe(batteries.length);
   });
 });
+
+describe("range-scoped promo", () => {
+  /** Mirrors the guard in FlavorShowcase. */
+  const shows = (promoRange: string, activeTab: string) => promoRange === activeTab;
+
+  it("shows the offer on the range it belongs to", () => {
+    expect(shows("Pods", "Pods")).toBe(true);
+  });
+
+  it("hides it on every other tab", () => {
+    // An offer on pods must not follow the visitor into the batteries tab,
+    // where it would advertise something that isn't on screen.
+    expect(shows("Pods", "Batteries")).toBe(false);
+    expect(shows("Pods", "Kits")).toBe(false);
+  });
+});
