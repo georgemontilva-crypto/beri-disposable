@@ -19,20 +19,22 @@ export default function PageTexture({ slot }: { slot: string }) {
     <div aria-hidden="true" className="pointer-events-none absolute inset-0">
       <div className="absolute inset-0 bg-black" />
       <div
-        className="absolute inset-0 opacity-[0.16]"
+        className="absolute inset-0 opacity-[0.34]"
         style={{
           backgroundImage: `url(${url})`,
           backgroundRepeat: "repeat",
           backgroundSize: "1200px auto",
-          filter: "brightness(0.7)",
+          filter: "brightness(0.95)",
         }}
       />
-      {/* Fades out downward so the pattern never runs under the form itself. */}
+      {/* Fades downward, but far later than before: the earlier ramp reached
+          near-black by the middle of the section, which hid the pattern exactly
+          where there was room to show it. */}
       <div
         className="absolute inset-0"
         style={{
           background:
-            "linear-gradient(180deg, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.6) 35%, rgba(0,0,0,0.9) 65%, #000 100%)",
+            "linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.15) 45%, rgba(0,0,0,0.65) 80%, rgba(0,0,0,0.95) 100%)",
         }}
       />
     </div>

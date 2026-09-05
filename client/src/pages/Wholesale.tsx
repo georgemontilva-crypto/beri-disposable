@@ -143,10 +143,11 @@ export default function Wholesale() {
             where a ribbon crosses the pattern it lifts it out of the black
             instead of covering it: the texture is lit rather than hidden.
 
-            Toned down from the flavour sections: this page is a form, and the
-            movement is meant to be felt at the edge of vision, not watched.
+            At 0.7 the ribbons were invisible: additive blending needs enough
+            opacity to actually lift the background, and below roughly 0.15 per
+            puff nothing separates from black.
           */}
-          <ColoredSmoke active intensity={0.7} />
+          <ColoredSmoke active intensity={1.5} />
 
           {/*
             One column, not two. The application is long enough that a side by
