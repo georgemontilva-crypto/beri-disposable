@@ -143,7 +143,7 @@ export default function Wholesale() {
             image.
           */}
           <div className="container mx-auto max-w-3xl py-16 md:py-20">
-            <div className="reveal">
+            <div className="reveal text-center">
               <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-neutral-300 backdrop-blur">
                 <Store className="h-3.5 w-3.5" />
                 Wholesale Program
@@ -151,12 +151,16 @@ export default function Wholesale() {
               <h1 className="mt-6 font-display text-4xl font-bold tracking-tight sm:text-5xl">
                 Become a BERI Partner
               </h1>
-              <p className="mt-4 max-w-md text-lg text-neutral-400">
+              <p className="mx-auto mt-4 max-w-xl text-lg text-neutral-400">
                 Join the BERI wholesale network and bring the full lineup to your
                 customers. Submit your application and our team will review it
                 for approval.
               </p>
-              <div className="mt-8 space-y-3">
+              {/* The list is centred as a block but each item stays
+                  left-aligned: centring the lines themselves would leave the
+                  icons and headings on a ragged edge and make the three harder
+                  to scan against each other. */}
+              <div className="mx-auto mt-8 inline-block space-y-3 text-left">
                 {benefits.map((b) => (
                   <div key={b.title} className="flex items-start gap-3">
                     <div className="rounded-lg bg-foreground p-2 text-background">
