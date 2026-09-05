@@ -156,6 +156,7 @@ export function flavorGlow(name: string): string {
     [/blueberry|black razz|razz|berry|berries/, "170 70 220"],
     [/mango|peach|caramel|sunni|orange/, "255 150 50"],
     [/banana|lemon|citrus|sour neon|gold/, "245 205 60"],
+    [/cran/, "205 50 70"],
     [/lime|apple|melon|green/, "110 210 90"],
     [/mint|polar|frost|alaskan|cool/, "70 220 210"],
     [/coconut|cream|milk|gelato|pistachio/, "235 210 170"],
@@ -387,7 +388,38 @@ export const BERI_CRUSH: Product = {
     ),
     ...buildFlavors(
       "crush",
-      ["Alaskan Mint", "Cherry Cola Gami", "Cran Apple Smash", "Punch Ice", "White Gami"],
+      [
+        {
+          name: "Alaskan Mint",
+          description:
+            "Sharp peppermint with a deep, frost-bitten finish.",
+          notes: ["Mint", "Crisp", "Extra Cool"],
+        },
+        {
+          name: "Cherry Cola Gami",
+          description:
+            "Sweet cherry cola with a chewy, gummy-inspired finish.",
+          notes: ["Cherry", "Cola", "Candy"],
+        },
+        {
+          name: "Cran Apple Smash",
+          description:
+            "Tart cranberry smashed together with crisp orchard apple.",
+          notes: ["Cranberry", "Apple", "Tart"],
+        },
+        {
+          name: "Punch Ice",
+          description:
+            "Bright fruit punch chilled to a sharp, frosty finish.",
+          notes: ["Fruit Punch", "Sweet", "Ice"],
+        },
+        {
+          name: "White Gami",
+          description:
+            "Soft white gummy candy with a smooth, sugary finish.",
+          notes: ["Gummy", "Candy", "Smooth"],
+        },
+      ],
       "Winter Edition"
     ),
     ...buildFlavors(
