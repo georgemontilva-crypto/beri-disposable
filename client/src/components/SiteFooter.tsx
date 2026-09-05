@@ -49,10 +49,10 @@ export function SiteFooter() {
             </h4>
             <ul className="mt-4 space-y-2 text-sm">
               <li><Link href="/" className="text-neutral-400 transition-colors hover:text-white">Home</Link></li>
-              <li><Link href="/products/crush" className="text-neutral-400 transition-colors hover:text-white">Beri Crush</Link></li>
-              <li><Link href="/products/cliq" className="text-neutral-400 transition-colors hover:text-white">Beri Cliq</Link></li>
-              <li><Link href="/products/cirql" className="text-neutral-400 transition-colors hover:text-white">Beri Cirql</Link></li>
-              <li><Link href="/products/eliquid" className="text-neutral-400 transition-colors hover:text-white">Beri E-Liquid</Link></li>
+              <li><Link href="/products/crush" className="text-neutral-400 transition-colors hover:text-white">BERI CRUSH</Link></li>
+              <li><Link href="/products/cliq" className="text-neutral-400 transition-colors hover:text-white">BERI CLIQ</Link></li>
+              <li><Link href="/products/cirql" className="text-neutral-400 transition-colors hover:text-white">BERI CIRQL</Link></li>
+              <li><Link href="/products/eliquid" className="text-neutral-400 transition-colors hover:text-white">BERI E-LIQUID</Link></li>
               <li><Link href="/authenticate" className="text-neutral-400 transition-colors hover:text-white">Verify</Link></li>
               <li><Link href="/wholesale" className="text-neutral-400 transition-colors hover:text-white">Wholesale</Link></li>
             </ul>

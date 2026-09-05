@@ -11,10 +11,10 @@ const NAV_LINKS = [
 ];
 
 const PRODUCT_LINKS = [
-  { label: "Beri Crush", href: "/products/crush" },
-  { label: "Beri Cliq", href: "/products/cliq" },
-  { label: "Beri Cirql", href: "/products/cirql" },
-  { label: "Beri E-Liquid", href: "/products/eliquid" },
+  { label: "BERI CRUSH", href: "/products/crush" },
+  { label: "BERI CLIQ", href: "/products/cliq" },
+  { label: "BERI CIRQL", href: "/products/cirql" },
+  { label: "BERI E-LIQUID", href: "/products/eliquid" },
 ];
 
 export function SiteNavbar() {
@@ -88,7 +88,7 @@ export function SiteNavbar() {
               )}
               onClick={() => setProductsOpen((v) => !v)}
             >
-              Products
+              Product
               <ChevronDown
                 className={cn("h-3.5 w-3.5 transition-transform duration-200", productsOpen && "rotate-180")}
               />
@@ -162,7 +162,7 @@ export function SiteNavbar() {
             </MobileLink>
           ))}
           <div className="px-4 pb-1 pt-3 text-xs font-semibold uppercase tracking-wider text-neutral-300">
-            Products
+            Product
           </div>
           {PRODUCT_LINKS.map((p) => (
             <MobileLink key={p.href} href={p.href} active={isActive(p.href)}>

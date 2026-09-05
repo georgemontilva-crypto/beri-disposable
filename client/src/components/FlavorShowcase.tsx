@@ -148,7 +148,7 @@ export default function FlavorShowcase({
             The Lineup
           </span>
           <h2 className="mt-3 font-display text-4xl font-bold tracking-tight">
-            {product.name} Flavors
+            {product.flavorTitle}
           </h2>
           <p className="mt-3 max-w-md text-neutral-300">
             {product.flavorIntro}

@@ -42,6 +42,8 @@ export type Product = {
   keySpecs: string[];
   /** Full spec list, shown as the small grid under the hero copy. */
   specs: { label: string; value: string }[];
+  /** Heading of the flavour section. Not always "<name> Flavors". */
+  flavorTitle: string;
   /** Line under the flavour section heading. */
   flavorIntro: string;
   /**
@@ -77,8 +79,8 @@ export type Product = {
   /** Overrides both background lights outright, as "r g b" strings. */
   glowColors?: [string, string];
   /**
-   * What the non-edition range is called. Three products call it "Classic";
-   * the e-liquid sells a salt nic line instead.
+   * What the non-edition range is called. Crush and Cirql call it the Core
+   * Collection, Cliq's base range is its pods, and the e-liquid is salt nic.
    */
   baseRangeLabel: string;
   /** Media slot for the product's own lockup, shown in place of the h1. */
@@ -189,6 +191,7 @@ export const BERI_CRUSH: Product = {
     { label: "Airflow", value: "Adjustable" },
     { label: "Origin", value: "Designed in USA" },
   ],
+  flavorTitle: "BERI CRUSH FLAVORS",
   flavorIntro: "35 Flavors. One CRUSH lineup. Select a flavor to explore.",
   howItWorks: [
     {
@@ -217,7 +220,7 @@ export const BERI_CRUSH: Product = {
     },
   ],
   accent: "#4ade80",
-  baseRangeLabel: "Classic",
+  baseRangeLabel: "Core Collection",
   logoSlot: "crush_logo",
   textureSlot: "crush_texture",
   panelSlot: "crush_panel",
@@ -466,6 +469,7 @@ export const BERI_CLIQ: Product = {
     { label: "Modes", value: "Normal / Eco Mode" },
     { label: "Pod", value: "Replaceable" },
   ],
+  flavorTitle: "BERI CLIQ COLLECTION",
   flavorIntro: "14 flavors. 6 battery colors. Build your CLIQ.",
   promo: {
     range: "Pods",
@@ -639,6 +643,7 @@ export const BERI_CIRQL: Product = {
     { label: "Profile", value: "Shisha-Inspired" },
     { label: "Modes", value: "Regular + Boost" },
   ],
+  flavorTitle: "BERI CIRQL FLAVORS",
   flavorIntro: "13 flavors. Select one to explore.",
   howItWorks: [
     {
@@ -661,7 +666,7 @@ export const BERI_CIRQL: Product = {
   accent: "#e0b44a",
   // Both lights in gold: amber and a deeper bronze.
   glowColors: ["224 180 74", "196 132 40"],
-  baseRangeLabel: "Classic",
+  baseRangeLabel: "Core Collection",
   logoSlot: "cirql_logo",
   textureSlot: "cirql_texture",
   panelSlot: "cirql_panel",
@@ -711,6 +716,7 @@ export const BERI_ELIQUID: Product = {
     { label: "Flavors", value: "12" },
     { label: "Cap", value: "Child-Resistant" },
   ],
+  flavorTitle: "BERI E-LIQUID FLAVORS",
   flavorIntro: "12 flavors. Select one to explore.",
   accent: "#ec4899",
   baseRangeLabel: "Salt Nic",
