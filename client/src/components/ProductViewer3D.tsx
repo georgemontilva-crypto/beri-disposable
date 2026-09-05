@@ -17,7 +17,7 @@ const Canvas3D = lazy(() => import("./ProductViewer3DCanvas"));
 /* ─── Error boundary: a corrupt GLB must not blank the whole page ─────────── */
 
 class ViewerErrorBoundary extends Component<
-  { children: ReactNode; fallback: ReactNode },
+  { children: ReactNode; fallback: ReactNode; onFail: () => void },
   { failed: boolean }
 > {
   state = { failed: false };
@@ -27,7 +27,13 @@ class ViewerErrorBoundary extends Component<
   }
 
   componentDidCatch(error: unknown) {
-    console.error("[ProductViewer3D] failed to render model:", error);
+    console.error(
+      "[ProductViewer3D] the model could not be loaded or rendered. " +
+        "Common causes: the bucket is missing a CORS rule for GET from this " +
+        "origin, the file is not a valid .glb, or WebGL is unavailable.",
+      error
+    );
+    this.props.onFail();
   }
 
   render() {
@@ -37,7 +43,15 @@ class ViewerErrorBoundary extends Component<
 
 /* ─── Placeholder shown when no model has been uploaded yet ───────────────── */
 
-function ViewerPlaceholder({ slot, label }: { slot: string; label: string }) {
+function ViewerPlaceholder({
+  slot,
+  label,
+  failed = false,
+}: {
+  slot: string;
+  label: string;
+  failed?: boolean;
+}) {
   return (
     <div className="relative flex h-full w-full flex-col items-center justify-center gap-3 rounded-[1.75rem] border border-dashed border-white/15 bg-neutral-900/60 text-center">
       <div className="rounded-2xl bg-white/5 p-4">
@@ -82,6 +96,7 @@ export default function ProductViewer3D({
   const containerRef = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
   const [autoRotate, setAutoRotate] = useState(true);
+  const [failed, setFailed] = useState(false);
 
   // Defer mounting the canvas until the viewer is near the viewport.
   useEffect(() => {
@@ -102,15 +117,29 @@ export default function ProductViewer3D({
 
   const fallbackImage = fallbackSlot ? media[fallbackSlot]?.url : undefined;
 
-  const placeholder = fallbackImage ? (
-    <img
-      src={fallbackImage}
-      alt={productName}
-      className="h-full w-full object-contain"
-    />
-  ) : (
-    <ViewerPlaceholder slot={slot} label={`${productName} in 3D`} />
-  );
+  /**
+   * Two different failures used to look identical: no model uploaded, and a
+   * model that exists but won't load. Both fell back to the product photo, so
+   * there was no way to tell which one was happening.
+   *
+   * Now the photo only stands in when there is genuinely nothing to show. A
+   * model that failed keeps the diagnostic panel, which names the slot and
+   * points at the console.
+   */
+  const placeholder =
+    fallbackImage && !url ? (
+      <img
+        src={fallbackImage}
+        alt={productName}
+        className="h-full w-full object-contain"
+      />
+    ) : (
+      <ViewerPlaceholder
+        slot={slot}
+        label={`${productName} in 3D`}
+        failed={failed}
+      />
+    );
 
   return (
     <div
@@ -122,7 +151,7 @@ export default function ProductViewer3D({
       {!url ? (
         placeholder
       ) : (
-        <ViewerErrorBoundary fallback={placeholder}>
+        <ViewerErrorBoundary fallback={placeholder} onFail={() => setFailed(true)}>
           {visible && (
             <Suspense fallback={<div className="h-full w-full animate-pulse bg-neutral-900" />}>
               <Canvas3D url={url} autoRotate={autoRotate} />
