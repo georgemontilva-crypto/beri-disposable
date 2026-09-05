@@ -135,10 +135,14 @@ export default function Wholesale() {
           className="tech-grid form-glow relative overflow-hidden"
           style={{ ["--form-glow" as string]: "124 92 255" }}
         >
-          {/* items-start, not items-center: the form is far taller than the
-              copy, and centring pushed the whole left column down to the fold
-              while the top of the page sat empty. */}
-          <div className="container grid items-start gap-12 py-16 md:grid-cols-2 md:py-20">
+          {/*
+            One column, not two. The application is long enough that a side by
+            side layout left most of the second column empty next to it, and the
+            gap grew with every field added. Stacked, the page reads in the
+            order it is used: what the programme is, then the form, then the
+            image.
+          */}
+          <div className="container mx-auto max-w-3xl py-16 md:py-20">
             <div className="reveal">
               <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-neutral-300 backdrop-blur">
                 <Store className="h-3.5 w-3.5" />
@@ -165,16 +169,6 @@ export default function Wholesale() {
                   </div>
                 ))}
               </div>
-              <div className="reveal mt-10 overflow-hidden rounded-[1.5rem]">
-                <PlaceholderImage
-                  slot="wholesale_banner"
-                  imageMap={images}
-                  width={1000}
-                  height={620}
-                  label="Wholesale"
-                  rounded="rounded-[1.5rem]"
-                />
-              </div>
 
               <p className="mt-8 text-sm text-neutral-400">
                 Already approved?{" "}
@@ -186,7 +180,7 @@ export default function Wholesale() {
             </div>
 
             {/* Form / Success */}
-            <div className="reveal" data-reveal-delay="120">
+            <div className="reveal mt-12" data-reveal-delay="120">
               {submitted ? (
                 <div className="glass rounded-[1.75rem] p-8 text-center shadow-xl">
                   <CheckCircle2 className="mx-auto h-14 w-14" />
@@ -378,6 +372,17 @@ export default function Wholesale() {
                   </button>
                 </form>
               )}
+            </div>
+
+            <div className="reveal mt-12 overflow-hidden rounded-[1.5rem]">
+              <PlaceholderImage
+                slot="wholesale_banner"
+                imageMap={images}
+                width={1280}
+                height={520}
+                label="Wholesale"
+                rounded="rounded-[1.5rem]"
+              />
             </div>
           </div>
         </section>
