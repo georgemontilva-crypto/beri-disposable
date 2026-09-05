@@ -1,5 +1,4 @@
-import LoadingScreen from "@/components/LoadingScreen";
-import { useCallback, useLayoutEffect, useState } from "react";
+import { useLayoutEffect } from "react";
 import { Route, Switch, useLocation } from "wouter";
 
 // Public pages
@@ -57,14 +56,9 @@ function ScrollToTop({ ready }: { ready: boolean }) {
 
 /* ─── App ─────────────────────────────────────────────────────────────────── */
 export default function App() {
-  const [loading, setLoading] = useState(true);
-  const handleDone = useCallback(() => setLoading(false), []);
-
   return (
     <>
-      {loading && <LoadingScreen onDone={handleDone} />}
-      {/* `ready` re-runs the reset once the loading screen releases the page. */}
-      <ScrollToTop ready={!loading} />
+      <ScrollToTop ready />
       <Switch>
         {/* Public */}
         <Route path="/" component={Home} />

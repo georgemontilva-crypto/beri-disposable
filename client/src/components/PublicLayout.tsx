@@ -1,4 +1,5 @@
 import { useLayoutEffect, useRef } from "react";
+import AgeGate from "./AgeGate";
 import { NicotineWarning } from "./NicotineWarning";
 import { SiteFooter } from "./SiteFooter";
 import { SiteNavbar } from "./SiteNavbar";
@@ -41,6 +42,9 @@ export function PublicLayout({
     // text-muted-foreground / bg-card on the public pages inverts at once
     // instead of needing a per-class rewrite.
     <div className="dark flex min-h-screen flex-col bg-neutral-900 text-foreground">
+
+      {/* Public pages only: the admin panel is behind a login already. */}
+      <AgeGate />
 
       <div ref={headerRef} className="fixed inset-x-0 top-0 z-50">
         {/* Legal nicotine warning, kept visible above the nav */}
