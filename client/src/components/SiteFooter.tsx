@@ -129,7 +129,8 @@ function FooterNewsletter() {
             New flavors, first
           </h2>
           <p className="mt-1 text-sm text-neutral-400">
-            Drops, limited editions and restocks, straight to your inbox.
+            Get the drop first. New drops, limited editions and restocks,
+            straight to your inbox.
           </p>
         </div>
 

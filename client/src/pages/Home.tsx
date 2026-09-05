@@ -132,9 +132,13 @@ function ActionStrip() {
             text would bury the image, while a wash plus a left-to-right ramp
             keeps the picture readable on the right of each column and dense
             under the copy on the left, where the words actually sit.
+
+            The vertical wash is lightest at the top, where nothing but the
+            eyebrow sits, so the pattern is visible as the band opens and only
+            closes in under the headings and buttons below.
           */}
-          <div className="absolute inset-0 bg-black/55" />
-          <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/40 to-black/70" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/25 via-black/50 to-black/70" />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/30 to-black/60" />
         </>
       )}
 
@@ -201,7 +205,7 @@ function WholesaleBand() {
   return (
     <div className="reveal flex flex-col justify-center border-white/20 px-6 py-16 md:border-l md:px-12">
       <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.25em] text-neutral-500">
-        <Store className="h-4 w-4" /> For retailers
+        <Store className="h-4 w-4" /> Wholesale partners
       </div>
       <h2 className="mt-4 font-display text-3xl font-bold tracking-tight sm:text-4xl">
         Carry Beri
