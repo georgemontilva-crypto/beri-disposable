@@ -4,6 +4,7 @@ import { useReveal } from "@/hooks/useReveal";
 import AuroraGlow from "@/components/AuroraGlow";
 import PinnedBanner from "@/components/PinnedBanner";
 import FlavorShowcase from "@/components/FlavorShowcase";
+import HowItWorks from "@/components/HowItWorks";
 import ProductViewer3D from "@/components/ProductViewer3D";
 import { useSiteImages, type PublicMediaEntry } from "@/hooks/useSiteImages";
 import { getNextProduct, getProductByKey, PRODUCTS } from "@/lib/products";
@@ -103,6 +104,14 @@ export default function ProductPage() {
                     </div>
                   ))}
                 </div>
+                {product.howItWorks && (
+                  <HowItWorks
+                    title={`How ${product.name.replace(/^BERI\s+/i, "").replace(/^Beri\s+/i, "")} Works`}
+                    items={product.howItWorks}
+                    accent={product.accent}
+                  />
+                )}
+
                 <Link
                   href="/authenticate"
                   className="press mt-7 inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-neutral-950 transition-opacity hover:opacity-90"

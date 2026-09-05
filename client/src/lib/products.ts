@@ -45,6 +45,12 @@ export type Product = {
   /** Line under the flavour section heading. */
   flavorIntro: string;
   /**
+   * Expandable explainer under the spec cards. Kept out of `specs` because
+   * these are explanations, not values: a spec answers "what", these answer
+   * "how it behaves".
+   */
+  howItWorks?: { title: string; body: string }[];
+  /**
    * The two or three features worth their own icon, shown as a band under the
    * hero. Kept separate from `specs` because these are marketing claims chosen
    * per product, not the complete data sheet — Crush leads with its screen and
@@ -178,6 +184,32 @@ export const BERI_CRUSH: Product = {
     { label: "Origin", value: "Designed in USA" },
   ],
   flavorIntro: "35 Flavors. One CRUSH lineup. Select a flavor to explore.",
+  howItWorks: [
+    {
+      title: "Adaptive Power",
+      body: "In Normal Mode, CRUSH responds to your draw and automatically adjusts power between 15 and 25W for a balanced experience.",
+    },
+    {
+      title: "CRUSH Mode",
+      body: "Activate CRUSH Mode to increase output up to 40W when you want stronger performance.",
+    },
+    {
+      title: "Quad-Mesh Technology",
+      body: "A quad-mesh coil system is designed to deliver consistent vapor and flavor across the life of the device.",
+    },
+    {
+      title: "Adjustable Airflow",
+      body: "Fine-tune the airflow to customize your draw preference.",
+    },
+    {
+      title: '1.77" HD Display',
+      body: "Monitor device information and settings directly from the full-color screen.",
+    },
+    {
+      title: "1,000 mAh Battery",
+      body: "Rechargeable battery capacity designed to support the device through its extended-use format.",
+    },
+  ],
   accent: "#4ade80",
   baseRangeLabel: "Classic",
   logoSlot: "crush_logo",
@@ -429,6 +461,24 @@ export const BERI_CLIQ: Product = {
     { label: "Pod", value: "Replaceable" },
   ],
   flavorIntro: "14 flavors. 6 battery colors. Build your CLIQ.",
+  howItWorks: [
+    {
+      title: "1. Start with the CLIQ Kit",
+      body: "Includes the rechargeable battery and one pre-filled pod.",
+    },
+    {
+      title: "2. Click in your pod",
+      body: "The 18 mL pre-filled pod connects to the reusable CLIQ battery.",
+    },
+    {
+      title: "3. Choose your mode",
+      body: "Normal Mode prioritizes extended use. CLIQ Mode increases output for a stronger experience.",
+    },
+    {
+      title: "4. Replace the pod",
+      body: "When the pod is empty, keep the battery and insert a new compatible CLIQ pod.",
+    },
+  ],
   accent: "#22d3ee",
   baseRangeLabel: "Classic",
   logoSlot: "cliq_logo",
@@ -578,6 +628,24 @@ export const BERI_CIRQL: Product = {
     { label: "Modes", value: "Regular + Boost" },
   ],
   flavorIntro: "13 flavors. Select one to explore.",
+  howItWorks: [
+    {
+      title: "Shisha-Inspired Profiles",
+      body: "Flavor profiles inspired by familiar hookah-lounge favorites, including Double Apple, Lady Killer and Love 66.",
+    },
+    {
+      title: "Quad-Mesh Technology",
+      body: "Designed for consistent flavor delivery across the extended-use format.",
+    },
+    {
+      title: "Regular + Boost Modes",
+      body: "Choose between the standard experience and increased output.",
+    },
+    {
+      title: "Extended Format",
+      body: "Designed for up to 150,000 puffs.",
+    },
+  ],
   accent: "#e0b44a",
   // Both lights in gold: amber and a deeper bronze.
   glowColors: ["224 180 74", "196 132 40"],
