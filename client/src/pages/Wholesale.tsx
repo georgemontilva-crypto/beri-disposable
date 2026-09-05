@@ -1,4 +1,5 @@
 import { PlaceholderImage } from "@/components/PlaceholderImage";
+import ColoredSmoke from "@/components/ColoredSmoke";
 import PageTexture from "@/components/PageTexture";
 import { PublicLayout } from "@/components/PublicLayout";
 import { useReveal } from "@/hooks/useReveal";
@@ -137,6 +138,15 @@ export default function Wholesale() {
           style={{ ["--form-glow" as string]: "124 92 255" }}
         >
           <PageTexture slot="wholesale_texture" />
+          {/*
+            Above the texture, below the content. The smoke draws additively, so
+            where a ribbon crosses the pattern it lifts it out of the black
+            instead of covering it: the texture is lit rather than hidden.
+
+            Toned down from the flavour sections: this page is a form, and the
+            movement is meant to be felt at the edge of vision, not watched.
+          */}
+          <ColoredSmoke active intensity={0.7} />
 
           {/*
             One column, not two. The application is long enough that a side by
