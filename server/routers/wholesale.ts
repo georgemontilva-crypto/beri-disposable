@@ -59,7 +59,12 @@ export const wholesaleRouter = beriRouter({
   presignDocument: beriPublicProcedure
     .input(
       z.object({
-        kind: z.enum(["business-license", "tobacco-license", "fein"]),
+        kind: z.enum([
+          "business-license",
+          "tobacco-license",
+          "fein",
+          "resale-certificate",
+        ]),
         fileName: z.string().min(1).max(200),
         mimeType: z.enum(DOC_TYPES),
       })
@@ -89,10 +94,16 @@ export const wholesaleRouter = beriRouter({
         company: z.string().min(1).max(255),
         email: z.string().email(),
         phone: z.string().max(64).optional(),
-        shippingAddress: z.string().max(2000).optional(),
+        shippingAddress: z.string().min(1).max(2000),
+        businessType: z.string().max(64).optional(),
+        locations: z.string().max(64).optional(),
+        website: z.string().max(512).optional(),
+        interestedIn: z.array(z.string().max(32)).max(10).optional(),
+        about: z.string().max(4000).optional(),
         businessLicenseUrl: z.string().url().max(1024),
         tobaccoLicenseUrl: z.string().url().max(1024),
         feinUrl: z.string().url().max(1024),
+        resaleCertUrl: z.string().url().max(1024),
       })
     )
     .mutation(async ({ input }) => {
@@ -109,10 +120,20 @@ export const wholesaleRouter = beriRouter({
         company: input.company.trim(),
         email: input.email.trim().toLowerCase(),
         phone: input.phone?.trim() || null,
-        shippingAddress: input.shippingAddress?.trim() || null,
+        shippingAddress: input.shippingAddress.trim(),
+        businessType: input.businessType?.trim() || null,
+        locations: input.locations?.trim() || null,
+        website: input.website?.trim() || null,
+        // Stored as a joined string: this is a lead form, and a lookup table
+        // for a list nobody queries on would be structure for its own sake.
+        interestedIn: input.interestedIn?.length
+          ? input.interestedIn.join(", ")
+          : null,
+        about: input.about?.trim() || null,
         businessLicenseUrl: input.businessLicenseUrl,
         tobaccoLicenseUrl: input.tobaccoLicenseUrl,
         feinUrl: input.feinUrl,
+        resaleCertUrl: input.resaleCertUrl,
         status: "pending",
       });
       // Notify the project owner (best-effort).

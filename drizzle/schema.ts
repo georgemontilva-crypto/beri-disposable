@@ -96,10 +96,18 @@ export const wholesaleInquiries = mysqlTable(
     email: varchar("email", { length: 320 }).notNull(),
     phone: varchar("phone", { length: 64 }),
     shippingAddress: text("shippingAddress"),
+    businessType: varchar("businessType", { length: 64 }),
+    /** Free text rather than an int: applicants write "12+" or "3 stores". */
+    locations: varchar("locations", { length: 64 }),
+    website: varchar("website", { length: 512 }),
+    /** Comma-separated product keys the applicant is interested in. */
+    interestedIn: varchar("interestedIn", { length: 255 }),
+    about: text("about"),
     /** Uploaded compliance documents, stored as public R2 URLs. */
     businessLicenseUrl: varchar("businessLicenseUrl", { length: 1024 }),
     tobaccoLicenseUrl: varchar("tobaccoLicenseUrl", { length: 1024 }),
     feinUrl: varchar("feinUrl", { length: 1024 }),
+    resaleCertUrl: varchar("resaleCertUrl", { length: 1024 }),
     status: mysqlEnum("status", ["pending", "approved", "rejected"])
       .default("pending")
       .notNull(),

@@ -9,12 +9,28 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { Link } from "wouter";
 
-type DocKind = "business-license" | "tobacco-license" | "fein";
+type DocKind =
+  | "business-license"
+  | "tobacco-license"
+  | "fein"
+  | "resale-certificate";
 
 const DOC_FIELDS: { kind: DocKind; label: string }[] = [
-  { kind: "business-license", label: "Business license image" },
-  { kind: "tobacco-license", label: "OTP / Vape / Tobacco License" },
+  { kind: "business-license", label: "Business License" },
+  { kind: "resale-certificate", label: "Resale Certificate / Sales Tax Permit" },
+  { kind: "tobacco-license", label: "Applicable Tobacco / Vapor License" },
   { kind: "fein", label: "Federal EIN Document (FEIN)" },
+];
+
+const BUSINESS_TYPES = ["Retailer", "Distributor", "Chain", "Other"];
+
+/** Product interest, as check boxes. Values are stored joined on the record. */
+const INTERESTS = [
+  "BERI CRUSH",
+  "BERI CLIQ",
+  "BERI CIRQL",
+  "BERI E-Liquid",
+  "Full Lineup",
 ];
 
 const INPUT =
@@ -34,12 +50,18 @@ export default function Wholesale() {
     phone: "",
     company: "",
     shippingAddress: "",
+    businessType: "",
+    locations: "",
+    website: "",
+    about: "",
   });
   const [docs, setDocs] = useState<Record<DocKind, string>>({
     "business-license": "",
+    "resale-certificate": "",
     "tobacco-license": "",
     fein: "",
   });
+  const [interests, setInterests] = useState<string[]>([]);
   const [submitted, setSubmitted] = useState(false);
 
   const submit = trpc.wholesale.submitInquiry.useMutation({
@@ -50,28 +72,57 @@ export default function Wholesale() {
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!form.email.trim() || !form.company.trim()) return;
+    if (
+      !form.firstName.trim() ||
+      !form.lastName.trim() ||
+      !form.email.trim() ||
+      !form.phone.trim() ||
+      !form.company.trim() ||
+      !form.shippingAddress.trim() ||
+      !form.businessType
+    ) {
+      toast.error("Please complete the required fields.");
+      return;
+    }
     if (missingDocs.length) {
       toast.error(`Please upload: ${missingDocs.map((d) => d.label).join(", ")}`);
       return;
     }
     submit.mutate({
-      firstName: form.firstName.trim() || undefined,
-      lastName: form.lastName.trim() || undefined,
+      firstName: form.firstName.trim(),
+      lastName: form.lastName.trim(),
       company: form.company.trim(),
       email: form.email.trim(),
-      phone: form.phone.trim() || undefined,
-      shippingAddress: form.shippingAddress.trim() || undefined,
+      phone: form.phone.trim(),
+      shippingAddress: form.shippingAddress.trim(),
+      businessType: form.businessType,
+      locations: form.locations.trim() || undefined,
+      website: form.website.trim() || undefined,
+      interestedIn: interests.length ? interests : undefined,
+      about: form.about.trim() || undefined,
       businessLicenseUrl: docs["business-license"],
       tobaccoLicenseUrl: docs["tobacco-license"],
       feinUrl: docs.fein,
+      resaleCertUrl: docs["resale-certificate"],
     });
   };
 
   const benefits = [
-    { icon: TrendingUp, title: "Competitive Margins", desc: "Pricing built for retail and distribution partners." },
-    { icon: Truck, title: "Reliable Supply", desc: "Consistent stock of the full BERI lineup." },
-    { icon: Store, title: "Brand Support", desc: "Marketing assets and authentication tools included." },
+    {
+      icon: TrendingUp,
+      title: "Wholesale Pricing",
+      desc: "Competitive pricing for qualified retail and distribution partners.",
+    },
+    {
+      icon: Truck,
+      title: "Full-Line Access",
+      desc: "Access to BERI products, flavors, and new releases.",
+    },
+    {
+      icon: Store,
+      title: "Brand Support",
+      desc: "Marketing assets, product information, and partner support.",
+    },
   ];
 
   return (
@@ -85,11 +136,12 @@ export default function Wholesale() {
                 Wholesale Program
               </span>
               <h1 className="mt-6 font-display text-4xl font-bold tracking-tight sm:text-5xl">
-                Become a BERI partner
+                Become a BERI Partner
               </h1>
-              <p className="mt-4 max-w-md text-lg text-muted-foreground">
-                Join our wholesale network and stock the premium BERI lineup. Submit
-                your application and our team will review it shortly.
+              <p className="mt-4 max-w-md text-lg text-neutral-400">
+                Join the BERI wholesale network and bring the full lineup to your
+                customers. Submit your application and our team will review it
+                for approval.
               </p>
               <div className="mt-8 space-y-3">
                 {benefits.map((b) => (
@@ -108,7 +160,7 @@ export default function Wholesale() {
                 Already approved?{" "}
                 <Link href="/wholesale/login" className="inline-flex items-center gap-1 font-semibold text-foreground underline underline-offset-4">
                   <Lock className="h-3.5 w-3.5" />
-                  Partner login
+                  Partner Login
                 </Link>
               </p>
             </div>
@@ -118,11 +170,13 @@ export default function Wholesale() {
               {submitted ? (
                 <div className="glass rounded-[1.75rem] p-8 text-center shadow-xl">
                   <CheckCircle2 className="mx-auto h-14 w-14" />
-                  <h2 className="mt-4 font-display text-2xl font-bold">Application received</h2>
-                  <p className="mt-3 text-muted-foreground">
-                    Thank you for your interest in BERI. Our team will review your
-                    application and, once approved, you'll receive an email to complete
-                    your account registration.
+                  <h2 className="mt-4 font-display text-2xl font-bold uppercase">
+                    Application Received
+                  </h2>
+                  <p className="mt-3 text-neutral-300">
+                    Thank you for your interest in becoming a BERI partner. Our
+                    wholesale team will review your information and contact you
+                    regarding the next steps.
                   </p>
                   <p className="mt-4 text-sm text-muted-foreground">
                     Questions? Email{" "}
@@ -133,21 +187,26 @@ export default function Wholesale() {
                 </div>
               ) : (
                 <form onSubmit={onSubmit} className="glass rounded-[1.75rem] p-6 shadow-xl sm:p-8">
-                  <h2 className="font-display text-xl font-bold">Wholesale application</h2>
+                  <h2 className="font-display text-xl font-bold uppercase">
+                    Wholesale Application
+                  </h2>
                   <p className="mt-1 text-sm text-muted-foreground">
                     Fields marked with * are required.
                   </p>
-                  <div className="mt-5 grid gap-4 sm:grid-cols-2">
-                    <Field label="First Name">
+                  <SectionLabel>Contact Information</SectionLabel>
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <Field label="First Name *">
                       <input
+                        required
                         value={form.firstName}
                         onChange={(e) => setForm({ ...form, firstName: e.target.value })}
                         className={INPUT}
                         placeholder="Jane"
                       />
                     </Field>
-                    <Field label="Last Name">
+                    <Field label="Last Name *">
                       <input
+                        required
                         value={form.lastName}
                         onChange={(e) => setForm({ ...form, lastName: e.target.value })}
                         className={INPUT}
@@ -164,14 +223,19 @@ export default function Wholesale() {
                         placeholder="you@company.com"
                       />
                     </Field>
-                    <Field label="Phone / Mobile">
+                    <Field label="Phone Number *">
                       <input
+                        required
                         value={form.phone}
                         onChange={(e) => setForm({ ...form, phone: e.target.value })}
                         className={INPUT}
                         placeholder="+1 555 000 0000"
                       />
                     </Field>
+                  </div>
+
+                  <SectionLabel>Business Information</SectionLabel>
+                  <div className="grid gap-4 sm:grid-cols-2">
                     <Field label="Company Name *" className="sm:col-span-2">
                       <input
                         required
@@ -181,8 +245,9 @@ export default function Wholesale() {
                         placeholder="Your business name"
                       />
                     </Field>
-                    <Field label="Shipping Address" className="sm:col-span-2">
+                    <Field label="Business / Shipping Address *" className="sm:col-span-2">
                       <textarea
+                        required
                         rows={2}
                         value={form.shippingAddress}
                         onChange={(e) =>
@@ -192,12 +257,41 @@ export default function Wholesale() {
                         placeholder="Street, city, state, ZIP"
                       />
                     </Field>
+                    <Field label="Business Type *">
+                      <select
+                        required
+                        value={form.businessType}
+                        onChange={(e) => setForm({ ...form, businessType: e.target.value })}
+                        className={INPUT}
+                      >
+                        <option value="">Select one</option>
+                        {BUSINESS_TYPES.map((t) => (
+                          <option key={t} value={t} className="bg-neutral-900">
+                            {t}
+                          </option>
+                        ))}
+                      </select>
+                    </Field>
+                    <Field label="Number of Locations">
+                      <input
+                        value={form.locations}
+                        onChange={(e) => setForm({ ...form, locations: e.target.value })}
+                        className={INPUT}
+                        placeholder="e.g. 3"
+                      />
+                    </Field>
+                    <Field label="Website / Social Media" className="sm:col-span-2">
+                      <input
+                        value={form.website}
+                        onChange={(e) => setForm({ ...form, website: e.target.value })}
+                        className={INPUT}
+                        placeholder="Optional"
+                      />
+                    </Field>
                   </div>
 
-                  <div className="mt-6 space-y-3">
-                    <p className="text-xs font-semibold uppercase tracking-wider text-neutral-400">
-                      Required documents
-                    </p>
+                  <SectionLabel>Documents</SectionLabel>
+                  <div className="space-y-3">
                     {DOC_FIELDS.map((d) => (
                       <DocUpload
                         key={d.kind}
@@ -208,6 +302,40 @@ export default function Wholesale() {
                       />
                     ))}
                   </div>
+
+                  <SectionLabel>Interested In</SectionLabel>
+                  <div className="grid gap-2 sm:grid-cols-2">
+                    {INTERESTS.map((item) => {
+                      const checked = interests.includes(item);
+                      return (
+                        <label
+                          key={item}
+                          className="flex cursor-pointer items-center gap-3 rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-sm transition-colors hover:bg-white/10"
+                        >
+                          <input
+                            type="checkbox"
+                            checked={checked}
+                            onChange={() =>
+                              setInterests((prev) =>
+                                checked ? prev.filter((v) => v !== item) : [...prev, item]
+                              )
+                            }
+                            className="h-4 w-4 accent-white"
+                          />
+                          {item}
+                        </label>
+                      );
+                    })}
+                  </div>
+
+                  <SectionLabel>Tell us about your business</SectionLabel>
+                  <textarea
+                    rows={3}
+                    value={form.about}
+                    onChange={(e) => setForm({ ...form, about: e.target.value })}
+                    className={`${INPUT} resize-none`}
+                    placeholder="Optional"
+                  />
 
                   {submit.isError && (
                     <p className="mt-4 text-sm text-destructive">
@@ -361,5 +489,15 @@ function DocUpload({
         <input type="file" accept={ACCEPT} onChange={onPick} className="sr-only" />
       </label>
     </div>
+  );
+}
+
+
+/** Groups the form into the sections the application is organised around. */
+function SectionLabel({ children }: { children: React.ReactNode }) {
+  return (
+    <p className="mb-3 mt-7 text-xs font-semibold uppercase tracking-[0.2em] text-neutral-400 first:mt-5">
+      {children}
+    </p>
   );
 }

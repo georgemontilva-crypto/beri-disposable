@@ -141,7 +141,19 @@ export default function AdminInquiries() {
                   <tr key={r.id} className="hover:bg-neutral-50">
                     <td className="px-5 py-3 text-neutral-500">{r.id}</td>
                     <td className="px-5 py-3 font-medium">{r.name}</td>
-                    <td className="px-5 py-3 text-neutral-600">{r.company ?? "—"}</td>
+                    <td className="px-5 py-3 text-neutral-600">
+                      {r.company ?? "—"}
+                      {/* Business type and locations sit under the company name
+                          rather than in columns of their own: the table is
+                          already at nine, and they only make sense together. */}
+                      {(r.businessType || r.locations) && (
+                        <div className="text-xs text-neutral-400">
+                          {[r.businessType, r.locations && `${r.locations} locations`]
+                            .filter(Boolean)
+                            .join(" · ")}
+                        </div>
+                      )}
+                    </td>
                     <td className="px-5 py-3 text-neutral-600">{r.email}</td>
                     <td className="px-5 py-3 text-neutral-600">{r.phone ?? "—"}</td>
                     <td className="px-5 py-3">
@@ -153,6 +165,7 @@ export default function AdminInquiries() {
                           which of the three arrived. */}
                       <div className="flex gap-1.5">
                         <DocLink url={r.businessLicenseUrl} title="Business license" label="BL" />
+                        <DocLink url={r.resaleCertUrl} title="Resale certificate" label="RC" />
                         <DocLink url={r.tobaccoLicenseUrl} title="Tobacco / vape license" label="TL" />
                         <DocLink url={r.feinUrl} title="Federal EIN document" label="EIN" />
                       </div>
