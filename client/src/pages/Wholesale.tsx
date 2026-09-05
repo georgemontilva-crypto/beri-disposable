@@ -1,4 +1,5 @@
 import { PlaceholderImage } from "@/components/PlaceholderImage";
+import PageTexture from "@/components/PageTexture";
 import { PublicLayout } from "@/components/PublicLayout";
 import { useReveal } from "@/hooks/useReveal";
 import { trpc } from "@/lib/trpc";
@@ -135,6 +136,8 @@ export default function Wholesale() {
           className="tech-grid form-glow relative overflow-hidden"
           style={{ ["--form-glow" as string]: "124 92 255" }}
         >
+          <PageTexture slot="wholesale_texture" />
+
           {/*
             One column, not two. The application is long enough that a side by
             side layout left most of the second column empty next to it, and the
@@ -142,7 +145,7 @@ export default function Wholesale() {
             order it is used: what the programme is, then the form, then the
             image.
           */}
-          <div className="container mx-auto max-w-3xl py-16 md:py-20">
+          <div className="container relative mx-auto max-w-3xl py-16 md:py-20">
             <div className="reveal text-center">
               <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-neutral-300 backdrop-blur">
                 <Store className="h-3.5 w-3.5" />

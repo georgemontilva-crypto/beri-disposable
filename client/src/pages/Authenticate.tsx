@@ -1,3 +1,4 @@
+import PageTexture from "@/components/PageTexture";
 import { PublicLayout } from "@/components/PublicLayout";
 import { useReveal } from "@/hooks/useReveal";
 import { trpc } from "@/lib/trpc";
@@ -70,7 +71,9 @@ export default function Authenticate() {
           className="tech-grid form-glow relative overflow-hidden"
           style={{ ["--form-glow" as string]: "74 222 128" }}
         >
-          <div className="container py-16 md:py-20">
+          <PageTexture slot="authenticate_texture" />
+
+          <div className="container relative py-16 md:py-20">
             <div className="reveal mx-auto max-w-2xl text-center">
               <span
                 className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-neutral-950"

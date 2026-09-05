@@ -93,7 +93,19 @@ function buildSlots(): SlotDef[] {
       size: "stretched to fit — gradients work best",
     },
     { slot: "authenticate_banner", label: "Authenticate — Banner", section: "Authenticate", size: "1600×600" },
+    {
+      slot: "authenticate_texture",
+      label: "Verify — Background texture",
+      section: "Authenticate",
+      size: "1200×1200 seamless tile",
+    },
     { slot: "wholesale_banner", label: "Wholesale — Banner", section: "Wholesale", size: "1280×520" },
+    {
+      slot: "wholesale_texture",
+      label: "Wholesale — Background texture",
+      section: "Wholesale",
+      size: "1200×1200 seamless tile",
+    },
   ];
 
   // Per-product slots are generated from the product catalogue, so adding a
