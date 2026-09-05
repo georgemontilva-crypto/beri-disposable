@@ -135,7 +135,10 @@ export default function Wholesale() {
           className="tech-grid form-glow relative overflow-hidden"
           style={{ ["--form-glow" as string]: "124 92 255" }}
         >
-          <div className="container grid items-center gap-12 py-16 md:grid-cols-2 md:py-20">
+          {/* items-start, not items-center: the form is far taller than the
+              copy, and centring pushed the whole left column down to the fold
+              while the top of the page sat empty. */}
+          <div className="container grid items-start gap-12 py-16 md:grid-cols-2 md:py-20">
             <div className="reveal">
               <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-neutral-300 backdrop-blur">
                 <Store className="h-3.5 w-3.5" />
@@ -162,7 +165,18 @@ export default function Wholesale() {
                   </div>
                 ))}
               </div>
-              <p className="mt-8 text-sm text-muted-foreground">
+              <div className="reveal mt-10 overflow-hidden rounded-[1.5rem]">
+                <PlaceholderImage
+                  slot="wholesale_banner"
+                  imageMap={images}
+                  width={1000}
+                  height={620}
+                  label="Wholesale"
+                  rounded="rounded-[1.5rem]"
+                />
+              </div>
+
+              <p className="mt-8 text-sm text-neutral-400">
                 Already approved?{" "}
                 <Link href="/wholesale/login" className="inline-flex items-center gap-1 font-semibold text-foreground underline underline-offset-4">
                   <Lock className="h-3.5 w-3.5" />
@@ -368,18 +382,6 @@ export default function Wholesale() {
           </div>
         </section>
 
-        <section className="container pb-20">
-          <div className="reveal">
-            <PlaceholderImage
-              slot="wholesale_banner"
-              imageMap={images}
-              width={1280}
-              height={360}
-              label="Wholesale lifestyle banner"
-              rounded="rounded-[2rem]"
-            />
-          </div>
-        </section>
       </div>
     </PublicLayout>
   );
