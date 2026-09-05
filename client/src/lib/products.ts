@@ -50,7 +50,7 @@ export type Product = {
   /** Overrides both background lights outright, as "r g b" strings. */
   glowColors?: [string, string];
   /**
-   * What the non-edition range is called. Three products call it "Original";
+   * What the non-edition range is called. Three products call it "Classic";
    * the e-liquid sells a salt nic line instead.
    */
   baseRangeLabel: string;
@@ -155,7 +155,7 @@ export const BERI_CRUSH: Product = {
     { label: "Origin", value: "Designed in USA" },
   ],
   accent: "#4ade80",
-  baseRangeLabel: "Original",
+  baseRangeLabel: "Classic",
   logoSlot: "crush_logo",
   textureSlot: "crush_texture",
   panelSlot: "crush_panel",
@@ -253,7 +253,7 @@ export const BERI_CLIQ: Product = {
     { label: "Pod", value: "Refillable" },
   ],
   accent: "#22d3ee",
-  baseRangeLabel: "Original",
+  baseRangeLabel: "Classic",
   logoSlot: "cliq_logo",
   textureSlot: "cliq_texture",
   panelSlot: "cliq_panel",
@@ -337,7 +337,7 @@ export const BERI_CIRQL: Product = {
   accent: "#e0b44a",
   // Both lights in gold: amber and a deeper bronze.
   glowColors: ["224 180 74", "196 132 40"],
-  baseRangeLabel: "Original",
+  baseRangeLabel: "Classic",
   logoSlot: "cirql_logo",
   textureSlot: "cirql_texture",
   panelSlot: "cirql_panel",
