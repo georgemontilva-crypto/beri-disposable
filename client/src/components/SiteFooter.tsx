@@ -126,11 +126,10 @@ function FooterNewsletter() {
       <div className="container flex flex-col gap-6 py-10 md:flex-row md:items-center md:justify-between">
         <div>
           <h2 className="font-display text-2xl font-bold tracking-tight text-white">
-            New flavors, first
+            Get the drop first
           </h2>
           <p className="mt-1 text-sm text-neutral-400">
-            Get the drop first. New drops, limited editions and restocks,
-            straight to your inbox.
+            New drops, limited editions and restocks, straight to your inbox.
           </p>
         </div>
 

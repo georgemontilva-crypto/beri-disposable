@@ -176,10 +176,11 @@ function VerifyBand() {
         <ShieldCheck className="h-4 w-4" /> Authenticity
       </div>
       <h2 className="mt-4 font-display text-3xl font-bold tracking-tight sm:text-4xl">
-        Is Your Beri Real?
+        Verify Your Beri
       </h2>
       <p className="mt-3 max-w-sm text-sm text-neutral-400">
-        Scratch the label and enter the code. Every genuine device carries one.
+        Scratch the authentication label to reveal your security code, then
+        enter it below.
       </p>
 
       <form onSubmit={onSubmit} className="mt-6 flex max-w-sm gap-2">
@@ -211,8 +212,8 @@ function WholesaleBand() {
         Carry Beri
       </h2>
       <p className="mt-3 max-w-sm text-sm text-neutral-400">
-        Displays of 5, master cases of 20, and full flavor coverage across all
-        four lines.
+        5-unit displays, 20-display master cases, and full flavor assortments
+        across all four BERI product lines.
       </p>
       <Link
         href="/wholesale"
