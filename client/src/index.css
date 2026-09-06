@@ -377,9 +377,13 @@
   will-change: transform;
 }
 
+/* No hue animation here.
+   Animating `filter` on a full-viewport layer repaints that whole area every
+   frame, twice over with both lights, for as long as the page is open — it was
+   the single most expensive thing on the site. The two lights already differ in
+   colour and drift independently, which is what the effect actually reads as. */
 .aurora-hue {
-  animation: aurora-hue 42s linear infinite;
-  will-change: filter;
+  will-change: auto;
 }
 
 @keyframes aurora-drift {
@@ -388,15 +392,6 @@
   }
   to {
     transform: translate(-50%, -10vh) scale(1.1);
-  }
-}
-
-@keyframes aurora-hue {
-  from {
-    filter: hue-rotate(0deg);
-  }
-  to {
-    filter: hue-rotate(360deg);
   }
 }
 
@@ -417,9 +412,7 @@
 }
 
 .aurora-hue-2 {
-  animation: aurora-hue 55s linear infinite;
-  animation-delay: -19s;
-  will-change: filter;
+  will-change: auto;
 }
 
 @keyframes aurora-drift-2 {
@@ -436,218 +429,6 @@
   .aurora-drift-2,
   .aurora-hue,
   .aurora-hue-2 {
-    animation: none;
-  }
-}
-
-/* ─── Floating media ───────────────────────────────────────────────────────
-   Gentle bob for product imagery. The base scale is above 1 so the vertical
-   travel never exposes the edges of the frame it sits in, and the shadow
-   deepens as the element rises, which is what actually sells the height —
-   movement alone reads as sliding, not floating. */
-.float-media {
-  animation: float-media 7s ease-in-out infinite;
-  will-change: transform, filter;
-}
-
-@keyframes float-media {
-  0%,
-  100% {
-    transform: translateY(0) scale(1.05);
-    filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.45));
-  }
-  50% {
-    transform: translateY(-10px) scale(1.07);
-    filter: drop-shadow(0 22px 28px rgba(0, 0, 0, 0.55));
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .float-media {
-    animation: none;
-    transform: scale(1.05);
-  }
-}
-
-/* ─── Rainbow scrollbar ────────────────────────────────────────────────────
-   Firefox only accepts a flat colour for scrollbar-thumb, so it gets a single
-   brand tone; WebKit gets the gradient. */
-* {
-  scrollbar-width: thin;
-  scrollbar-color: hsl(265 80% 60%) transparent;
-}
-
-::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
-}
-
-::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.04);
-}
-
-::-webkit-scrollbar-thumb {
-  border-radius: 999px;
-  /* Fixed rainbow: the thumb is the thing being dragged, and recolouring it
-     under the pointer while scrolling is distracting. */
-  background: linear-gradient(
-    180deg,
-    #ff5f6d,
-    #ffc371,
-    #47e5bc,
-    #4facfe,
-    #a06bff,
-    #ff5f6d
-  );
-  border: 2px solid transparent;
-  background-clip: padding-box;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  filter: brightness(1.15);
-}
-
-/* ─── 3D tilt cards ───────────────────────────────────────────────────────── */
-.tilt-card {
-  transform-style: preserve-3d;
-  transition: transform 400ms cubic-bezier(0.22, 1, 0.36, 1);
-  will-change: transform;
-}
-
-/* ─── Animated colour outlines ─────────────────────────────────────────────
-   A gradient border isn't something CSS can animate directly, so the ring is a
-   pseudo-element: a gradient fill with a mask that punches out everything but a
-   1.5px frame. The colour movement comes from sliding an oversized background
-   rather than animating the gradient stops, which browsers can't interpolate.
-
-   The palette repeats its first colour at the end so the slide loops without a
-   visible seam. */
-.rainbow-ring {
-  position: relative;
-}
-
-.rainbow-ring::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  padding: 1.5px;
-  background: linear-gradient(
-    90deg,
-    #ff4d6d,
-    #ffb020,
-    #3ddc97,
-    #35b8ff,
-    #a06bff,
-    #ff4d6d
-  );
-  background-size: 300% 100%;
-  animation: rainbow-slide 9s linear infinite;
-  /* Two masks composited to exclude: the outer fills the whole box, the inner
-     covers the content area, and the difference is the frame. */
-  -webkit-mask:
-    linear-gradient(#000 0 0) content-box,
-    linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor;
-  mask:
-    linear-gradient(#000 0 0) content-box,
-    linear-gradient(#000 0 0);
-  mask-composite: exclude;
-  pointer-events: none;
-  z-index: 2;
-}
-
-/* Edge-to-edge bar: a full ring would run off both sides of the screen, so the
-   navigation gets a single moving line along its bottom edge instead. */
-.rainbow-edge {
-  position: relative;
-}
-
-.rainbow-edge::after {
-  content: "";
-  position: absolute;
-  inset: auto 0 0 0;
-  /* Kept below any panel that hangs off the bar; the line is trim, not
-     something that should cross a menu. */
-  z-index: 1;
-  height: 1.5px;
-  background: linear-gradient(
-    90deg,
-    #ff4d6d,
-    #ffb020,
-    #3ddc97,
-    #35b8ff,
-    #a06bff,
-    #ff4d6d
-  );
-  background-size: 300% 100%;
-  animation: rainbow-slide 9s linear infinite;
-  pointer-events: none;
-}
-
-/* Same moving line along the top edge, for dividers that sit above their
-   content instead of below it. */
-.rainbow-edge-top {
-  position: relative;
-}
-
-.rainbow-edge-top::before {
-  content: "";
-  position: absolute;
-  inset: 0 0 auto 0;
-  z-index: 1;
-  height: 1.5px;
-  background: linear-gradient(
-    90deg,
-    #ff4d6d,
-    #ffb020,
-    #3ddc97,
-    #35b8ff,
-    #a06bff,
-    #ff4d6d
-  );
-  background-size: 300% 100%;
-  animation: rainbow-slide 9s linear infinite;
-  pointer-events: none;
-}
-
-/* Underline for the navigation links. Its own class rather than reusing
-   .rainbow-edge: that one is a pseudo-element pinned to an element's edge,
-   while this needs to be a real node so it can be scaled from the centre. */
-.nav-underline {
-  transform-origin: center;
-  background: linear-gradient(
-    90deg,
-    #ff4d6d,
-    #ffb020,
-    #3ddc97,
-    #35b8ff,
-    #a06bff,
-    #ff4d6d
-  );
-  background-size: 300% 100%;
-  animation: rainbow-slide 5s linear infinite;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .nav-underline {
-    animation: none;
-  }
-}
-
-@keyframes rainbow-slide {
-  from {
-    background-position: 0% 50%;
-  }
-  to {
-    background-position: 300% 50%;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .rainbow-ring::after,
-  .rainbow-edge::after,
-  .rainbow-edge-top::before {
     animation: none;
   }
 }

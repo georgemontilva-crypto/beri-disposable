@@ -103,7 +103,9 @@ export default function SmokeVapor() {
       makeNoiseSprite(i * 7919 + 13, SPRITE_SIZE)
     );
     // The effect is diffuse; extra resolution buys nothing and costs fill rate.
-    const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+    // 1.25, not 1.5: the effect is soft-edged noise, so extra resolution is
+    // invisible while fill rate scales with its square.
+    const dpr = Math.min(window.devicePixelRatio || 1, 1.25);
 
     let w = 0;
     let h = 0;

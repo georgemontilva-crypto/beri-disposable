@@ -90,7 +90,16 @@ function Model({
   autoRotate: boolean;
   onReady?: () => void;
 }) {
-  const { scene } = useGLTF(url);
+  /*
+   * Draco and Meshopt decoders enabled.
+   *
+   * Without them `useGLTF` can only read uncompressed GLB, and every model
+   * built to the spec we hand out — which asks for Draco or Meshopt, since it
+   * takes a 20 MB export down to 3 MB — would fail to load and fall through to
+   * the error boundary. The decoders are fetched only when a compressed file
+   * actually needs them.
+   */
+  const { scene } = useGLTF(url, true, true);
   const ref = useRef<Group>(null);
   const inner = useRef<Group>(null);
   const { invalidate } = useThree();
