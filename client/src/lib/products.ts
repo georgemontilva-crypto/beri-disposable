@@ -79,8 +79,8 @@ export type Product = {
   /** Overrides both background lights outright, as "r g b" strings. */
   glowColors?: [string, string];
   /**
-   * What the non-edition range is called. Crush and Cirql call it the Core
-   * Collection, Cliq's base range is its pods, and the e-liquid is salt nic.
+   * What the non-edition range is called: Core Collection on Crush, E-Hookah on
+   * Cirql, Pods on Cliq and Salt Nicotine on the e-liquid.
    */
   baseRangeLabel: string;
   /**
@@ -862,7 +862,7 @@ export const BERI_ELIQUID: Product = {
   flavorTitle: "BERI SALT NICOTINE FLAVORS",
   flavorIntro: "12 flavors. Select one to explore.",
   accent: "#ec4899",
-  baseRangeLabel: "Salt Nic",
+  baseRangeLabel: "Salt Nicotine",
   logoSlot: "eliquid_logo",
   textureSlot: "eliquid_texture",
   panelSlot: "eliquid_panel",
