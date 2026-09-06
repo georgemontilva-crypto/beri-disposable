@@ -547,7 +547,7 @@ export const BERI_CLIQ: Product = {
   promo: {
     range: "Pods",
     badge: "Limited Edition",
-    title: "5 + 1",
+    title: "25 Flavors 5+1",
     body: "Five pods and one limited edition battery, available on six of the fourteen flavors. While stocks last.",
   },
   howItWorks: [
@@ -777,7 +777,7 @@ export const BERI_CIRQL: Product = {
   summary:
     "Hookah, without the setup. 150,000 puffs of authentic shisha flavor through a quad mesh coil.",
   description:
-    "BERI CIRQL brings the hookah-lounge flavor experience into a high-capacity disposable format. Built with quad-mesh technology and up to 150,000 puffs, CIRQL features shisha-inspired profiles such as Double Apple, Lady Killer and Love 66.",
+    "BERI CIRQL brings the hookah flavor experience into a high-capacity disposable format. Built with quad-mesh technology and up to 150,000 puffs, CIRQL features shisha-inspired profiles such as Double Apple, Lady Killer and Love 66.",
   highlight: { value: "150K", unit: "Puffs" },
   keySpecs: ["Authentic Shisha Flavor", "Quad Mesh Coil", "Made in USA"],
   specs: [
@@ -809,7 +809,7 @@ export const BERI_CIRQL: Product = {
   accent: "#e0b44a",
   // Both lights in gold: amber and a deeper bronze.
   glowColors: ["224 180 74", "196 132 40"],
-  baseRangeLabel: "Core Collection",
+  baseRangeLabel: "E-Hookah",
   logoSlot: "cirql_logo",
   textureSlot: "cirql_texture",
   panelSlot: "cirql_panel",
@@ -859,7 +859,7 @@ export const BERI_ELIQUID: Product = {
     { label: "Flavors", value: "12" },
     { label: "Cap", value: "Child-Resistant" },
   ],
-  flavorTitle: "BERI E-LIQUID FLAVORS",
+  flavorTitle: "BERI SALT NICOTINE FLAVORS",
   flavorIntro: "12 flavors. Select one to explore.",
   accent: "#ec4899",
   baseRangeLabel: "Salt Nic",
