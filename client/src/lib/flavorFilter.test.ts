@@ -97,3 +97,37 @@ describe("range-scoped promo", () => {
     expect(shows("Pods", "Kits")).toBe(false);
   });
 });
+
+describe("explicit tab order", () => {
+  /** Mirrors the ordering in FlavorShowcase. */
+  function order(present: string[], rangeOrder?: string[]): string[] {
+    if (!rangeOrder) return present;
+    const ranked = rangeOrder.filter((r) => present.includes(r));
+    return [...ranked, ...present.filter((r) => !ranked.includes(r))];
+  }
+
+  it("puts Kits before Pods when the product asks for it", () => {
+    expect(order(["Pods", "Kits", "Batteries"], ["Kits", "Pods", "Batteries"])).toEqual([
+      "Kits",
+      "Pods",
+      "Batteries",
+    ]);
+  });
+
+  it("skips a range in the order that has nothing uploaded", () => {
+    // Otherwise a product would show an empty tab just because the order
+    // mentions it.
+    expect(order(["Pods"], ["Kits", "Pods", "Batteries"])).toEqual(["Pods"]);
+  });
+
+  it("keeps a range that the order forgot to mention", () => {
+    expect(order(["Pods", "Mystery"], ["Pods"])).toEqual(["Pods", "Mystery"]);
+  });
+
+  it("leaves order alone when the product doesn't specify one", () => {
+    expect(order(["Core Collection", "Summer Edition"])).toEqual([
+      "Core Collection",
+      "Summer Edition",
+    ]);
+  });
+});

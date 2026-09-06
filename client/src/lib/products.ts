@@ -83,6 +83,11 @@ export type Product = {
    * Collection, Cliq's base range is its pods, and the e-liquid is salt nic.
    */
   baseRangeLabel: string;
+  /**
+   * Tab order, when it shouldn't be "base range first, then editions as they
+   * appear". Cliq sells kits before loose pods, so its tabs lead with Kits.
+   */
+  rangeOrder?: string[];
   /** Media slot for the product's own lockup, shown in place of the h1. */
   logoSlot: string;
   /** Media slot for a tiling brand pattern used behind the flavour section. */
@@ -538,7 +543,7 @@ export const BERI_CLIQ: Product = {
     { label: "Pod", value: "Replaceable" },
   ],
   flavorTitle: "BERI CLIQ COLLECTION",
-  flavorIntro: "14 flavors. 6 battery colors. Build your CLIQ.",
+  flavorIntro: "10 kits. 14 pods. 6 battery colors. Build your CLIQ.",
   promo: {
     range: "Pods",
     badge: "Limited Edition",
@@ -565,6 +570,7 @@ export const BERI_CLIQ: Product = {
   ],
   accent: "#22d3ee",
   baseRangeLabel: "Pods",
+  rangeOrder: ["Kits", "Pods", "Batteries"],
   logoSlot: "cliq_logo",
   textureSlot: "cliq_texture",
   panelSlot: "cliq_panel",
@@ -663,6 +669,75 @@ export const BERI_CLIQ: Product = {
         notes: ["Tobacco", "Rich", "Classic"],
       },
     ]),
+    // Kits repeat pod names, so they need their own slug prefix or both
+    // would resolve to the same media slot.
+    ...buildFlavors(
+      "cliq",
+      [
+        {
+          name: "Blue Razz Ice",
+          description:
+            "Tangy blue raspberry with a crisp icy finish.",
+          notes: ["Blue Razz", "Tart", "Ice"],
+        },
+        {
+          name: "Clear",
+          description:
+            "A clean, understated profile with minimal added flavor.",
+          notes: ["Clean", "Light", "Neutral"],
+        },
+        {
+          name: "Grape Ice",
+          description:
+            "Bold grape sweetness balanced by a chilled finish.",
+          notes: ["Grape", "Sweet", "Ice"],
+        },
+        {
+          name: "Miami Mint",
+          description:
+            "Fresh mint with a smooth, refreshing cooling finish.",
+          notes: ["Mint", "Fresh", "Cool"],
+        },
+        {
+          name: "Peach Ice",
+          description:
+            "Ripe peach sweetness paired with a light icy finish.",
+          notes: ["Peach", "Sweet", "Ice"],
+        },
+        {
+          name: "Super Mint",
+          description:
+            "Strong, refreshing mint with an intensely cool finish.",
+          notes: ["Mint", "Fresh", "Extra Cool"],
+        },
+        {
+          name: "Tobacco",
+          description:
+            "A classic tobacco-style profile with a smooth, familiar finish.",
+          notes: ["Tobacco", "Rich", "Classic"],
+        },
+        {
+          name: "Watermelon Ice",
+          description:
+            "Juicy watermelon balanced by a refreshing icy finish.",
+          notes: ["Watermelon", "Juicy", "Ice"],
+        },
+        {
+          name: "White Gami",
+          description:
+            "Soft white gummy candy with a smooth, sugary finish.",
+          notes: ["Gummy", "Candy", "Smooth"],
+        },
+        {
+          name: "White Strawberry",
+          description:
+            "Smooth, sweet strawberry with a softer fruit-forward finish.",
+          notes: ["Strawberry", "Sweet", "Smooth"],
+        },
+      ],
+      "Kits",
+      "kit-"
+    ),
     ...buildFlavors(
       "cliq",
       [

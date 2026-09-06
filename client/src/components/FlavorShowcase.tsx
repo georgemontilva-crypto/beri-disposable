@@ -60,8 +60,15 @@ export default function FlavorShowcase({
       if (f.edition && !editions.includes(f.edition)) editions.push(f.edition);
     }
     const hasBase = mounted.some((f) => !f.edition);
-    return [...(hasBase ? [product.baseRangeLabel] : []), ...editions];
-  }, [mounted, product.baseRangeLabel]);
+    const present = [...(hasBase ? [product.baseRangeLabel] : []), ...editions];
+
+    // An explicit order wins, but only over ranges that actually exist: a
+    // product shouldn't get a tab for a range whose images aren't uploaded yet
+    // just because the order mentions it.
+    if (!product.rangeOrder) return present;
+    const ranked = product.rangeOrder.filter((r) => present.includes(r));
+    return [...ranked, ...present.filter((r) => !ranked.includes(r))];
+  }, [mounted, product.baseRangeLabel, product.rangeOrder]);
 
   const visible = useMemo(
     () =>
