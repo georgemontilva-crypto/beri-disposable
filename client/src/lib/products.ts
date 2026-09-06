@@ -791,7 +791,7 @@ export const BERI_CIRQL: Product = {
   howItWorks: [
     {
       title: "Shisha-Inspired Profiles",
-      body: "Flavor profiles inspired by familiar hookah-lounge favorites, including Double Apple, Lady Killer and Love 66.",
+      body: "Flavor profiles inspired by familiar hookah favorites, including Double Apple, Lady Killer and Love 66.",
     },
     {
       title: "Quad-Mesh Technology",
