@@ -239,7 +239,7 @@ export const BERI_CRUSH: Product = {
     { label: "Origin", value: "Designed in USA" },
   ],
   flavorTitle: "BERI CRUSH FLAVORS",
-  flavorIntro: "35 Flavors. One CRUSH lineup. Select a flavor to explore.",
+  flavorIntro: "35 Options. One CRUSH lineup. Select a flavor to explore.",
   howItWorks: [
     {
       title: "Adaptive Power",
