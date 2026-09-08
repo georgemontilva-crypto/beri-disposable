@@ -194,7 +194,6 @@ export default function ProductPage() {
           slot={rangeBannerSlot(product.key, range)}
           fallbackSlot={`${product.key}_banner`}
           label={`${product.name} lifestyle banner`}
-          className="h-[75vh] min-h-[420px]"
         />
 
         {/* ── Cross-sell (scroll to top + navigate) ────────────────────── */}

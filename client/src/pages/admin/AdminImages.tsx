@@ -162,7 +162,7 @@ function buildSlots(): SlotDef[] {
       slot: `${p.key}_banner`,
       label: `${p.name} — Banner (default)`,
       section,
-      size: "1600×900",
+      size: "any shape — shown whole",
     });
     // One optional banner per range, shown while that tab is open. Without one
     // the range falls back to the default above.
@@ -176,7 +176,7 @@ function buildSlots(): SlotDef[] {
         slot: rangeBannerSlot(p.key, range),
         label: `${range} — Banner`,
         section,
-        size: "1600×900",
+        size: "any shape — shown whole",
       });
     }
     // One icon per highlight.

@@ -163,3 +163,20 @@ describe("per-range banner slot", () => {
     expect(rangeBannerSlot("crush", "0% Nicotine")).toBe("crush_banner_0-nicotine");
   });
 });
+
+describe("banner aspect ratio", () => {
+  const DEFAULT_ASPECT = 16 / 9;
+  /** Mirrors PinnedBanner: measured ratio when known, default until then. */
+  const ratio = (natural: number | null) => natural ?? DEFAULT_ASPECT;
+
+  it("uses the file's own proportions once measured", () => {
+    expect(ratio(2400 / 800)).toBeCloseTo(3);
+    expect(ratio(1000 / 1000)).toBe(1);
+  });
+
+  it("falls back to 16:9 before the image has loaded", () => {
+    // Without a default the section would have zero height on first paint and
+    // the page below would jump once the image arrived.
+    expect(ratio(null)).toBeCloseTo(16 / 9);
+  });
+});
