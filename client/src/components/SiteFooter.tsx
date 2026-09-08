@@ -38,8 +38,9 @@ export function SiteFooter() {
               </div>
             )}
             <p className="mt-4 max-w-sm text-sm leading-relaxed text-neutral-300">
-              Premium disposable and pod systems. Verify the authenticity of your
-              genuine BERI product and explore the full lineup.
+              BERI&rsquo;s lineup includes disposable hookahs, vapes, pod systems
+              and e-liquids. Our product family spans multiple formats,
+              exclusively for adults of legal purchasing age.
             </p>
           </div>
 
