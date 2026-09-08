@@ -213,7 +213,7 @@ function buildFlavors(
 export const BERI_CRUSH: Product = {
   key: "crush",
   name: "Beri Crush",
-  tagline: "Auto-Adaptive Draw.",
+  tagline: "Your New Crush.",
   eyebrow: "Beri Disposable",
   headline: "AUTO-ADAPTIVE POWER.",
   summary:
@@ -771,7 +771,7 @@ export const CLIQ_KITS = [
 export const BERI_CIRQL: Product = {
   key: "cirql",
   name: "BERI CIRQL",
-  tagline: "Authentic Shisha Flavor.",
+  tagline: "Built For After Hours.",
   eyebrow: "E-Hookah Series",
   headline: "SHISHA, REIMAGINED.",
   summary:
@@ -843,7 +843,7 @@ export const BERI_CIRQL: Product = {
 export const BERI_ELIQUID: Product = {
   key: "eliquid",
   name: "BERI E-LIQUID",
-  tagline: "The Flavor, Bottled.",
+  tagline: "The Best Damn Disposable Flavors In A Bottle.",
   eyebrow: "Bottled E-Liquid",
   headline: "THE FLAVOR, BOTTLED.",
   summary:
