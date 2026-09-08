@@ -548,7 +548,7 @@ export const BERI_CLIQ: Product = {
     { label: "Pod", value: "Replaceable" },
   ],
   flavorTitle: "BERI CLIQ COLLECTION",
-  flavorIntro: "10 kits. 14 pods. 6 battery colors. Build your CLIQ.",
+  flavorIntro: "10 Kits. 25 Pods. 6 Limited Edition Batteries. Build your CLIQ.",
   promo: {
     range: "Pods",
     badge: "Limited Edition",
