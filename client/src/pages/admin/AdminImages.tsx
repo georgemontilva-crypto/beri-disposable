@@ -206,6 +206,7 @@ function buildSlots(): SlotDef[] {
 export default function AdminImages() {
   const slots = useMemo(buildSlots, []);
   const [section, setSection] = useState<string>("All");
+  const [query, setQuery] = useState("");
   const utils = trpc.useUtils();
   const list = trpc.images.adminList.useQuery(undefined, { retry: false });
 
@@ -293,7 +294,30 @@ export default function AdminImages() {
     },
   });
 
-  const filtered = section === "All" ? slots : slots.filter((s) => s.section === section);
+  /**
+   * Product sections run to fifty-odd cards once every flavour has one, and the
+   * handful that aren't flavours — logos, banners, textures, the 3D model — end
+   * up buried among them. Two things fix that: a search box, and pulling the
+   * non-flavour slots to the front of their section.
+   */
+  const filtered = useMemo(() => {
+    const inSection =
+      section === "All" ? slots : slots.filter((s) => s.section === section);
+
+    const q = query.trim().toLowerCase();
+    const matched = q
+      ? inSection.filter(
+          (s) =>
+            s.label.toLowerCase().includes(q) || s.slot.toLowerCase().includes(q)
+        )
+      : inSection;
+
+    const isFlavor = (slot: string) => slot.includes("_flavor_");
+    return [
+      ...matched.filter((s) => !isFlavor(s.slot)),
+      ...matched.filter((s) => isFlavor(s.slot)),
+    ];
+  }, [slots, section, query]);
 
   return (
     <AdminLayout title="Site Images & Video">
@@ -363,6 +387,21 @@ export default function AdminImages() {
         BERI wordmark in the top bar and the footer — use a transparent PNG; the
         site scales it by height, so any width works. The <strong>Home Hero Video</strong> slots play muted on loop behind the hero, with a separate vertical cut for phones; the <strong>still</strong> background shows while the video loads and on devices that block autoplay. The three <strong>Parallax</strong> layers stack into one scene that gains depth as you scroll: back is the furthest and barely moves, front is closest and moves most, so the middle and front need transparent PNGs to let the layers behind show through. The <strong>Home Fan Card</strong> slots are the four portrait cards in the hero (480×640, the product on a clean background). The <strong>3D Model</strong> slots accept web-ready <strong>.glb</strong> files (max 25 MB) and power the interactive viewer on each product page — CAD files (STEP/IGES) must be converted to GLB first. All other slots accept images. Empty slots render placeholders on the public site.
       </p>
+
+      <div className="mb-4">
+        <input
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Search slots — try “banner”, “winter”, “texture”…"
+          className="w-full max-w-md rounded-xl border border-neutral-300 px-4 py-2.5 text-sm outline-none transition focus:border-neutral-900"
+        />
+        {query && (
+          <p className="mt-2 text-xs text-neutral-500">
+            {filtered.length} slot{filtered.length === 1 ? "" : "s"} matching
+            “{query}”
+          </p>
+        )}
+      </div>
 
       <div className="mb-5 flex flex-wrap gap-2">
         {sections.map((s) => (
