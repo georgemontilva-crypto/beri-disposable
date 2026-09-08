@@ -449,10 +449,10 @@ export const BERI_CRUSH: Product = {
           notes: ["Melon", "Dragon Fruit", "Frosty"],
         },
         {
-          name: "OG Watermelon",
+          name: "OG Lemonade",
           description:
-            "Classic juicy watermelon with a clean, refreshing finish.",
-          notes: ["Watermelon", "Juicy", "Classic"],
+            "Classic lemonade with a bright, sweet-and-tart citrus finish.",
+          notes: ["Lemonade", "Citrus", "Sweet"],
         },
         {
           name: "Polar Ice",
