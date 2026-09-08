@@ -224,7 +224,7 @@ export const BERI_CRUSH: Product = {
   keySpecs: ["Quad-Mesh Coil", "Up to 40W Power", "Auto-Adaptive Draw"],
   specs: [
     { label: "Puffs", value: "Up to 50,000" },
-    { label: "Nicotine", value: "5%" },
+    { label: "Nicotine", value: "5% & 0%" },
     { label: "Coil", value: "Quad-Mesh" },
     { label: "Power", value: "Up to 40W" },
     { label: "Draw", value: "Auto-Adaptive" },
