@@ -7,7 +7,7 @@ import FlavorShowcase from "@/components/FlavorShowcase";
 import HowItWorks from "@/components/HowItWorks";
 import ProductViewer3D from "@/components/ProductViewer3D";
 import { useSiteImages, type PublicMediaEntry } from "@/hooks/useSiteImages";
-import { getNextProduct, getProductByKey, PRODUCTS } from "@/lib/products";
+import { getNextProduct, getProductByKey, PRODUCTS, rangeBannerSlot } from "@/lib/products";
 import { ArrowLeft, ArrowRight, ShieldCheck } from "lucide-react";
 import { useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Link, useLocation, useParams } from "wouter";
@@ -33,6 +33,7 @@ export default function ProductPage() {
     product.glowHue ?? PRODUCTS.findIndex((p) => p.key === product.key) * 78;
 
   const logoUrl = images[product.logoSlot]?.url;
+  const [range, setRange] = useState(product.baseRangeLabel);
 
   const goToNext = () => {
     window.scrollTo({ top: 0, behavior: "instant" });
@@ -180,11 +181,18 @@ export default function ProductPage() {
           </div>
         </section>
 
-        <FlavorShowcase product={product} images={images} />
+        <FlavorShowcase
+          product={product}
+          images={images}
+          onRangeChange={setRange}
+        />
 
         {/* ── Pinned banner: holds still while the page scrolls over it ── */}
+        {/* Follows the open flavour tab: each range can have its own banner,
+            and falls back to the product's when it doesn't. */}
         <PinnedBanner
-          slot={`${product.key}_banner`}
+          slot={rangeBannerSlot(product.key, range)}
+          fallbackSlot={`${product.key}_banner`}
           label={`${product.name} lifestyle banner`}
           className="h-[75vh] min-h-[420px]"
         />

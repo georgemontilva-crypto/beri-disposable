@@ -14,7 +14,7 @@
 import { PlaceholderImage } from "@/components/PlaceholderImage";
 import type { PublicMediaEntry } from "@/hooks/useSiteImages";
 import { editionTextureSlot, flavorGlow, type Flavor, type Product } from "@/lib/products";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import ColoredSmoke from "./ColoredSmoke";
 import Snowfall from "./Snowfall";
 import SummerEmbers from "./SummerEmbers";
@@ -22,9 +22,16 @@ import SummerEmbers from "./SummerEmbers";
 export default function FlavorShowcase({
   product,
   images,
+  onRangeChange,
 }: {
   product: Product;
   images: Record<string, PublicMediaEntry>;
+  /**
+   * Reports the open tab upward. The banner below this section belongs to the
+   * page, not to the showcase, but it has to follow the same selection — so the
+   * showcase owns the state and publishes it rather than the page reaching in.
+   */
+  onRangeChange?: (range: string) => void;
 }) {
   const [filter, setFilter] = useState<string>(product.baseRangeLabel);
 
@@ -85,6 +92,13 @@ export default function FlavorShowcase({
     visible.find((f) => f.slug === selected) ?? visible[0];
 
   const glow = featured ? flavorGlow(featured.name) : "160 160 170";
+
+  useEffect(() => {
+    onRangeChange?.(filter);
+    // Deliberately not depending on the callback: a parent that passes an
+    // inline arrow would otherwise re-fire this on every one of its renders.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filter]);
 
   return (
     <section className="relative overflow-hidden py-20 text-white">

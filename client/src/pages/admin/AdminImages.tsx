@@ -1,6 +1,6 @@
 import { AdminLayout } from "@/components/AdminLayout";
 import { TableCard } from "@/components/admin/AdminTable";
-import { editionTextureSlot, PRODUCTS } from "@/lib/products";
+import { editionTextureSlot, PRODUCTS, rangeBannerSlot } from "@/lib/products";
 import { trpc } from "@/lib/trpc";
 import { Box, Film, Image as ImageIcon, Loader2, Trash2, Upload } from "lucide-react";
 import { useMemo, useRef, useState } from "react";
@@ -158,7 +158,27 @@ function buildSlots(): SlotDef[] {
       size: ".glb / .gltf · max 25 MB",
       type: "model",
     });
-    slots.push({ slot: `${p.key}_banner`, label: `${p.name} — Banner`, section, size: "1600×600" });
+    slots.push({
+      slot: `${p.key}_banner`,
+      label: `${p.name} — Banner (default)`,
+      section,
+      size: "1600×900",
+    });
+    // One optional banner per range, shown while that tab is open. Without one
+    // the range falls back to the default above.
+    for (const range of [
+      p.baseRangeLabel,
+      ...Array.from(
+        new Set(p.flavors.map((f) => f.edition).filter((e): e is string => !!e))
+      ),
+    ]) {
+      slots.push({
+        slot: rangeBannerSlot(p.key, range),
+        label: `${range} — Banner`,
+        section,
+        size: "1600×900",
+      });
+    }
     // One icon per highlight.
     for (const spec of p.highlights) {
       slots.push({

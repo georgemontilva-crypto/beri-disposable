@@ -17,17 +17,22 @@ import { useEffect, useState } from "react";
 
 export default function PinnedBanner({
   slot,
+  fallbackSlot,
   label,
   className = "",
   children,
 }: {
   slot: string;
+  /** Used when `slot` has no image, so a range without its own banner still
+      shows the product's rather than an empty panel. */
+  fallbackSlot?: string;
   label?: string;
   className?: string;
   children?: React.ReactNode;
 }) {
   const media = useSiteImages();
-  const url = media[slot]?.url;
+  const url =
+    media[slot]?.url ?? (fallbackSlot ? media[fallbackSlot]?.url : undefined);
   const [pinned, setPinned] = useState(false);
 
   useEffect(() => {

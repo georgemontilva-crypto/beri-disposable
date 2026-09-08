@@ -131,3 +131,35 @@ describe("explicit tab order", () => {
     ]);
   });
 });
+
+describe("per-range banner slot", () => {
+  const toSlug = (s: string) =>
+    s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+  const rangeBannerSlot = (key: string, range: string) =>
+    `${key}_banner_${toSlug(range)}`;
+
+  it("gives every range its own slot", () => {
+    const ranges = [
+      "Core Collection",
+      "Summer Edition",
+      "Winter Edition",
+      "Graffiti Edition",
+      "0% Nicotine",
+    ];
+    const slots = ranges.map((r) => rangeBannerSlot("crush", r));
+    expect(new Set(slots).size).toBe(ranges.length);
+  });
+
+  it("never collides with the product's default banner", () => {
+    // The default is `crush_banner`; a range slug must not produce that exact
+    // key or the two would overwrite each other.
+    const slots = ["Core Collection", "0% Nicotine"].map((r) =>
+      rangeBannerSlot("crush", r)
+    );
+    expect(slots).not.toContain("crush_banner");
+  });
+
+  it("survives a range name that is mostly punctuation", () => {
+    expect(rangeBannerSlot("crush", "0% Nicotine")).toBe("crush_banner_0-nicotine");
+  });
+});

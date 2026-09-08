@@ -133,6 +133,11 @@ function deriveProfile(name: string): FlavorProfile {
   return "Other";
 }
 
+/** Media slot for a range's own pinned banner, if one is uploaded. */
+export function rangeBannerSlot(productKey: string, range: string): string {
+  return `${productKey}_banner_${toSlug(range)}`;
+}
+
 /** Media slot for an edition's own background pattern, if one is uploaded. */
 export function editionTextureSlot(productKey: string, edition: string): string {
   return `${productKey}_texture_${toSlug(edition)}`;
