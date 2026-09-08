@@ -213,8 +213,8 @@ function WholesaleBand() {
         Carry Beri
       </h2>
       <p className="mt-3 max-w-md text-sm leading-relaxed text-neutral-400">
-        5-unit displays, 20-display master cases, and full flavor assortments
-        across all four BERI product lines.
+        Four product lines. Over 60 flavor options. Register your business to
+        apply for a BERI wholesale account.
       </p>
       <Link
         href="/wholesale"
