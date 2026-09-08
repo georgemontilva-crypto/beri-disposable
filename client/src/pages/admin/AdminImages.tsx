@@ -468,7 +468,10 @@ function SlotCard({
     ? "video/mp4,video/*"
     : isModel
       ? ".glb,.gltf,model/gltf-binary,model/gltf+json"
-      : "image/*";
+      : // Extensions listed alongside the wildcard: some systems don't map
+        // .webp, .avif or .heic to image/*, and the picker then greys the file
+        // out with no explanation.
+        "image/*,.jpg,.jpeg,.png,.webp,.avif,.heic,.heif";
 
   const onFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -489,6 +492,8 @@ function SlotCard({
       file,
       mimeType,
     });
+    // Also cleared here, not only on click: an upload that fails should leave
+    // the field empty so the next attempt is a fresh selection.
     if (inputRef.current) inputRef.current.value = "";
   };
 
@@ -568,10 +573,16 @@ function SlotCard({
         </div>
         <div className="mt-0.5 font-mono text-[11px] text-neutral-400">{def.slot}</div>
         <div className="mt-3 flex gap-1.5">
-          <input ref={inputRef} type="file" accept={accept} onChange={onFile} className="hidden" />
-          <button
-            onClick={() => inputRef.current?.click()}
-            className={`press inline-flex flex-1 items-center justify-center gap-1.5 rounded-lg px-3 py-2 text-xs font-semibold text-white ${
+          {/*
+            A label wrapping the input, not a button firing click() on a hidden
+            one. The programmatic version fails silently in several situations —
+            a display:none input, a click outside a trusted user gesture, some
+            in-app browsers — and when it fails there is nothing at all to see:
+            no dialog, no error, no way to tell it even tried. A label opens the
+            picker natively and can't fail that way.
+          */}
+          <label
+            className={`press inline-flex flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-lg px-3 py-2 text-xs font-semibold text-white ${
               isVideo
                 ? "bg-blue-600 hover:bg-blue-700"
                 : isModel
@@ -581,7 +592,20 @@ function SlotCard({
           >
             <Upload className="h-3.5 w-3.5" />
             {current ? "Replace" : isVideo ? "Upload Video" : "Upload"}
-          </button>
+            <input
+              ref={inputRef}
+              type="file"
+              accept={accept}
+              onChange={onFile}
+              // Cleared on click so choosing the same file twice still fires a
+              // change event; without it a retry after a failed upload does
+              // nothing and looks broken.
+              onClick={(e) => {
+                (e.target as HTMLInputElement).value = "";
+              }}
+              className="sr-only"
+            />
+          </label>
           {current && (
             <button
               onClick={() => onDelete(current.id)}
