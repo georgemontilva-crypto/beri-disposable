@@ -14,7 +14,7 @@
 import { PlaceholderImage } from "@/components/PlaceholderImage";
 import type { PublicMediaEntry } from "@/hooks/useSiteImages";
 import { editionTextureSlot, flavorGlow, type Flavor, type Product } from "@/lib/products";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import ColoredSmoke from "./ColoredSmoke";
 import Snowfall from "./Snowfall";
 import SummerEmbers from "./SummerEmbers";
@@ -34,6 +34,12 @@ export default function FlavorShowcase({
   onRangeChange?: (range: string) => void;
 }) {
   const [filter, setFilter] = useState<string>(product.baseRangeLabel);
+  /**
+   * Whether the visitor has picked a tab themselves. Until they do, the open
+   * tab follows the first one on screen — which isn't always the base range,
+   * since a product can set its own tab order.
+   */
+  const userPicked = useRef(false);
 
   /**
    * An edition can bring its own pattern; without one it falls back to the
@@ -92,6 +98,19 @@ export default function FlavorShowcase({
     visible.find((f) => f.slug === selected) ?? visible[0];
 
   const glow = featured ? flavorGlow(featured.name) : "160 160 170";
+
+  /*
+    Opens on the leftmost tab.
+
+    Runs on every change to the chip list rather than once on mount, because
+    the list is derived from which images have been uploaded and arrives a
+    moment after the first render. Selecting on mount would land on a tab that
+    doesn't exist yet.
+  */
+  useEffect(() => {
+    if (userPicked.current) return;
+    if (chips.length && chips[0] !== filter) setFilter(chips[0]);
+  }, [chips, filter]);
 
   useEffect(() => {
     onRangeChange?.(filter);
@@ -254,7 +273,10 @@ export default function FlavorShowcase({
                 role="tab"
                 type="button"
                 aria-selected={active}
-                onClick={() => setFilter(chip)}
+                onClick={() => {
+                  userPicked.current = true;
+                  setFilter(chip);
+                }}
                 className={`press rounded-full px-4 py-2 text-sm font-semibold transition-all ${
                   active
                     ? "text-neutral-950"

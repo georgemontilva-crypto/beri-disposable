@@ -177,3 +177,32 @@ describe("banner aspect ratio", () => {
     expect(ratio(null)).toBeCloseTo(16 / 9);
   });
 });
+
+describe("default open tab", () => {
+  /** Mirrors the effect in FlavorShowcase. */
+  function openTab(chips: string[], current: string, userPicked: boolean): string {
+    if (userPicked) return current;
+    return chips.length && chips[0] !== current ? chips[0] : current;
+  }
+
+  it("opens on the leftmost tab, not the base range", () => {
+    // Cliq's base range is Pods but its tab order leads with Kits, so landing
+    // on the page must select Kits.
+    expect(openTab(["Kits", "Pods"], "Pods", false)).toBe("Kits");
+  });
+
+  it("leaves the base range selected when it is already first", () => {
+    expect(openTab(["Core Collection", "Summer Edition"], "Core Collection", false)).toBe(
+      "Core Collection"
+    );
+  });
+
+  it("stops overriding once the visitor picks a tab", () => {
+    expect(openTab(["Kits", "Pods"], "Pods", true)).toBe("Pods");
+  });
+
+  it("does nothing while the chip list is still empty", () => {
+    // The list is derived from uploaded images and arrives after first render.
+    expect(openTab([], "Pods", false)).toBe("Pods");
+  });
+});
