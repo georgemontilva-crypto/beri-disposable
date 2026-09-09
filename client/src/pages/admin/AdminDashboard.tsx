@@ -20,7 +20,7 @@ import { Link } from "wouter";
 function mediaGroups(): { section: string; slots: string[] }[] {
   const groups: { section: string; slots: string[] }[] = [
     { section: "Home", slots: ["home_hero_bg"] },
-    { section: "Other pages", slots: ["authenticate_banner", "wholesale_banner"] },
+    { section: "Other pages", slots: ["authenticate_banner"] },
   ];
   for (const p of PRODUCTS) {
     groups.push({
