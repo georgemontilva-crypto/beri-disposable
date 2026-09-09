@@ -850,19 +850,84 @@ export const BERI_CIRQL: Product = {
   heroSlot: "cirql_hero",
   modelSlot: "cirql_model_3d",
   flavors: buildFlavors("cirql", [
-    "Blue Razz",
-    "Blueberry Ice",
-    "Cool Mint",
-    "Double Apple",
-    "Grape Ice",
-    "Lady Killer",
-    "Lemon Mint",
-    "Love 66",
-    "Lucid Dreams",
-    "Peach Ice",
-    "Peach Mango Watermelon",
-    "Strawberry Punch",
-    "Watermelon Ice",
+    {
+      name: "Blue Razz",
+      description:
+        "Blue raspberry with the deep, syrupy sweetness of a lounge favorite. Tart on the draw, rounded and candied on the exhale.",
+      notes: ["Blue Razz", "Tart", "Sweet"],
+    },
+    {
+      name: "Blueberry Ice",
+      description:
+        "Ripe blueberry laid over a cooling base. The fruit stays soft and jammy while the ice keeps every draw clean.",
+      notes: ["Blueberry", "Jammy", "Ice"],
+    },
+    {
+      name: "Cool Mint",
+      description:
+        "Straight mint, cut clean. A cooling profile that resets the palate between heavier bowls.",
+      notes: ["Mint", "Clean", "Cool"],
+    },
+    {
+      name: "Double Apple",
+      description:
+        "The classic shisha profile. Red and green apple carried by the aniseed edge that made it a lounge staple for a century.",
+      notes: ["Apple", "Aniseed", "Classic"],
+    },
+    {
+      name: "Grape Ice",
+      description:
+        "Dark grape with a chilled finish. Rich and lightly candied up front, cool and dry on the way out.",
+      notes: ["Grape", "Rich", "Ice"],
+    },
+    {
+      name: "Lady Killer",
+      description:
+        "A layered berry and citrus blend, sweet at the centre with a sharp edge. One of the boldest profiles in the range.",
+      notes: ["Berry", "Citrus", "Bold"],
+    },
+    {
+      name: "Lemon Mint",
+      description:
+        "Bright lemon over cool mint, the pairing that anchors half the menu in a Middle Eastern lounge. Sharp, clean and endlessly smokeable.",
+      notes: ["Lemon", "Mint", "Sharp"],
+    },
+    {
+      name: "Love 66",
+      description:
+        "A melon-led mixed fruit blend named after the lounge classic. Sweet, floral and rounded, with no single fruit taking over.",
+      notes: ["Melon", "Mixed Fruit", "Floral"],
+    },
+    {
+      name: "Lucid Dreams",
+      description:
+        "A soft, dessert-leaning blend of berries and cream. The slowest and sweetest profile in the lineup.",
+      notes: ["Berry", "Cream", "Sweet"],
+    },
+    {
+      name: "Peach Ice",
+      description:
+        "Ripe peach with a light frost. The fruit reads as fresh rather than candied, and the ice keeps it from turning heavy.",
+      notes: ["Peach", "Fresh", "Ice"],
+    },
+    {
+      name: "Peach Mango Watermelon",
+      description:
+        "Three summer fruits stacked together. Peach for body, mango for sweetness, watermelon for the clean finish.",
+      notes: ["Peach", "Mango", "Watermelon"],
+    },
+    {
+      name: "Strawberry Punch",
+      description:
+        "Ripe strawberry pushed into fruit punch territory. Sweet and full, with a tart lift that keeps it from cloying.",
+      notes: ["Strawberry", "Punch", "Sweet"],
+    },
+    {
+      name: "Watermelon Ice",
+      description:
+        "Juicy watermelon over a cold base. Light-bodied and refreshing, the closest thing here to a summer drink.",
+      notes: ["Watermelon", "Juicy", "Ice"],
+    },
   ]),
 };
 
