@@ -60,25 +60,27 @@ describe("ranges that reuse names", () => {
   const slot = (key: string, name: string, prefix = "") =>
     `${key}_flavor_${prefix}${toSlug(name)}`;
 
-  it("keeps a battery apart from the pod of the same name", () => {
-    // Four Cliq batteries share a name with a pod. Without the prefix both
-    // resolve to one media slot and the tabs would show the same photo.
-    expect(slot("cliq", "Grape Ice")).not.toBe(
-      slot("cliq", "Grape Ice", "battery-")
-    );
+  it("keeps a kit apart from the pod of the same name", () => {
+    // Seven Cliq kits share a name with a pod. Without the prefix both resolve
+    // to one media slot and the tabs would show the same photo.
+    expect(slot("cliq", "Grape Ice")).not.toBe(slot("cliq", "Grape Ice", "kit-"));
   });
 
-  it("gives every battery its own slot", () => {
-    const batteries = [
-      "Original",
-      "Blue Razz",
+  it("gives every kit its own slot", () => {
+    const kits = [
+      "Blue Razz Ice",
+      "Clear",
       "Grape Ice",
-      "White Strawberry",
+      "Miami Mint",
+      "Peach Ice",
+      "Super Mint",
+      "Tobacco",
       "Watermelon Ice",
-      "Green Apple",
+      "White Gami",
+      "White Strawberry",
     ];
-    const slots = batteries.map((b) => slot("cliq", b, "battery-"));
-    expect(new Set(slots).size).toBe(batteries.length);
+    const slots = kits.map((k) => slot("cliq", k, "kit-"));
+    expect(new Set(slots).size).toBe(kits.length);
   });
 });
 
@@ -91,9 +93,8 @@ describe("range-scoped promo", () => {
   });
 
   it("hides it on every other tab", () => {
-    // An offer on pods must not follow the visitor into the batteries tab,
-    // where it would advertise something that isn't on screen.
-    expect(shows("Pods", "Batteries")).toBe(false);
+    // An offer on pods must not follow the visitor into the kits tab, where it
+    // would advertise something that isn't on screen.
     expect(shows("Pods", "Kits")).toBe(false);
   });
 });
@@ -107,17 +108,13 @@ describe("explicit tab order", () => {
   }
 
   it("puts Kits before Pods when the product asks for it", () => {
-    expect(order(["Pods", "Kits", "Batteries"], ["Kits", "Pods", "Batteries"])).toEqual([
-      "Kits",
-      "Pods",
-      "Batteries",
-    ]);
+    expect(order(["Pods", "Kits"], ["Kits", "Pods"])).toEqual(["Kits", "Pods"]);
   });
 
   it("skips a range in the order that has nothing uploaded", () => {
     // Otherwise a product would show an empty tab just because the order
     // mentions it.
-    expect(order(["Pods"], ["Kits", "Pods", "Batteries"])).toEqual(["Pods"]);
+    expect(order(["Pods"], ["Kits", "Pods"])).toEqual(["Pods"]);
   });
 
   it("keeps a range that the order forgot to mention", () => {

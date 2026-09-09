@@ -548,7 +548,7 @@ export const BERI_CLIQ: Product = {
     { label: "Pod", value: "Replaceable" },
   ],
   flavorTitle: "BERI CLIQ COLLECTION",
-  flavorIntro: "10 Kits. 25 Pods. 6 Limited Edition Batteries. Build your CLIQ.",
+  flavorIntro: "10 Kits. 25 Pods. Build your CLIQ.",
   promo: {
     range: "Pods",
     badge: "Limited Edition",
@@ -575,7 +575,7 @@ export const BERI_CLIQ: Product = {
   ],
   accent: "#22d3ee",
   baseRangeLabel: "Pods",
-  rangeOrder: ["Kits", "Pods", "Batteries"],
+  rangeOrder: ["Kits", "Pods"],
   logoSlot: "cliq_logo",
   textureSlot: "cliq_texture",
   panelSlot: "cliq_panel",
@@ -778,19 +778,6 @@ export const BERI_CLIQ: Product = {
       ],
       "Kits",
       "kit-"
-    ),
-    ...buildFlavors(
-      "cliq",
-      [
-        "Original",
-        "Blue Razz",
-        "Grape Ice",
-        "White Strawberry",
-        "Watermelon Ice",
-        "Green Apple",
-      ],
-      "Batteries",
-      "battery-"
     ),
   ],
 };
