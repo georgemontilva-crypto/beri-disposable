@@ -33,7 +33,17 @@ export default function FlavorShowcase({
    */
   onRangeChange?: (range: string) => void;
 }) {
-  const [filter, setFilter] = useState<string>(product.baseRangeLabel);
+  /*
+    Starts on the product's declared first tab rather than on its base range.
+
+    The effect below would correct it either way, but only after a render has
+    already happened: on Cliq that meant one frame with "Pods" highlighted
+    before it switched to "Kits". On a fast machine it's invisible; on a phone
+    it reads as the page opening on the wrong tab and then jumping.
+  */
+  const [filter, setFilter] = useState<string>(
+    () => product.rangeOrder?.[0] ?? product.baseRangeLabel
+  );
   /**
    * Whether the visitor has picked a tab themselves. Until they do, the open
    * tab follows the first one on screen — which isn't always the base range,

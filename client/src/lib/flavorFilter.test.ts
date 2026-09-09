@@ -206,3 +206,18 @@ describe("default open tab", () => {
     expect(openTab([], "Pods", false)).toBe("Pods");
   });
 });
+
+describe("initial tab before images load", () => {
+  /** Mirrors the lazy initialiser in FlavorShowcase. */
+  const initial = (baseRangeLabel: string, rangeOrder?: string[]) =>
+    rangeOrder?.[0] ?? baseRangeLabel;
+
+  it("starts on the declared first tab, not the base range", () => {
+    // Without this the first paint highlights Pods and then jumps to Kits.
+    expect(initial("Pods", ["Kits", "Pods"])).toBe("Kits");
+  });
+
+  it("falls back to the base range when no order is declared", () => {
+    expect(initial("Core Collection")).toBe("Core Collection");
+  });
+});
