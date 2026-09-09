@@ -589,90 +589,126 @@ export const BERI_CLIQ: Product = {
   modelSlot: "cliq_model_3d",
   flavors: [
     ...buildFlavors("cliq", [
-      {
-        name: "Alaskan Mint",
-        description:
-          "Crisp mint with a clean, intensely cool finish.",
-        notes: ["Mint", "Crisp", "Cool"],
-      },
-      {
-        name: "Banana Ice",
-        description:
-          "Smooth banana sweetness balanced by a refreshing icy finish.",
-        notes: ["Banana", "Sweet", "Ice"],
-      },
-      {
-        name: "Black Razz Ice",
-        description:
-          "Dark raspberry with a tangy berry bite and cool finish.",
-        notes: ["Raspberry", "Tart", "Ice"],
-      },
-      {
-        name: "Blue Razz Ice",
-        description:
-          "Tangy blue raspberry with a crisp icy finish.",
-        notes: ["Blue Razz", "Tart", "Ice"],
-      },
-      {
-        name: "Clear",
-        description:
-          "A clean, understated profile with minimal added flavor.",
-        notes: ["Clean", "Light", "Neutral"],
-      },
-      {
-        name: "Grape Ice",
-        description:
-          "Bold grape sweetness balanced by a chilled finish.",
-        notes: ["Grape", "Sweet", "Ice"],
-      },
-      {
-        name: "Green Apple",
-        description:
-          "Crisp green apple with a bright sweet-and-tart bite.",
-        notes: ["Apple", "Tart", "Crisp"],
-      },
-      {
-        name: "Mango Bomb",
-        description:
-          "Bold tropical mango with a smooth, juicy finish.",
-        notes: ["Mango", "Tropical", "Juicy"],
-      },
-      {
-        name: "Miami Mint",
-        description:
-          "Fresh mint with a smooth, refreshing cooling finish.",
-        notes: ["Mint", "Fresh", "Cool"],
-      },
-      {
-        name: "Peach Ice",
-        description:
-          "Ripe peach sweetness paired with a light icy finish.",
-        notes: ["Peach", "Sweet", "Ice"],
-      },
-      {
-        name: "Punch Ice",
-        description:
-          "Sweet mixed fruit punch with a crisp icy finish.",
-        notes: ["Fruit Punch", "Sweet", "Ice"],
-      },
-      {
-        name: "Sour Neon Fab",
-        description:
-          "Bright sour-candy flavor with a bold sweet-and-tart finish.",
-        notes: ["Sour Candy", "Sweet", "Tart"],
-      },
-      {
-        name: "Super Mint",
-        description:
-          "Strong, refreshing mint with an intensely cool finish.",
-        notes: ["Mint", "Fresh", "Extra Cool"],
-      },
-      {
-        name: "Tobacco",
-        description:
-          "A classic tobacco-style profile with a smooth, familiar finish.",
-        notes: ["Tobacco", "Rich", "Classic"],
-      },
+    {
+      name: "Alaskan Mint",
+      description:
+        "Crisp mint with a clean, intensely cool finish.",
+      notes: ["Mint", "Crisp", "Cool"],
+    },
+    {
+      name: "Banana Ice",
+      description:
+        "Smooth banana sweetness balanced by a refreshing icy finish.",
+      notes: ["Banana", "Sweet", "Ice"],
+    },
+    {
+      name: "Black Razz Ice",
+      description:
+        "Dark raspberry with a tangy berry bite and cool finish.",
+      notes: ["Raspberry", "Tart", "Ice"],
+    },
+    {
+      name: "Blue Rancher",
+      description:
+        "Hard blue candy with a sharp, sweet-and-sour bite.",
+      notes: ["Blue Candy", "Sweet", "Sour"],
+    },
+    {
+      name: "Blue Razz Ice",
+      description:
+        "Tangy blue raspberry with a crisp icy finish.",
+      notes: ["Blue Razz", "Tart", "Ice"],
+    },
+    {
+      name: "Clear",
+      description:
+        "A clean, understated profile with minimal added flavor.",
+      notes: ["Clean", "Light", "Neutral"],
+    },
+    {
+      name: "Grape Ice",
+      description:
+        "Bold grape sweetness balanced by a chilled finish.",
+      notes: ["Grape", "Sweet", "Ice"],
+    },
+    {
+      name: "Green Apple",
+      description:
+        "Crisp green apple with a bright sweet-and-tart bite.",
+      notes: ["Apple", "Tart", "Crisp"],
+    },
+    {
+      name: "Mango Bomb",
+      description:
+        "Bold tropical mango with a smooth, juicy finish.",
+      notes: ["Mango", "Tropical", "Juicy"],
+    },
+    {
+      name: "Miami Mint",
+      description:
+        "Fresh mint with a smooth, refreshing cooling finish.",
+      notes: ["Mint", "Fresh", "Cool"],
+    },
+    {
+      name: "Mixed Berry",
+      description:
+        "A blend of ripe berries with a smooth, jammy sweetness.",
+      notes: ["Mixed Berry", "Ripe", "Sweet"],
+    },
+    {
+      name: "Peach Ice",
+      description:
+        "Ripe peach sweetness paired with a light icy finish.",
+      notes: ["Peach", "Sweet", "Ice"],
+    },
+    {
+      name: "Punch Ice",
+      description:
+        "Sweet mixed fruit punch with a crisp icy finish.",
+      notes: ["Fruit Punch", "Sweet", "Ice"],
+    },
+    {
+      name: "Sour Neon Fab",
+      description:
+        "Bright sour-candy flavor with a bold sweet-and-tart finish.",
+      notes: ["Sour Candy", "Sweet", "Tart"],
+    },
+    {
+      name: "Super Mint",
+      description:
+        "Strong, refreshing mint with an intensely cool finish.",
+      notes: ["Mint", "Fresh", "Extra Cool"],
+    },
+    {
+      name: "Tobacco",
+      description:
+        "A classic tobacco-style profile with a smooth, familiar finish.",
+      notes: ["Tobacco", "Rich", "Classic"],
+    },
+    {
+      name: "Watermelon BG",
+      description:
+        "Juicy watermelon bubblegum with a soft, chewy finish.",
+      notes: ["Watermelon", "Bubblegum", "Sweet"],
+    },
+    {
+      name: "Watermelon Ice",
+      description:
+        "Juicy watermelon balanced by a refreshing icy finish.",
+      notes: ["Watermelon", "Juicy", "Ice"],
+    },
+    {
+      name: "White Gami",
+      description:
+        "Soft white gummy candy with a smooth, sugary finish.",
+      notes: ["Gummy", "Candy", "Smooth"],
+    },
+    {
+      name: "White Strawberry",
+      description:
+        "Smooth, sweet strawberry with a softer fruit-forward finish.",
+      notes: ["Strawberry", "Sweet", "Smooth"],
+    },
     ]),
     // Kits repeat pod names, so they need their own slug prefix or both
     // would resolve to the same media slot.
