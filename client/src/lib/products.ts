@@ -217,7 +217,7 @@ function buildFlavors(
 
 export const BERI_CRUSH: Product = {
   key: "crush",
-  name: "Beri Crush",
+  name: "BERI CRUSH",
   tagline: "Your New Crush.",
   eyebrow: "Beri Disposable",
   headline: "AUTO-ADAPTIVE POWER.",

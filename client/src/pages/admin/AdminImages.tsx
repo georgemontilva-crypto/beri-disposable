@@ -188,13 +188,21 @@ function buildSlots(): SlotDef[] {
         size: "~450×450 PNG transparent",
       });
     }
+    /*
+      Each range gets its own section rather than pooling every flavour under
+      the product. Cliq mixes ten kits with twenty pods that repeat seven of the
+      same names, so a single list is genuinely confusing: you can't tell which
+      card is the kit and which is the pod without reading the label each time.
+
+      The product's own section keeps the slots there is one of — logo, banners,
+      texture, 3D model.
+    */
     for (const f of p.flavors) {
-      // The edition is part of the label, not just the data: without it the
-      // limited runs sit among the regulars with nothing to tell them apart.
+      const range = f.edition ?? p.baseRangeLabel;
       slots.push({
         slot: f.slot,
-        label: f.edition ? `${f.edition} — ${f.name}` : `${p.name} — ${f.name}`,
-        section,
+        label: f.name,
+        section: `${p.name} · ${range}`,
         size: "800×600",
       });
     }
