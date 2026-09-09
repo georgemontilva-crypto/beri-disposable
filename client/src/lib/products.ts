@@ -552,8 +552,8 @@ export const BERI_CLIQ: Product = {
   promo: {
     range: "Pods",
     badge: "Limited Edition",
-    title: "25 Flavors 5+1",
-    body: "Five pods and one limited edition battery, across 25 flavors. While stocks last.",
+    title: "5 Flavors 5+1",
+    body: "Five flavors of the 25 come with a special limited edition colored battery. While supplies last.",
   },
   howItWorks: [
     {
