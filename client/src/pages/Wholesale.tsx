@@ -1,4 +1,5 @@
 import { PlaceholderImage } from "@/components/PlaceholderImage";
+import BannerCarousel from "@/components/BannerCarousel";
 import ColoredSmoke from "@/components/ColoredSmoke";
 import PageTexture from "@/components/PageTexture";
 import { PublicLayout } from "@/components/PublicLayout";
@@ -392,15 +393,8 @@ export default function Wholesale() {
               )}
             </div>
 
-            <div className="reveal mt-12 overflow-hidden rounded-[1.5rem]">
-              <PlaceholderImage
-                slot="wholesale_banner"
-                imageMap={images}
-                width={1280}
-                height={520}
-                label="Wholesale"
-                rounded="rounded-[1.5rem]"
-              />
+            <div className="reveal mt-12">
+              <BannerCarousel />
             </div>
           </div>
         </section>

@@ -221,3 +221,55 @@ describe("initial tab before images load", () => {
     expect(initial("Core Collection")).toBe("Core Collection");
   });
 });
+
+describe("banner carousel slides", () => {
+  /** Mirrors the slide list built in BannerCarousel. */
+  function slides(
+    products: { key: string; ranges: string[] }[],
+    media: Record<string, string>
+  ) {
+    const out: string[] = [];
+    const seen = new Set<string>();
+    for (const p of products) {
+      for (const r of p.ranges) {
+        const url =
+          media[`${p.key}_banner_${r}`] ?? media[`${p.key}_banner`] ?? undefined;
+        if (!url || seen.has(url)) continue;
+        seen.add(url);
+        out.push(url);
+      }
+    }
+    return out;
+  }
+
+  it("uses a range's own banner when it has one", () => {
+    const out = slides([{ key: "crush", ranges: ["core", "summer"] }], {
+      crush_banner_core: "/a.jpg",
+      crush_banner_summer: "/b.jpg",
+    });
+    expect(out).toEqual(["/a.jpg", "/b.jpg"]);
+  });
+
+  it("collapses a product that only has the default banner", () => {
+    // Otherwise five ranges would show the same picture five times running.
+    const out = slides([{ key: "crush", ranges: ["core", "summer", "winter"] }], {
+      crush_banner: "/default.jpg",
+    });
+    expect(out).toEqual(["/default.jpg"]);
+  });
+
+  it("skips ranges with nothing uploaded instead of showing a gap", () => {
+    expect(slides([{ key: "cliq", ranges: ["kits", "pods"] }], {})).toEqual([]);
+  });
+
+  it("keeps catalogue order across products", () => {
+    const out = slides(
+      [
+        { key: "crush", ranges: ["core"] },
+        { key: "cliq", ranges: ["kits"] },
+      ],
+      { crush_banner_core: "/1.jpg", cliq_banner_kits: "/2.jpg" }
+    );
+    expect(out).toEqual(["/1.jpg", "/2.jpg"]);
+  });
+});
