@@ -215,6 +215,47 @@ export default function FlavorShowcase({
           </p>
         </div>
 
+        {/* ── Filters ─────────────────────────────────────────────────── */}
+        {/*
+          One scrolling row, never wrapping. Crush has five ranges and on a
+          phone they wrapped to three lines, pushing the product further down
+          the page than the tabs themselves were worth.
+        */}
+        <div
+          role="tablist"
+          aria-label="Flavor ranges"
+          className="no-scrollbar reveal -mx-5 mb-6 flex gap-2 overflow-x-auto px-5 sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0"
+        >
+          {chips.map((chip) => {
+            const active = filter === chip;
+            return (
+              <button
+                key={chip}
+                role="tab"
+                type="button"
+                aria-selected={active}
+                onClick={() => {
+                  userPicked.current = true;
+                  setFilter(chip);
+                }}
+                className={`press shrink-0 rounded-full px-4 py-2 text-sm font-semibold transition-all ${
+                  active
+                    ? "text-neutral-950"
+                    : "border border-white/20 text-neutral-300 hover:border-white/40 hover:text-white"
+                }`}
+                style={active ? { backgroundColor: product.accent } : undefined}
+              >
+                {chip}
+                <span className="ml-1.5 text-xs opacity-70">
+                  {chip === product.baseRangeLabel
+                    ? mounted.filter((f) => !f.edition).length
+                    : mounted.filter((f) => f.edition === chip).length}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+
         {/* ── Featured ────────────────────────────────────────────────── */}
         {featured && (
           <div className="reveal relative mb-10 overflow-hidden rounded-[2rem] border border-white/15 bg-white/[0.06]">
@@ -280,38 +321,6 @@ export default function FlavorShowcase({
             </div>
           </div>
         )}
-
-        {/* ── Filters ─────────────────────────────────────────────────── */}
-        <div role="tablist" aria-label="Flavor ranges" className="reveal mb-6 flex flex-wrap gap-2">
-          {chips.map((chip) => {
-            const active = filter === chip;
-            return (
-              <button
-                key={chip}
-                role="tab"
-                type="button"
-                aria-selected={active}
-                onClick={() => {
-                  userPicked.current = true;
-                  setFilter(chip);
-                }}
-                className={`press rounded-full px-4 py-2 text-sm font-semibold transition-all ${
-                  active
-                    ? "text-neutral-950"
-                    : "border border-white/20 text-neutral-300 hover:border-white/40 hover:text-white"
-                }`}
-                style={active ? { backgroundColor: product.accent } : undefined}
-              >
-                {chip}
-                <span className="ml-1.5 text-xs opacity-70">
-                  {chip === product.baseRangeLabel
-                    ? mounted.filter((f) => !f.edition).length
-                    : mounted.filter((f) => f.edition === chip).length}
-                </span>
-              </button>
-            );
-          })}
-        </div>
 
         {/* Offer for the open range, above the wall it applies to. */}
         {product.promo && product.promo.range === filter && (
