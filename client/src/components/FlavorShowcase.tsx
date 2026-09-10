@@ -109,6 +109,14 @@ export default function FlavorShowcase({
 
   const glow = featured ? flavorGlow(featured.name) : "160 160 170";
 
+  const wallRef = useRef<HTMLDivElement>(null);
+  // Back to the start when the range changes: the row keeps its scroll
+  // position otherwise, so switching tabs would open mid-list on a shorter
+  // range and look like the first flavours are missing.
+  useEffect(() => {
+    wallRef.current?.scrollTo({ left: 0 });
+  }, [filter]);
+
   /*
     Opens on the leftmost tab.
 
@@ -335,7 +343,18 @@ export default function FlavorShowcase({
         )}
 
         {/* ── Wall ────────────────────────────────────────────────────── */}
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+        {/*
+          A single scrolling row on phones, a grid from tablet up.
+
+          On a phone the grid ran several screens deep, so picking a flavour
+          meant scrolling down to the tile and back up to the panel that had
+          just changed. In one row the panel stays on screen while you swipe
+          through the tiles, and every tap lands where you can already see it.
+        */}
+        <div
+          ref={wallRef}
+          className="no-scrollbar -mx-5 flex snap-x gap-3 overflow-x-auto px-5 sm:mx-0 sm:grid sm:grid-cols-3 sm:overflow-visible sm:px-0 lg:grid-cols-5"
+        >
           {visible.map((f) => {
             const active = f.slug === featured?.slug;
             return (
@@ -344,7 +363,7 @@ export default function FlavorShowcase({
                 type="button"
                 onClick={() => setSelected(f.slug)}
                 aria-pressed={active}
-                className="group rounded-2xl border p-2 text-left backdrop-blur-xl backdrop-saturate-150 transition-all duration-200 hover:-translate-y-1 hover:bg-black/60"
+                className="group w-[38vw] shrink-0 snap-start rounded-2xl border p-2 text-left backdrop-blur-xl backdrop-saturate-150 transition-all duration-200 hover:-translate-y-1 hover:bg-black/60 sm:w-auto sm:shrink"
                 style={{
                   borderColor: active ? product.accent : "rgba(255,255,255,0.12)",
                   // Dark glass rather than a white tint: over a patterned
