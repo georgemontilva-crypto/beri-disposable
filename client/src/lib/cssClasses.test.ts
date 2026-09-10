@@ -20,6 +20,7 @@ describe("custom classes referenced by components exist in the stylesheet", () =
     "rainbow-edge",
     "rainbow-edge-top",
     "nav-underline",
+    "rainbow-border",
     "glass-nav",
     "tech-grid",
     "form-glow",

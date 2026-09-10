@@ -238,12 +238,16 @@ export default function FlavorShowcase({
                   userPicked.current = true;
                   setFilter(chip);
                 }}
-                className={`press shrink-0 rounded-full px-4 py-2 text-sm font-semibold transition-all ${
-                  active
-                    ? "text-neutral-950"
-                    : "border border-white/20 text-neutral-300 hover:border-white/40 hover:text-white"
+                className={`press rainbow-border shrink-0 rounded-full px-4 py-2 text-sm font-semibold transition-all ${
+                  active ? "text-neutral-950" : "text-neutral-300 hover:text-white"
                 }`}
-                style={active ? { backgroundColor: product.accent } : undefined}
+                /* The fill is what distinguishes the open tab now that every
+                   chip carries the same moving border. */
+                style={
+                  {
+                    "--chip-bg": active ? product.accent : "#0d0d10",
+                  } as React.CSSProperties
+                }
               >
                 {chip}
                 <span className="ml-1.5 text-xs opacity-70">

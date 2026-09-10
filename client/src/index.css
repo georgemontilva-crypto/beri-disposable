@@ -705,6 +705,31 @@
   animation: rainbow-slide 5s linear infinite;
 }
 
+/* Animated gradient border for the collection tabs.
+
+   Two backgrounds in one box: a solid fill clipped to the padding box and the
+   moving gradient clipped to the border box, with a transparent border letting
+   the gradient show through. Doing it this way keeps the button a single
+   element — a wrapper faking a border would break the pill radius and the
+   focus outline. */
+.rainbow-border {
+  border: 1.5px solid transparent;
+  background:
+    linear-gradient(var(--chip-bg), var(--chip-bg)) padding-box,
+    linear-gradient(90deg, #ff4d6d, #ffb020, #3ddc97, #35b8ff, #a06bff, #ff4d6d)
+      border-box;
+  background-size:
+    auto,
+    300% 100%;
+  animation: rainbow-slide 6s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rainbow-border {
+    animation: none;
+  }
+}
+
 @keyframes rainbow-slide {
   from {
     background-position: 0% 50%;
