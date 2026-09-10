@@ -629,59 +629,98 @@
   }
 }
 
-/* ─── Summer lights ────────────────────────────────────────────────────────
-   Two orange washes behind the page while the summer range is open. Periods
-   are coprime so the pair never pulses in unison, which would read as the
-   whole page breathing. */
-.summer-light {
-  will-change: transform;
+/* ─── Rainbow lines ────────────────────────────────────────────────────────
+   The moving gradient used along the header edge, the footer dividers and the
+   navigation underline. One set of keyframes and one palette for all of them,
+   so they travel at the same rhythm and read as one system instead of three
+   unrelated animations. */
+.rainbow-edge {
+  position: relative;
 }
 
-.summer-light-a {
-  background: radial-gradient(
-    closest-side,
-    rgba(255, 138, 30, 0.4) 0%,
-    rgba(255, 138, 30, 0.18) 45%,
-    transparent 76%
+.rainbow-edge::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0 0;
+  /* Below any panel that hangs off the bar: the line is trim, not something
+     that should cross an open menu. */
+  z-index: 1;
+  height: 1.5px;
+  background: linear-gradient(
+    90deg,
+    #ff4d6d,
+    #ffb020,
+    #3ddc97,
+    #35b8ff,
+    #a06bff,
+    #ff4d6d
   );
-  animation: summer-drift-a 17s ease-in-out infinite alternate;
+  background-size: 300% 100%;
+  animation: rainbow-slide 9s linear infinite;
+  pointer-events: none;
 }
 
-.summer-light-b {
-  background: radial-gradient(
-    closest-side,
-    rgba(255, 96, 60, 0.34) 0%,
-    rgba(255, 96, 60, 0.15) 45%,
-    transparent 76%
+/* Same line along the top edge, for dividers that sit above their content
+   instead of below it. */
+.rainbow-edge-top {
+  position: relative;
+}
+
+.rainbow-edge-top::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  z-index: 1;
+  height: 1.5px;
+  background: linear-gradient(
+    90deg,
+    #ff4d6d,
+    #ffb020,
+    #3ddc97,
+    #35b8ff,
+    #a06bff,
+    #ff4d6d
   );
-  animation: summer-drift-b 23s ease-in-out infinite alternate -8s;
+  background-size: 300% 100%;
+  animation: rainbow-slide 9s linear infinite;
+  pointer-events: none;
 }
 
-@keyframes summer-drift-a {
+/* Underline for the navigation links. A real node rather than a pseudo-element
+   so it can be scaled out from its centre on hover. */
+.nav-underline {
+  transform-origin: center;
+  background: linear-gradient(
+    90deg,
+    #ff4d6d,
+    #ffb020,
+    #3ddc97,
+    #35b8ff,
+    #a06bff,
+    #ff4d6d
+  );
+  background-size: 300% 100%;
+  /* Faster than the long lines: over a few centimetres the 9s cycle looks
+     almost still. */
+  animation: rainbow-slide 5s linear infinite;
+}
+
+@keyframes rainbow-slide {
   from {
-    transform: translate(-50%, 0) scale(1);
+    background-position: 0% 50%;
   }
   to {
-    transform: translate(-50%, -9vh) scale(1.1);
-  }
-}
-
-@keyframes summer-drift-b {
-  from {
-    transform: translate(-50%, 0) scale(1.06);
-  }
-  to {
-    transform: translate(-50%, -12vh) scale(0.95);
+    background-position: 300% 50%;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .summer-light-a,
-  .summer-light-b {
+  .rainbow-edge::after,
+  .rainbow-edge-top::before,
+  .nav-underline {
     animation: none;
   }
 }
-
 
 /* ─── Technical grid ───────────────────────────────────────────────────────
    Dot grid for the functional pages. Deliberately fainter than the product
