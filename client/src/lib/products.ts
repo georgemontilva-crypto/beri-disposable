@@ -320,8 +320,8 @@ export const BERI_CRUSH: Product = {
       {
         name: "Miami Mint",
         description:
-          "Clean, refreshing mint with a smooth cooling finish.",
-        notes: ["Mint", "Fresh", "Cool"],
+          "Fresh peppermint with a smooth and slightly fruity icy finish.",
+        notes: ["Peppermint", "Fresh", "Icy"],
       },
       {
         name: "Strawberry Cream",
@@ -356,8 +356,8 @@ export const BERI_CRUSH: Product = {
       {
         name: "White Strawberry",
         description:
-          "Smooth, sweet strawberry with a softer fruit-forward finish.",
-        notes: ["Strawberry", "Sweet", "Smooth"],
+          "Sweet, creamy strawberry with a fruit forward finish.",
+        notes: ["Strawberry", "Creamy", "Sweet"],
       },
     ]),
     ...buildFlavors(
@@ -372,8 +372,8 @@ export const BERI_CRUSH: Product = {
         {
           name: "Blue Coconut",
           description:
-            "Sweet blue raspberry paired with smooth, tropical coconut.",
-          notes: ["Blue Razz", "Coconut", "Tropical"],
+            "Sweet blueberry paired with smooth, tropical coconut.",
+          notes: ["Blueberry", "Coconut", "Tropical"],
         },
         {
           name: "Blueberry Watermelon",
@@ -500,8 +500,8 @@ export const BERI_CRUSH: Product = {
         {
           name: "Miami Mint",
           description:
-            "Clean, refreshing mint with a smooth cooling finish, without nicotine.",
-          notes: ["Mint", "Fresh", "Cool"],
+            "Fresh peppermint with a smooth and slightly fruity icy finish, without nicotine.",
+          notes: ["Peppermint", "Fresh", "Icy"],
         },
         {
           name: "Strawberry Watermelon",
@@ -604,8 +604,8 @@ export const BERI_CLIQ: Product = {
     {
       name: "Black Razz Ice",
       description:
-        "Dark raspberry with a tangy berry bite and cool finish.",
-      notes: ["Raspberry", "Tart", "Ice"],
+        "Black raspberry with a tangy berry bite and cool finish.",
+      notes: ["Black Raspberry", "Tart", "Ice"],
     },
     {
       name: "Blue Rancher",
@@ -646,8 +646,8 @@ export const BERI_CLIQ: Product = {
     {
       name: "Miami Mint",
       description:
-        "Fresh mint with a smooth, refreshing cooling finish.",
-      notes: ["Mint", "Fresh", "Cool"],
+        "Fresh peppermint with a smooth and slightly fruity icy finish.",
+      notes: ["Peppermint", "Fresh", "Icy"],
     },
     {
       name: "Mixed Berry",
@@ -706,8 +706,8 @@ export const BERI_CLIQ: Product = {
     {
       name: "White Strawberry",
       description:
-        "Smooth, sweet strawberry with a softer fruit-forward finish.",
-      notes: ["Strawberry", "Sweet", "Smooth"],
+        "Sweet, creamy strawberry with a fruit forward finish.",
+      notes: ["Strawberry", "Creamy", "Sweet"],
     },
     ]),
     // Kits repeat pod names, so they need their own slug prefix or both
@@ -736,8 +736,8 @@ export const BERI_CLIQ: Product = {
         {
           name: "Miami Mint",
           description:
-            "Fresh mint with a smooth, refreshing cooling finish.",
-          notes: ["Mint", "Fresh", "Cool"],
+            "Fresh peppermint with a smooth and slightly fruity icy finish.",
+          notes: ["Peppermint", "Fresh", "Icy"],
         },
         {
           name: "Peach Ice",
@@ -772,8 +772,8 @@ export const BERI_CLIQ: Product = {
         {
           name: "White Strawberry",
           description:
-            "Smooth, sweet strawberry with a softer fruit-forward finish.",
-          notes: ["Strawberry", "Sweet", "Smooth"],
+            "Sweet, creamy strawberry with a fruit forward finish.",
+          notes: ["Strawberry", "Creamy", "Sweet"],
         },
       ],
       "Kits",
