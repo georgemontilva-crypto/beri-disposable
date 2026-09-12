@@ -1,6 +1,6 @@
 import { AdminLayout } from "@/components/AdminLayout";
 import { TableCard } from "@/components/admin/AdminTable";
-import { editionTextureSlot, PRODUCTS, rangeBannerSlot } from "@/lib/products";
+import { editionTextureSlot, PRODUCTS } from "@/lib/products";
 import { trpc } from "@/lib/trpc";
 import { Box, Film, Image as ImageIcon, Loader2, Trash2, Upload } from "lucide-react";
 import { useMemo, useRef, useState } from "react";
@@ -100,6 +100,19 @@ function buildSlots(): SlotDef[] {
       size: "2000×2000 seamless tile",
     },
     {
+      slot: "wholesale_video",
+      label: "Wholesale — Video",
+      section: "Wholesale",
+      size: "1920×1080 MP4, loops muted",
+      type: "video",
+    },
+    {
+      slot: "wholesale_video_poster",
+      label: "Wholesale — Video poster",
+      section: "Wholesale",
+      size: "1920×1080 — first frame",
+    },
+    {
       slot: "wholesale_texture",
       label: "Wholesale — Background texture",
       section: "Wholesale",
@@ -158,26 +171,44 @@ function buildSlots(): SlotDef[] {
       type: "model",
     });
     slots.push({
-      slot: `${p.key}_banner`,
-      label: `${p.name} — Banner (default)`,
+      slot: p.panelVideoSlot,
+      label: `${p.name} — Home panel loop`,
       section,
-      size: "any shape — shown whole",
+      size: "1080×1620 MP4, 3-6s, plays once",
+      type: "video",
     });
-    // One optional banner per range, shown while that tab is open. Without one
-    // the range falls back to the default above.
-    for (const range of [
-      p.baseRangeLabel,
-      ...Array.from(
-        new Set(p.flavors.map((f) => f.edition).filter((e): e is string => !!e))
-      ),
-    ]) {
+    slots.push({
+      slot: p.textureSlot,
+      label: `${p.name} — Background texture`,
+      section,
+      size: "1500×1500 seamless tile",
+    });
+    // One optional pattern per edition; an edition without one falls back to
+    // the product's.
+    for (const edition of Array.from(
+      new Set(p.flavors.map((f) => f.edition).filter((e): e is string => !!e))
+    )) {
       slots.push({
-        slot: rangeBannerSlot(p.key, range),
-        label: `${range} — Banner`,
+        slot: editionTextureSlot(p.key, edition),
+        label: `${edition} — Background texture`,
         section,
-        size: "any shape — shown whole",
+        size: "1500×1500 seamless tile",
       });
     }
+    slots.push({
+      slot: p.logoSlot,
+      label: `${p.name} — Product logo`,
+      section,
+      size: "1040×384 PNG transparent",
+    });
+    slots.push({ slot: p.heroSlot, label: `${p.name} — Hero`, section, size: "1200×900" });
+    slots.push({
+      slot: p.modelSlot,
+      label: `${p.name} — 3D Model`,
+      section,
+      size: ".glb / .gltf · max 25 MB",
+      type: "model",
+    });
     // One icon per highlight.
     for (const spec of p.highlights) {
       slots.push({

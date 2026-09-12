@@ -1,5 +1,4 @@
 import { PlaceholderImage } from "@/components/PlaceholderImage";
-import BannerCarousel from "@/components/BannerCarousel";
 import ColoredSmoke from "@/components/ColoredSmoke";
 import PageTexture from "@/components/PageTexture";
 import { PublicLayout } from "@/components/PublicLayout";
@@ -394,7 +393,7 @@ export default function Wholesale() {
             </div>
 
             <div className="reveal mt-12">
-              <BannerCarousel />
+              <WholesaleVideo />
             </div>
           </div>
         </section>
@@ -524,5 +523,42 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
     <p className="mb-3 mt-7 text-xs font-semibold uppercase tracking-[0.2em] text-neutral-400 first:mt-5">
       {children}
     </p>
+  );
+}
+
+
+/**
+ * Promo video for the wholesale page.
+ *
+ * Loops muted, which is the only kind of autoplay browsers allow without a
+ * gesture, and keeps its controls so a retailer who wants the sound can turn it
+ * on. `preload="metadata"` rather than `auto`: most visitors come here to fill
+ * in the form, and they shouldn't pay for the whole file to find that out.
+ */
+function WholesaleVideo() {
+  const media = useSiteImages();
+  const url = media["wholesale_video"]?.url;
+  const poster = media["wholesale_video_poster"]?.url;
+
+  if (!url) {
+    return (
+      <div className="flex aspect-video w-full items-center justify-center rounded-[1.5rem] border border-dashed border-white/15 bg-white/[0.04]">
+        <span className="font-mono text-[11px] text-neutral-500">wholesale_video</span>
+      </div>
+    );
+  }
+
+  return (
+    <video
+      src={url}
+      poster={poster}
+      controls
+      autoPlay
+      muted
+      loop
+      playsInline
+      preload="metadata"
+      className="aspect-video w-full rounded-[1.5rem] border border-white/10 bg-black object-cover"
+    />
   );
 }

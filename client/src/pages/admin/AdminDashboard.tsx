@@ -31,7 +31,6 @@ function mediaGroups(): { section: string; slots: string[] }[] {
         p.panelSlot,
         p.heroSlot,
         p.modelSlot,
-        `${p.key}_banner`,
         ...p.highlights.map((h) => h.iconSlot),
         ...p.flavors.map((f) => f.slot),
       ],

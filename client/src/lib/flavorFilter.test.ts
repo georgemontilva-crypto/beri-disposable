@@ -129,54 +129,6 @@ describe("explicit tab order", () => {
   });
 });
 
-describe("per-range banner slot", () => {
-  const toSlug = (s: string) =>
-    s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
-  const rangeBannerSlot = (key: string, range: string) =>
-    `${key}_banner_${toSlug(range)}`;
-
-  it("gives every range its own slot", () => {
-    const ranges = [
-      "Core Collection",
-      "Summer Edition",
-      "Winter Edition",
-      "Graffiti Edition",
-      "0% Nicotine",
-    ];
-    const slots = ranges.map((r) => rangeBannerSlot("crush", r));
-    expect(new Set(slots).size).toBe(ranges.length);
-  });
-
-  it("never collides with the product's default banner", () => {
-    // The default is `crush_banner`; a range slug must not produce that exact
-    // key or the two would overwrite each other.
-    const slots = ["Core Collection", "0% Nicotine"].map((r) =>
-      rangeBannerSlot("crush", r)
-    );
-    expect(slots).not.toContain("crush_banner");
-  });
-
-  it("survives a range name that is mostly punctuation", () => {
-    expect(rangeBannerSlot("crush", "0% Nicotine")).toBe("crush_banner_0-nicotine");
-  });
-});
-
-describe("banner aspect ratio", () => {
-  const DEFAULT_ASPECT = 16 / 9;
-  /** Mirrors BannerCarousel: measured ratio when known, default until then. */
-  const ratio = (natural: number | null) => natural ?? DEFAULT_ASPECT;
-
-  it("uses the file's own proportions once measured", () => {
-    expect(ratio(2400 / 800)).toBeCloseTo(3);
-    expect(ratio(1000 / 1000)).toBe(1);
-  });
-
-  it("falls back to 16:9 before the image has loaded", () => {
-    // Without a default the section would have zero height on first paint and
-    // the page below would jump once the image arrived.
-    expect(ratio(null)).toBeCloseTo(16 / 9);
-  });
-});
 
 describe("default open tab", () => {
   /** Mirrors the effect in FlavorShowcase. */
@@ -222,54 +174,3 @@ describe("initial tab before images load", () => {
   });
 });
 
-describe("banner carousel slides", () => {
-  /** Mirrors the slide list built in BannerCarousel. */
-  function slides(
-    products: { key: string; ranges: string[] }[],
-    media: Record<string, string>
-  ) {
-    const out: string[] = [];
-    const seen = new Set<string>();
-    for (const p of products) {
-      for (const r of p.ranges) {
-        const url =
-          media[`${p.key}_banner_${r}`] ?? media[`${p.key}_banner`] ?? undefined;
-        if (!url || seen.has(url)) continue;
-        seen.add(url);
-        out.push(url);
-      }
-    }
-    return out;
-  }
-
-  it("uses a range's own banner when it has one", () => {
-    const out = slides([{ key: "crush", ranges: ["core", "summer"] }], {
-      crush_banner_core: "/a.jpg",
-      crush_banner_summer: "/b.jpg",
-    });
-    expect(out).toEqual(["/a.jpg", "/b.jpg"]);
-  });
-
-  it("collapses a product that only has the default banner", () => {
-    // Otherwise five ranges would show the same picture five times running.
-    const out = slides([{ key: "crush", ranges: ["core", "summer", "winter"] }], {
-      crush_banner: "/default.jpg",
-    });
-    expect(out).toEqual(["/default.jpg"]);
-  });
-
-  it("skips ranges with nothing uploaded instead of showing a gap", () => {
-    expect(slides([{ key: "cliq", ranges: ["kits", "pods"] }], {})).toEqual([]);
-  });
-
-  it("keeps catalogue order across products", () => {
-    const out = slides(
-      [
-        { key: "crush", ranges: ["core"] },
-        { key: "cliq", ranges: ["kits"] },
-      ],
-      { crush_banner_core: "/1.jpg", cliq_banner_kits: "/2.jpg" }
-    );
-    expect(out).toEqual(["/1.jpg", "/2.jpg"]);
-  });
-});
