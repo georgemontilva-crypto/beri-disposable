@@ -163,7 +163,7 @@ describe("per-range banner slot", () => {
 
 describe("banner aspect ratio", () => {
   const DEFAULT_ASPECT = 16 / 9;
-  /** Mirrors PinnedBanner: measured ratio when known, default until then. */
+  /** Mirrors BannerCarousel: measured ratio when known, default until then. */
   const ratio = (natural: number | null) => natural ?? DEFAULT_ASPECT;
 
   it("uses the file's own proportions once measured", () => {

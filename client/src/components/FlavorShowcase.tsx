@@ -22,16 +22,9 @@ import SummerEmbers from "./SummerEmbers";
 export default function FlavorShowcase({
   product,
   images,
-  onRangeChange,
 }: {
   product: Product;
   images: Record<string, PublicMediaEntry>;
-  /**
-   * Reports the open tab upward. The banner below this section belongs to the
-   * page, not to the showcase, but it has to follow the same selection — so the
-   * showcase owns the state and publishes it rather than the page reaching in.
-   */
-  onRangeChange?: (range: string) => void;
 }) {
   /*
     Starts on the product's declared first tab rather than on its base range.
@@ -130,12 +123,6 @@ export default function FlavorShowcase({
     if (chips.length && chips[0] !== filter) setFilter(chips[0]);
   }, [chips, filter]);
 
-  useEffect(() => {
-    onRangeChange?.(filter);
-    // Deliberately not depending on the callback: a parent that passes an
-    // inline arrow would otherwise re-fire this on every one of its renders.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filter]);
 
   return (
     <section className="relative overflow-hidden py-20 text-white">
