@@ -18,7 +18,6 @@ function usedIn(file: string): string[] {
 describe("custom classes referenced by components exist in the stylesheet", () => {
   const custom = [
     "rainbow-edge",
-    "rainbow-edge-top",
     "nav-underline",
     "rainbow-border",
     "glass-nav",

@@ -6,7 +6,6 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { useSiteImages } from "@/hooks/useSiteImages";
 import { Link } from "wouter";
-import { NicotineWarning } from "./NicotineWarning";
 
 export function SiteFooter() {
   const media = useSiteImages();
@@ -86,11 +85,7 @@ export function SiteFooter() {
           </div>
         </div>
 
-        <div className="mt-10">
-          <NicotineWarning variant="footer" />
-        </div>
-
-        <div className="rainbow-edge-top mt-8 flex flex-col items-center justify-between gap-4 pt-6 text-xs text-neutral-400 sm:flex-row">
+        <div className="mt-10 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-6 text-xs text-neutral-400 sm:flex-row">
           <span>© {year} Beri Disposable. All rights reserved.</span>
           <span>For adult use only. 21+</span>
         </div>
@@ -123,7 +118,7 @@ function FooterNewsletter() {
   };
 
   return (
-    <div className="rainbow-edge">
+    <div className="border-b border-white/10">
       <div className="container flex flex-col gap-6 py-10 md:flex-row md:items-center md:justify-between">
         <div>
           <h2 className="font-display text-2xl font-bold tracking-tight text-white">
