@@ -543,7 +543,7 @@ export const BERI_CLIQ: Product = {
     { label: "Pod", value: "Replaceable" },
   ],
   flavorTitle: "BERI CLIQ COLLECTION",
-  flavorIntro: "10 Kits. 25 Pods. Build your CLIQ.",
+  flavorIntro: "14 Kits. 25 Pods. Build your CLIQ.",
   promo: {
     range: "Pods",
     badge: "Limited Edition",
@@ -711,64 +711,88 @@ export const BERI_CLIQ: Product = {
       "cliq",
       [
         {
-          name: "Blue Razz Ice",
+          name: "Alaskan Mint",
           description:
-            "Tangy blue raspberry with a crisp icy finish.",
-          notes: ["Blue Razz", "Tart", "Ice"],
+            "Crisp mint with a clean, intensely cool finish.",
+          notes: ["Mint", "Crisp", "Cool"],
         },
         {
-          name: "Clear",
+          name: "Banana Ice",
           description:
-            "A clean, understated profile with minimal added flavor.",
-          notes: ["Clean", "Light", "Neutral"],
+            "Smooth banana sweetness balanced by a refreshing icy finish.",
+          notes: ["Banana", "Sweet", "Ice"],
         },
         {
-          name: "Grape Ice",
+          name: "Black Razz Ice",
           description:
-            "Bold grape sweetness balanced by a chilled finish.",
-          notes: ["Grape", "Sweet", "Ice"],
+            "Black raspberry with a tangy berry bite and cool finish.",
+          notes: ["Black Raspberry", "Tart", "Ice"],
         },
         {
-          name: "Miami Mint",
+          name: "Blue Coconut",
           description:
-            "Fresh peppermint with a smooth and slightly fruity icy finish.",
-          notes: ["Peppermint", "Fresh", "Icy"],
+            "Sweet blueberry paired with smooth, tropical coconut.",
+          notes: ["Blueberry", "Coconut", "Tropical"],
         },
         {
-          name: "Peach Ice",
+          name: "Blue Rancher",
           description:
-            "Ripe peach sweetness paired with a light icy finish.",
-          notes: ["Peach", "Sweet", "Ice"],
+            "Hard blue candy with a sharp, sweet-and-sour bite.",
+          notes: ["Blue Candy", "Sweet", "Sour"],
         },
         {
-          name: "Super Mint",
+          name: "Green Apple",
           description:
-            "Strong, refreshing mint with an intensely cool finish.",
-          notes: ["Mint", "Fresh", "Extra Cool"],
+            "Crisp green apple with a bright sweet-and-tart bite.",
+          notes: ["Apple", "Tart", "Crisp"],
         },
         {
-          name: "Tobacco",
+          name: "Mango Bomb",
           description:
-            "A classic tobacco-style profile with a smooth, familiar finish.",
-          notes: ["Tobacco", "Rich", "Classic"],
+            "Bold tropical mango with a smooth, juicy finish.",
+          notes: ["Mango", "Tropical", "Juicy"],
+        },
+        {
+          name: "Mixed Berry",
+          description:
+            "A blend of ripe berries with a smooth, jammy sweetness.",
+          notes: ["Mixed Berry", "Ripe", "Sweet"],
+        },
+        {
+          name: "Passion Fruit Mango",
+          description:
+            "Tart passion fruit lifted by ripe mango, bright and tropical throughout.",
+          notes: ["Passion Fruit", "Mango", "Tropical"],
+        },
+        {
+          name: "Punch Ice",
+          description:
+            "Sweet mixed fruit punch with a crisp icy finish.",
+          notes: ["Fruit Punch", "Sweet", "Ice"],
+        },
+        {
+          name: "Sour Neon",
+          description:
+            "A bright sour-candy blend with a punchy sweet-and-tart finish.",
+          notes: ["Sour Candy", "Sweet", "Tart"],
+        },
+        {
+          name: "Sour Watermelon Gami",
+          description:
+            "Tangy watermelon candy with a sweet gummy-inspired finish.",
+          notes: ["Watermelon", "Sour", "Candy"],
+        },
+        {
+          name: "Strawberry Burst",
+          description:
+            "Ripe strawberry at full volume, sweet and juicy with a clean finish.",
+          notes: ["Strawberry", "Juicy", "Sweet"],
         },
         {
           name: "Watermelon Ice",
           description:
             "Juicy watermelon balanced by a refreshing icy finish.",
           notes: ["Watermelon", "Juicy", "Ice"],
-        },
-        {
-          name: "White Gami",
-          description:
-            "Soft white gummy candy with a smooth, sugary finish.",
-          notes: ["Gummy", "Candy", "Smooth"],
-        },
-        {
-          name: "White Strawberry",
-          description:
-            "Sweet, creamy strawberry with a fruit forward finish.",
-          notes: ["Strawberry", "Creamy", "Sweet"],
         },
       ],
       "Kits",
