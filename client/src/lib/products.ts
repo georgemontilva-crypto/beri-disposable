@@ -603,6 +603,12 @@ export const BERI_CLIQ: Product = {
       notes: ["Black Raspberry", "Tart", "Ice"],
     },
     {
+      name: "Blue Coconut",
+      description:
+        "Sweet blueberry paired with smooth, tropical coconut.",
+      notes: ["Blueberry", "Coconut", "Tropical"],
+    },
+    {
       name: "Blue Rancher",
       description:
         "Hard blue candy with a sharp, sweet-and-sour bite.",
@@ -651,10 +657,22 @@ export const BERI_CLIQ: Product = {
       notes: ["Mixed Berry", "Ripe", "Sweet"],
     },
     {
+      name: "Passion Fruit Mango",
+      description:
+        "Tart passion fruit lifted by ripe mango, bright and tropical throughout.",
+      notes: ["Passion Fruit", "Mango", "Tropical"],
+    },
+    {
       name: "Peach Ice",
       description:
         "Ripe peach sweetness paired with a light icy finish.",
       notes: ["Peach", "Sweet", "Ice"],
+    },
+    {
+      name: "Peach Refresher",
+      description:
+        "Ripe peach over a light, crisp base, closer to a cold drink than a candy.",
+      notes: ["Peach", "Refreshing", "Light"],
     },
     {
       name: "Punch Ice",
@@ -667,6 +685,18 @@ export const BERI_CLIQ: Product = {
       description:
         "Bright sour-candy flavor with a bold sweet-and-tart finish.",
       notes: ["Sour Candy", "Sweet", "Tart"],
+    },
+    {
+      name: "Sour Watermelon Gami",
+      description:
+        "Tangy watermelon candy with a sweet gummy-inspired finish.",
+      notes: ["Watermelon", "Sour", "Candy"],
+    },
+    {
+      name: "Strawberry Burst",
+      description:
+        "Ripe strawberry at full volume, sweet and juicy with a clean finish.",
+      notes: ["Strawberry", "Juicy", "Sweet"],
     },
     {
       name: "Super Mint",
