@@ -543,7 +543,7 @@ export const BERI_CLIQ: Product = {
     { label: "Pod", value: "Replaceable" },
   ],
   flavorTitle: "BERI CLIQ COLLECTION",
-  flavorIntro: "24 Kits. 25 Pods. Build your CLIQ.",
+  flavorIntro: "25 Kits. 25 Pods. Build your CLIQ.",
   promo: {
     range: "Pods",
     badge: "Limited Edition",
@@ -807,7 +807,7 @@ export const BERI_CLIQ: Product = {
           notes: ["Fruit Punch", "Sweet", "Ice"],
         },
         {
-          name: "Sour Neon",
+          name: "Sour Neon FAB",
           description:
             "A bright sour-candy blend with a punchy sweet-and-tart finish.",
           notes: ["Sour Candy", "Sweet", "Tart"],
@@ -835,6 +835,12 @@ export const BERI_CLIQ: Product = {
           description:
             "A classic tobacco-style profile with a smooth, familiar finish.",
           notes: ["Tobacco", "Rich", "Classic"],
+        },
+        {
+          name: "Watermelon BG",
+          description:
+            "Juicy watermelon bubblegum with a soft, chewy finish.",
+          notes: ["Watermelon", "Bubblegum", "Sweet"],
         },
         {
           name: "Watermelon Ice",
