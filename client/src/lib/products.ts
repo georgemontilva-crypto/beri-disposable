@@ -543,7 +543,7 @@ export const BERI_CLIQ: Product = {
     { label: "Pod", value: "Replaceable" },
   ],
   flavorTitle: "BERI CLIQ COLLECTION",
-  flavorIntro: "23 Kits. 25 Pods. Build your CLIQ.",
+  flavorIntro: "24 Kits. 25 Pods. Build your CLIQ.",
   promo: {
     range: "Pods",
     badge: "Limited Edition",
@@ -787,6 +787,12 @@ export const BERI_CLIQ: Product = {
           description:
             "Tart passion fruit lifted by ripe mango, bright and tropical throughout.",
           notes: ["Passion Fruit", "Mango", "Tropical"],
+        },
+        {
+          name: "Peach Refresher",
+          description:
+            "Ripe peach over a light, crisp base, closer to a cold drink than a candy.",
+          notes: ["Peach", "Refreshing", "Light"],
         },
         {
           name: "Peach Ice",
