@@ -543,7 +543,7 @@ export const BERI_CLIQ: Product = {
     { label: "Pod", value: "Replaceable" },
   ],
   flavorTitle: "BERI CLIQ COLLECTION",
-  flavorIntro: "14 Kits. 25 Pods. Build your CLIQ.",
+  flavorIntro: "23 Kits. 25 Pods. Build your CLIQ.",
   promo: {
     range: "Pods",
     badge: "Limited Edition",
@@ -741,6 +741,24 @@ export const BERI_CLIQ: Product = {
           notes: ["Blue Candy", "Sweet", "Sour"],
         },
         {
+          name: "Blue Razz Ice",
+          description:
+            "Tangy blue raspberry with a crisp icy finish.",
+          notes: ["Blue Razz", "Tart", "Ice"],
+        },
+        {
+          name: "Clear",
+          description:
+            "A clean, understated profile with minimal added flavor.",
+          notes: ["Clean", "Light", "Neutral"],
+        },
+        {
+          name: "Grape Ice",
+          description:
+            "Bold grape sweetness balanced by a chilled finish.",
+          notes: ["Grape", "Sweet", "Ice"],
+        },
+        {
           name: "Green Apple",
           description:
             "Crisp green apple with a bright sweet-and-tart bite.",
@@ -753,6 +771,12 @@ export const BERI_CLIQ: Product = {
           notes: ["Mango", "Tropical", "Juicy"],
         },
         {
+          name: "Miami Mint",
+          description:
+            "Fresh peppermint with a smooth and slightly fruity icy finish.",
+          notes: ["Peppermint", "Fresh", "Icy"],
+        },
+        {
           name: "Mixed Berry",
           description:
             "A blend of ripe berries with a smooth, jammy sweetness.",
@@ -763,6 +787,12 @@ export const BERI_CLIQ: Product = {
           description:
             "Tart passion fruit lifted by ripe mango, bright and tropical throughout.",
           notes: ["Passion Fruit", "Mango", "Tropical"],
+        },
+        {
+          name: "Peach Ice",
+          description:
+            "Ripe peach sweetness paired with a light icy finish.",
+          notes: ["Peach", "Sweet", "Ice"],
         },
         {
           name: "Punch Ice",
@@ -789,10 +819,34 @@ export const BERI_CLIQ: Product = {
           notes: ["Strawberry", "Juicy", "Sweet"],
         },
         {
+          name: "Super Mint",
+          description:
+            "Strong, refreshing mint with an intensely cool finish.",
+          notes: ["Mint", "Fresh", "Extra Cool"],
+        },
+        {
+          name: "Tobacco",
+          description:
+            "A classic tobacco-style profile with a smooth, familiar finish.",
+          notes: ["Tobacco", "Rich", "Classic"],
+        },
+        {
           name: "Watermelon Ice",
           description:
             "Juicy watermelon balanced by a refreshing icy finish.",
           notes: ["Watermelon", "Juicy", "Ice"],
+        },
+        {
+          name: "White Gami",
+          description:
+            "Soft white gummy candy with a smooth, sugary finish.",
+          notes: ["Gummy", "Candy", "Smooth"],
+        },
+        {
+          name: "White Strawberry",
+          description:
+            "Sweet, creamy strawberry with a fruit forward finish.",
+          notes: ["Strawberry", "Creamy", "Sweet"],
         },
       ],
       "Kits",
