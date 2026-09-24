@@ -187,14 +187,6 @@ export default function Wholesale() {
                   </div>
                 ))}
               </div>
-
-              <p className="mt-8 text-sm text-neutral-400">
-                Already approved?{" "}
-                <Link href="/wholesale/login" className="inline-flex items-center gap-1 font-semibold text-foreground underline underline-offset-4">
-                  <Lock className="h-3.5 w-3.5" />
-                  Partner Login
-                </Link>
-              </p>
             </div>
 
             {/* Form / Success */}

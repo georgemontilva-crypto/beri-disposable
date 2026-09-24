@@ -11,6 +11,8 @@ import {
   queryLogs,
   siteImages,
   newsletterSubscribers,
+  partnerNews,
+  partnerResources,
   siteSettings,
   users,
   wholesaleInquiries,
@@ -410,4 +412,64 @@ export async function countSubscribers() {
     .select({ value: sql<number>`count(*)` })
     .from(newsletterSubscribers);
   return Number(rows[0]?.value ?? 0);
+}
+
+
+/* ─── Partner portal ──────────────────────────────────────────────────────── */
+
+/** Published items only, newest first. What partners see. */
+export async function listPartnerNews(onlyPublished = true, limit = 50) {
+  const db = await requireDb();
+  const q = db.select().from(partnerNews);
+  const rows = onlyPublished
+    ? await q.where(eq(partnerNews.published, true)).orderBy(desc(partnerNews.createdAt)).limit(limit)
+    : await q.orderBy(desc(partnerNews.createdAt)).limit(limit);
+  return rows;
+}
+
+export async function createPartnerNews(values: {
+  title: string;
+  body: string;
+  published: boolean;
+}) {
+  const db = await requireDb();
+  await db.insert(partnerNews).values(values);
+}
+
+export async function updatePartnerNews(
+  id: number,
+  values: Partial<{ title: string; body: string; published: boolean }>
+) {
+  const db = await requireDb();
+  await db.update(partnerNews).set(values).where(eq(partnerNews.id, id));
+}
+
+export async function deletePartnerNews(id: number) {
+  const db = await requireDb();
+  await db.delete(partnerNews).where(eq(partnerNews.id, id));
+}
+
+/** Ordered by the admin's chosen position, then alphabetically as a tiebreak. */
+export async function listPartnerResources() {
+  const db = await requireDb();
+  return db
+    .select()
+    .from(partnerResources)
+    .orderBy(partnerResources.sortOrder, partnerResources.title);
+}
+
+export async function createPartnerResource(values: {
+  title: string;
+  description: string | null;
+  url: string;
+  category: string;
+  sortOrder: number;
+}) {
+  const db = await requireDb();
+  await db.insert(partnerResources).values(values);
+}
+
+export async function deletePartnerResource(id: number) {
+  const db = await requireDb();
+  await db.delete(partnerResources).where(eq(partnerResources.id, id));
 }

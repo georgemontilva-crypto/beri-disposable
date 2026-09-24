@@ -6,6 +6,7 @@ import { adminAuthRouter } from "./routers/adminAuth";
 import { codesRouter } from "./routers/codes";
 import { imagesRouter } from "./routers/images";
 import { newsletterRouter } from "./routers/newsletter";
+import { partnerRouter } from "./routers/partner";
 import { settingsRouter } from "./routers/settings";
 import { wholesaleRouter } from "./routers/wholesale";
 
@@ -26,6 +27,7 @@ export const appRouter = router({
   wholesale: wholesaleRouter,
   images: imagesRouter,
   newsletter: newsletterRouter,
+  partner: partnerRouter,
   settings: settingsRouter,
 });
 

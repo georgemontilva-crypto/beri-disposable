@@ -1,5 +1,6 @@
 import {
   bigint,
+  boolean,
   index,
   int,
   mysqlEnum,
@@ -229,3 +230,45 @@ export const newsletterSubscribers = mysqlTable(
 );
 
 export type NewsletterSubscriber = typeof newsletterSubscribers.$inferSelect;
+
+/** Brand news shown to approved wholesale partners. */
+export const partnerNews = mysqlTable(
+  "partner_news",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    title: varchar("title", { length: 255 }).notNull(),
+    body: text("body").notNull(),
+    /** Drafts stay hidden from partners until this is set. */
+    published: boolean("published").default(false).notNull(),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+    updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+  },
+  (t) => ({
+    publishedIdx: index("partner_news_published_idx").on(t.published),
+  })
+);
+
+/**
+ * Downloadable assets for partners: product photography, logo packs, sell
+ * sheets. Stored as links rather than uploads because these are large folders
+ * that already live in Drive, and a link stays current when the folder changes.
+ */
+export const partnerResources = mysqlTable(
+  "partner_resources",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    title: varchar("title", { length: 255 }).notNull(),
+    description: varchar("description", { length: 512 }),
+    url: varchar("url", { length: 1024 }).notNull(),
+    /** Free text so new kinds don't need a migration. */
+    category: varchar("category", { length: 64 }).default("General"),
+    sortOrder: int("sortOrder").default(0).notNull(),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+  },
+  (t) => ({
+    categoryIdx: index("partner_resources_category_idx").on(t.category),
+  })
+);
+
+export type PartnerNews = typeof partnerNews.$inferSelect;
+export type PartnerResource = typeof partnerResources.$inferSelect;

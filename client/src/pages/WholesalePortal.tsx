@@ -1,7 +1,7 @@
 import { PublicLayout } from "@/components/PublicLayout";
 import { trpc } from "@/lib/trpc";
 import { CONTACT_WHOLESALE_EMAIL } from "@shared/const";
-import { Loader2, LogOut, Mail, Package } from "lucide-react";
+import { ExternalLink, FolderOpen, Loader2, LogOut, Mail, Newspaper } from "lucide-react";
 import { useEffect } from "react";
 import { useLocation } from "wouter";
 
@@ -62,32 +62,119 @@ export default function WholesalePortal() {
             </div>
           </div>
 
-          <div className="mt-6 grid gap-5 sm:grid-cols-2">
-            <div className="glass rounded-2xl p-6">
-              <div className="inline-flex rounded-xl bg-foreground p-2.5 text-background">
-                <Package className="h-5 w-5" />
-              </div>
-              <h2 className="mt-4 font-display text-lg font-semibold">Your account is active</h2>
-              <p className="mt-1.5 text-sm text-muted-foreground">
-                Your wholesale partnership is approved. Our team will reach out with
-                catalog and ordering details.
-              </p>
+          <PartnerNews />
+          <PartnerResources />
+
+          <div className="glass mt-6 rounded-2xl p-6">
+            <div className="inline-flex rounded-xl bg-foreground p-2.5 text-background">
+              <Mail className="h-5 w-5" />
             </div>
-            <div className="glass rounded-2xl p-6">
-              <div className="inline-flex rounded-xl bg-foreground p-2.5 text-background">
-                <Mail className="h-5 w-5" />
-              </div>
-              <h2 className="mt-4 font-display text-lg font-semibold">Need anything?</h2>
-              <p className="mt-1.5 text-sm text-muted-foreground">
-                Reach our wholesale team at{" "}
-                <a href={`mailto:${CONTACT_WHOLESALE_EMAIL}`} className="font-medium text-foreground underline underline-offset-4">
-                  {CONTACT_WHOLESALE_EMAIL}
-                </a>
-              </p>
-            </div>
+            <h2 className="mt-4 font-display text-lg font-semibold">Need anything?</h2>
+            <p className="mt-1.5 text-sm text-neutral-400">
+              Reach our wholesale team at{" "}
+              <a
+                href={`mailto:${CONTACT_WHOLESALE_EMAIL}`}
+                className="font-medium text-white underline underline-offset-4"
+              >
+                {CONTACT_WHOLESALE_EMAIL}
+              </a>
+            </p>
           </div>
         </div>
       </section>
     </PublicLayout>
+  );
+}
+
+
+/**
+ * Brand news. Only published items reach here — the server filters drafts out
+ * rather than sending everything and hiding some in the browser.
+ */
+function PartnerNews() {
+  const news = trpc.partner.news.useQuery();
+
+  if (news.isLoading || !news.data?.length) return null;
+
+  return (
+    <section className="mt-6">
+      <div className="mb-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-neutral-400">
+        <Newspaper className="h-4 w-4" /> Brand news
+      </div>
+
+      <div className="space-y-4">
+        {news.data.map((item) => (
+          <article key={item.id} className="glass rounded-2xl p-6">
+            <h3 className="font-display text-lg font-semibold text-white">
+              {item.title}
+            </h3>
+            <time className="mt-1 block text-xs text-neutral-500">
+              {new Date(item.createdAt).toLocaleDateString()}
+            </time>
+            {/* whitespace-pre-line so paragraph breaks typed in the admin box
+                survive, without accepting HTML from the form. */}
+            <p className="mt-3 whitespace-pre-line text-sm leading-relaxed text-neutral-300">
+              {item.body}
+            </p>
+          </article>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+/**
+ * Downloadable assets, grouped by category.
+ *
+ * Every link opens in a new tab with `rel="noreferrer"`: these point at Drive
+ * and similar, and a partner who follows one shouldn't lose the portal, nor
+ * should the destination be handed the page they came from.
+ */
+function PartnerResources() {
+  const resources = trpc.partner.resources.useQuery();
+
+  if (resources.isLoading || !resources.data?.length) return null;
+
+  const groups = new Map<string, typeof resources.data>();
+  for (const r of resources.data) {
+    const key = r.category ?? "General";
+    groups.set(key, [...(groups.get(key) ?? []), r]);
+  }
+
+  return (
+    <section className="mt-8">
+      <div className="mb-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-neutral-400">
+        <FolderOpen className="h-4 w-4" /> Resources
+      </div>
+
+      <div className="space-y-6">
+        {Array.from(groups.entries()).map(([category, items]) => (
+          <div key={category}>
+            <h3 className="mb-2 text-sm font-semibold text-white">{category}</h3>
+            <div className="grid gap-3 sm:grid-cols-2">
+              {items.map((r) => (
+                <a
+                  key={r.id}
+                  href={r.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="glass group flex items-start justify-between gap-3 rounded-2xl p-5 transition-colors hover:bg-white/10"
+                >
+                  <div className="min-w-0">
+                    <div className="font-semibold text-white">{r.title}</div>
+                    {r.description && (
+                      <div className="mt-1 text-sm text-neutral-400">
+                        {r.description}
+                      </div>
+                    )}
+                  </div>
+                  <ExternalLink className="mt-1 h-4 w-4 shrink-0 text-neutral-500 transition-colors group-hover:text-white" />
+                </a>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
   );
 }

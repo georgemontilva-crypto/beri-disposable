@@ -11,7 +11,7 @@ import {
   ScrollText,
   Store,
   Users,
-  X, Mail } from "lucide-react";
+  X, Mail, FolderOpen } from "lucide-react";
 import { useState } from "react";
 import { Link, useLocation } from "wouter";
 
@@ -22,6 +22,7 @@ const NAV = [
   { label: "Wholesale Inquiries", href: "/admin/inquiries", icon: Store },
   { label: "Wholesale Users", href: "/admin/users", icon: Users },
   { label: "Newsletter", href: "/admin/subscribers", icon: Mail },
+  { label: "Partner Portal", href: "/admin/partner-content", icon: FolderOpen },
   { label: "Site Images", href: "/admin/images", icon: ImageIcon },
 ];
 
