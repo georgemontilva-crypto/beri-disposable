@@ -22,12 +22,18 @@ export default function PageTexture({ slot }: { slot: string }) {
         className="absolute inset-0 opacity-[0.34]"
         style={{
           backgroundImage: `url(${url})`,
-          backgroundRepeat: "repeat",
-          // Large tile on purpose. A brand pattern has to stay readable as a
-          // mark: shrink it and the lettering turns into woven mesh, which
-          // reads as noise rather than as branding. Matches the scale used in
-          // the product sections for the same reason.
-          backgroundSize: "2600px auto",
+          /*
+            One copy covering the whole area, not a repeating tile.
+
+            Tiling only works when the artwork is authored to line up edge to
+            edge, and an ordinary pattern image isn't: every join shows as a
+            seam across the section. Covering crops instead, which costs some
+            of the image at the edges but never draws a line through the
+            middle of the page.
+          */
+          backgroundRepeat: "no-repeat",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
           filter: "brightness(0.95)",
         }}
       />
