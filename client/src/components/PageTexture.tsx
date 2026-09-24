@@ -19,7 +19,7 @@ export default function PageTexture({ slot }: { slot: string }) {
     <div aria-hidden="true" className="pointer-events-none absolute inset-0">
       <div className="absolute inset-0 bg-black" />
       <div
-        className="absolute inset-0 opacity-[0.34]"
+        className="absolute inset-0 opacity-[0.18]"
         style={{
           backgroundImage: `url(${url})`,
           /*
@@ -34,7 +34,9 @@ export default function PageTexture({ slot }: { slot: string }) {
           backgroundRepeat: "no-repeat",
           backgroundSize: "cover",
           backgroundPosition: "center",
-          filter: "brightness(0.95)",
+          // Dimmed along with the opacity: lowering only the latter leaves
+          // the bright parts of the artwork still catching the eye.
+          filter: "brightness(0.8)",
         }}
       />
       {/* Fades downward, but far later than before: the earlier ramp reached
