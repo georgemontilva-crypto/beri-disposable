@@ -170,45 +170,6 @@ function buildSlots(): SlotDef[] {
       size: ".glb / .gltf · max 25 MB",
       type: "model",
     });
-    slots.push({
-      slot: p.panelVideoSlot,
-      label: `${p.name} — Home panel loop`,
-      section,
-      size: "1080×1620 MP4, 3-6s, plays once",
-      type: "video",
-    });
-    slots.push({
-      slot: p.textureSlot,
-      label: `${p.name} — Background texture`,
-      section,
-      size: "1500×1500 seamless tile",
-    });
-    // One optional pattern per edition; an edition without one falls back to
-    // the product's.
-    for (const edition of Array.from(
-      new Set(p.flavors.map((f) => f.edition).filter((e): e is string => !!e))
-    )) {
-      slots.push({
-        slot: editionTextureSlot(p.key, edition),
-        label: `${edition} — Background texture`,
-        section,
-        size: "1500×1500 seamless tile",
-      });
-    }
-    slots.push({
-      slot: p.logoSlot,
-      label: `${p.name} — Product logo`,
-      section,
-      size: "1040×384 PNG transparent",
-    });
-    slots.push({ slot: p.heroSlot, label: `${p.name} — Hero`, section, size: "1200×900" });
-    slots.push({
-      slot: p.modelSlot,
-      label: `${p.name} — 3D Model`,
-      section,
-      size: ".glb / .gltf · max 25 MB",
-      type: "model",
-    });
     // One icon per highlight.
     for (const spec of p.highlights) {
       slots.push({
@@ -231,7 +192,9 @@ function buildSlots(): SlotDef[] {
       const range = f.edition ?? p.baseRangeLabel;
       slots.push({
         slot: f.slot,
-        label: f.name,
+        // Hidden flavours stay listed so their photo can be prepared before
+        // the range goes live; the tag is the only sign they aren't on site.
+        label: f.hidden ? `${f.name} — hidden on site` : f.name,
         section: `${p.name} · ${range}`,
         size: "800×600",
       });

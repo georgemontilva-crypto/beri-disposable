@@ -65,8 +65,11 @@ export default function FlavorShowcase({
    * missing.
    */
   const mounted = useMemo(() => {
-    const withImages = product.flavors.filter((f) => images[f.slot]?.url);
-    return withImages.length ? withImages : product.flavors;
+    // Flavours switched off in the catalogue never reach the page, even if
+    // their photo is already uploaded.
+    const live = product.flavors.filter((f) => !f.hidden);
+    const withImages = live.filter((f) => images[f.slot]?.url);
+    return withImages.length ? withImages : live;
   }, [product, images]);
 
   /** Regular first, then whatever editions actually exist for this product. */

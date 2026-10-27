@@ -10,12 +10,24 @@ export type Flavor = {
   description?: string;
   /** Two or three tasting keywords, shown as a row under the description. */
   notes?: string[];
+  /**
+   * Switched off on the public site while keeping its slot and any uploaded
+   * photo. Used for flavours that are catalogued but not yet announced: the
+   * admin still lists them so images can be prepared, the product page skips
+   * them. Turning one back on is a one-word change.
+   */
+  hidden?: boolean;
 };
 
 /** A flavour as authored: a bare name, or a name with its copy. */
 type FlavorInput =
   | string
-  | { name: string; description?: string; notes?: string[] };
+  | {
+      name: string;
+      description?: string;
+      notes?: string[];
+      hidden?: boolean;
+    };
 
 /** Product identifiers used in URLs (/products/:key). */
 export type ProductKey = "crush" | "cliq" | "cirql" | "eliquid";
@@ -203,6 +215,7 @@ function buildFlavors(
       profile: deriveProfile(f.name),
       ...(f.description ? { description: f.description } : {}),
       ...(f.notes ? { notes: f.notes } : {}),
+      ...(f.hidden ? { hidden: true as const } : {}),
       ...(edition ? { edition } : {}),
     };
   });
@@ -543,7 +556,9 @@ export const BERI_CLIQ: Product = {
     { label: "Pod", value: "Replaceable" },
   ],
   flavorTitle: "BERI CLIQ COLLECTION",
-  flavorIntro: "25 Kits. 25 Pods. Build your CLIQ.",
+  // Counts the live ranges only: 15 kits are catalogued but switched off
+  // (`hidden`), so the page shows 10 of the 25.
+  flavorIntro: "10 Kits. 25 Pods. Build your CLIQ.",
   promo: {
     range: "Pods",
     badge: "Limited Edition",
@@ -745,30 +760,35 @@ export const BERI_CLIQ: Product = {
           description:
             "Crisp mint with a clean, intensely cool finish.",
           notes: ["Mint", "Crisp", "Cool"],
+          hidden: true,
         },
         {
           name: "Banana Ice",
           description:
             "Smooth banana sweetness balanced by a refreshing icy finish.",
           notes: ["Banana", "Sweet", "Ice"],
+          hidden: true,
         },
         {
           name: "Black Razz Ice",
           description:
             "Black raspberry with a tangy berry bite and cool finish.",
           notes: ["Black Raspberry", "Tart", "Ice"],
+          hidden: true,
         },
         {
           name: "Blue Coconut",
           description:
             "Sweet blueberry paired with smooth, tropical coconut.",
           notes: ["Blueberry", "Coconut", "Tropical"],
+          hidden: true,
         },
         {
           name: "Blue Rancher",
           description:
             "Hard blue candy with a sharp, sweet-and-sour bite.",
           notes: ["Blue Candy", "Sweet", "Sour"],
+          hidden: true,
         },
         {
           name: "Blue Razz Ice",
@@ -793,12 +813,14 @@ export const BERI_CLIQ: Product = {
           description:
             "Crisp green apple with a bright sweet-and-tart bite.",
           notes: ["Apple", "Tart", "Crisp"],
+          hidden: true,
         },
         {
           name: "Mango Bomb",
           description:
             "Bold tropical mango with a smooth, juicy finish.",
           notes: ["Mango", "Tropical", "Juicy"],
+          hidden: true,
         },
         {
           name: "Miami Mint",
@@ -811,18 +833,21 @@ export const BERI_CLIQ: Product = {
           description:
             "A blend of ripe berries with a smooth, jammy sweetness.",
           notes: ["Mixed Berry", "Ripe", "Sweet"],
+          hidden: true,
         },
         {
           name: "Passion Fruit Mango",
           description:
             "Tart passion fruit lifted by ripe mango, bright and tropical throughout.",
           notes: ["Passion Fruit", "Mango", "Tropical"],
+          hidden: true,
         },
         {
           name: "Peach Refresher",
           description:
             "Ripe peach over a light, crisp base, closer to a cold drink than a candy.",
           notes: ["Peach", "Refreshing", "Light"],
+          hidden: true,
         },
         {
           name: "Peach Ice",
@@ -835,24 +860,28 @@ export const BERI_CLIQ: Product = {
           description:
             "Sweet mixed fruit punch with a crisp icy finish.",
           notes: ["Fruit Punch", "Sweet", "Ice"],
+          hidden: true,
         },
         {
           name: "Sour Neon FAB",
           description:
             "A bright sour-candy blend with a punchy sweet-and-tart finish.",
           notes: ["Sour Candy", "Sweet", "Tart"],
+          hidden: true,
         },
         {
           name: "Sour Watermelon Gami",
           description:
             "Tangy watermelon candy with a sweet gummy-inspired finish.",
           notes: ["Watermelon", "Sour", "Candy"],
+          hidden: true,
         },
         {
           name: "Strawberry Burst",
           description:
             "Ripe strawberry at full volume, sweet and juicy with a clean finish.",
           notes: ["Strawberry", "Juicy", "Sweet"],
+          hidden: true,
         },
         {
           name: "Super Mint",
@@ -871,6 +900,7 @@ export const BERI_CLIQ: Product = {
           description:
             "Juicy watermelon bubblegum with a soft, chewy finish.",
           notes: ["Watermelon", "Bubblegum", "Sweet"],
+          hidden: true,
         },
         {
           name: "Watermelon Ice",
